@@ -16,7 +16,7 @@ packageは `jp.kossacktouch.app`。初回署名証明書のSHA-256:
 
 リポジトリ: https://github.com/45kikurage-rgb/kossack-touch
 
-テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.2-test03
+テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.3-test04
 
 後続変更はこのリポジトリにpushする。署名鍵、signing.env、個人情報を含む元資料、toolchainはpushしない。`site/downloads` の署名済みAPKとSHA256SUMSを公開配布用に追加する。
 
@@ -38,7 +38,7 @@ Cloudflareの新規Pagesプロジェクト `kossack-touch` を作成し、上記
 | Root directory | リポジトリルート |
 | Production branch | main |
 
-初回は`site/downloads/kossack-touch-0.1.2-test03.apk`を直接配信できる。Release公開後は配布ページのボタンをReleaseのダウンロードURLに変更してもよい。APKにAPIサーバー等は不要。
+初回は`site/downloads/kossack-touch-0.1.3-test04.apk`を直接配信できる。Release公開後は配布ページのボタンをReleaseのダウンロードURLに変更してもよい。APKにAPIサーバー等は不要。
 
 別案として、Cloudflareダッシュボードで `site/` の内容をアップロードして静的ページを作成できる。公開前にAPKリンク、versionCode、SHA-256、スマートフォンの表示と初回説明を確認する。
 

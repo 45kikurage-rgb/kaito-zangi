@@ -85,7 +85,7 @@ public final class QuizService extends AccessibilityService {
    if(current.isEmpty())guard.lastConfirmed=q.number-1;
    current="第"+q.number+"問\n"+q.body;
    if(QuizFlow.correct(s.model)){if(now-questionSince>60000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
-   if(stableCount<2){status("照合中",q.number+"/5 · 問題文の安定を確認");return;}
+   if(stableCount<2){status("照合中",q.number+"/5 · 問題文の安定を確認");handler.postDelayed(this::check,1700);return;}
    if(!guard.canAnswer(q)){stop("要確認","問題番号が想定した順序と異なります");return;}
    if(!s.visibleQuestion()){scroll(s);return;}
    try{

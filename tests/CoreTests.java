@@ -42,8 +42,8 @@ public class CoreTests {
   reject(()->MathEngine.solve("a=3,a=4,b=5。1から100までから1つ選ぶ。aまたはbの倍数となる確率。小数点以下を四捨五入。"));
   reject(()->MathEngine.solve("a=3,b=5。1から100までから1つ選ぶ。aの倍数ではなく、bの倍数ではない確率。小数点以下を四捨五入。"));
   String fixture=new String(Files.readAllBytes(Paths.get("tests/quiz-marathon.txt")),"UTF-8");Question q=Question.parse(fixture);yes(q!=null&&q.number==1);eq("67分",q.choices.get("C"));
-  AnswerBank.Entry entry=new AnswerBank.Entry("marathon","100m走の世界記録の速度でフルマラソンを","67分",Arrays.asList("67分"),true);AnswerBank bank=new AnswerBank(Arrays.asList(entry));eq("C",bank.match(q));
-  Map<String,String> options=new LinkedHashMap<>(q.choices);options.put("A","67分");reject(()->bank.match(new Question(1,q.body,options)));reject(()->new AnswerBank(Arrays.asList(entry,entry)));reject(()->bank.match(new Question(1,"未登録問題",q.choices)));
+  AnswerBank.Entry entry=new AnswerBank.Entry("marathon","100m走の世界記録の速度でフルマラソンを","67分",Arrays.asList("67分"),true);entry.sourceLetter="C";AnswerBank bank=new AnswerBank(Arrays.asList(entry));eq("C",bank.match(q));
+  Map<String,String> options=new LinkedHashMap<>(q.choices);options.put("A","67分");eq("C",bank.match(new Question(1,q.body,options)));reject(()->new AnswerBank(Arrays.asList(entry,entry)));reject(()->bank.match(new Question(1,"未登録問題",q.choices)));
   RunGuard guard=new RunGuard();yes(guard.canAnswer(q));guard.mark(q,1000);yes(!guard.canAnswer(q));reject(()->guard.mark(q,1001));yes(!guard.confirmNext(new Question(3,"wrong",options)));yes(guard.confirmNext(new Question(2,"next",options)));yes(guard.pending.isEmpty());
   eq("登録する",Registration.choose(Registration.Stage.SUMMARY,Arrays.asList("変更する","登録する","戻る"),new Random(1)));
   eq("参加登録する",Registration.choose(Registration.Stage.INTRO,Arrays.asList("参加登録する","A","B","変更する"),new Random(2)));

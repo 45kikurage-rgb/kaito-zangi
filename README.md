@@ -5,17 +5,17 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 ## ダウンロード
 
 - 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kossack-touch/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.2-test03
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.3-test04
 
 Cloudflare Pagesへの公開は未完了です。テスト版の一般公開と、実機での動作検証を区別しています。
 
 ## 現在の版
 
-- 0.1.2-test03 / versionCode 3
+- 0.1.3-test04 / versionCode 4
 - package: `jp.kossacktouch.app`（今後固定）
 - Android 8.0/API 26以上、target API 35
 - Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**
-- 第1〜4問: 50件の正答表を構造化。48件は固有キーワードで問題を識別し選択肢本文を照合。画像依存2件は画像内容を特定する文字情報が必要。
+- 第1〜4問: 50件の正答表を構造化。50件すべてを問題文の固有キーワードで識別し、正答表に登録したA〜Dへ直接照合。画像や選択肢本文は判定に使用しません。
 - 第5問: 三角形、等差数列（区間和・閾値）、両端の並び、倍数5条件、ボクシング（差と約数・互いに素）の演算を実装。毎回の条件を抽出し、固定の数字を回答しません。
 - 実例「ライトフライ48kg・フェザー57kg・互いに素」の期待値63をテスト。
 - 数字入力は**クイズ専用WebViewフォームの入力欄と回答ボタンを両方確認できる場合のみ**実行。資料に専用フォームのUI全走査がないため、既存のLINEトークの第5問画面では計算後に要確認で止まる可能性があります。LINEの通常入力欄・送信ボタンは操作しません。

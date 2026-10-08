@@ -3,8 +3,8 @@ import java.util.*;
 /** AND between keyword groups, OR within each group. No fuzzy matching or letter lookup. */
 public final class AnswerBank {
  public static final class Entry {
-  public String id,stem,answer,full;public List<String> tokens;public boolean enabled,visualRequired;
-  public List<List<String>> keywords=new ArrayList<>(),context=new ArrayList<>(),answerGroups=new ArrayList<>(),visualText=new ArrayList<>();
+  public String id,stem,answer,full,sourceLetter="";public List<String> tokens;public boolean enabled;
+  public List<List<String>> keywords=new ArrayList<>(),context=new ArrayList<>(),answerGroups=new ArrayList<>();
   public List<String> aliases=new ArrayList<>();
   public Entry(String id,String s,String a,List<String> t,boolean e){this(id,s,a,t,e,"");}
   public Entry(String id,String s,String a,List<String> t,boolean e,String f){this.id=id;stem=s;answer=a;tokens=t;enabled=e;full=f;}
@@ -31,20 +31,8 @@ public final class AnswerBank {
   if(candidates.size()!=1)throw new IllegalArgumentException("正答集で一意に照合できません");
   Entry e=candidates.get(0);
   if(!containsGroups(body,e.context))throw new IllegalArgumentException("登録済み問題の条件と一致しません");
-  if(e.visualRequired&&(e.visualText.isEmpty()||!containsGroups(body,e.visualText)))throw new IllegalArgumentException("画像の内容を特定する文字情報が必要です");
-  List<String> letters=new ArrayList<>();
-  for(Map.Entry<String,String> c:q.choices.entrySet()){
-   String value=Text.norm(c.getValue());boolean exact=value.equals(Text.norm(e.answer))||value.equals(Text.norm(e.answer)+"級");
-   for(String alias:e.aliases)if(value.equals(Text.norm(alias)))exact=true;
-   boolean yes=exact;
-   if(!exact&&!(e.tokens.size()==1&&Text.norm(e.answer).length()<=10)){
-    yes=true;for(String token:e.tokens)if(!value.contains(Text.norm(token)))yes=false;
-    if(!containsGroups(value,e.answerGroups))yes=false;
-   }
-   if(yes)letters.add(c.getKey());
-  }
-  if(letters.size()!=1)throw new IllegalArgumentException("正答と選択肢の照合が不一致です");
-  return letters.get(0);
+  if(!e.sourceLetter.matches("[A-D]")||!q.choices.containsKey(e.sourceLetter))throw new IllegalArgumentException("登録済みの正答ボタンを確認できません");
+  return e.sourceLetter;
  }
  public int size(){return entries.size();}
 }

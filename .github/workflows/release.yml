@@ -15,4 +15,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.1.2-test03 site/downloads/kossack-touch-0.1.2-test03.apk site/downloads/SHA256SUMS --prerelease --title '回答ザンギ 0.1.2-test03' --notes-file docs/release-notes.md
+          gh release create v0.1.3-test04 site/downloads/kossack-touch-0.1.3-test04.apk site/downloads/SHA256SUMS --prerelease --title '回答ザンギ 0.1.3-test04' --notes-file docs/release-notes.md

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "version": "sports6-2026-10-08-keywords1",
+  "version": "sports6-2026-10-08-text-only2",
   "questions": [
     {
       "id": "sports6-001",
@@ -16,7 +16,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "2026"
@@ -46,7 +46,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "2026"
@@ -75,7 +75,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -103,7 +103,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -130,7 +130,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -156,7 +156,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -186,7 +186,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -212,7 +212,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "インターハイ"
@@ -241,7 +241,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ヨット"
@@ -272,7 +272,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "武道"
@@ -304,7 +304,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "BCAA"
@@ -328,7 +328,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "CoQ10",
@@ -353,7 +353,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "マルトデキストリン"
@@ -389,7 +389,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "カゼイン"
@@ -413,7 +413,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ビタミン"
@@ -442,7 +442,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "2000kcal",
@@ -469,7 +469,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ピリドキシン"
@@ -492,7 +492,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "第六の栄養素",
@@ -517,7 +517,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "脂肪酸"
@@ -544,7 +544,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ビタミンB1"
@@ -570,7 +570,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "100m走",
@@ -602,7 +602,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "アメリカンフットボール"
@@ -627,9 +627,9 @@
         "ない"
       ],
       "enabled": true,
-      "requires_visual_context": true,
+      "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。画像の内容を特定するテキストが取得できない場合は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "このボール"
@@ -639,12 +639,7 @@
         ]
       ],
       "answer_aliases": [],
-      "visual_text_alternatives": [
-        [
-          "ビーチバレー",
-          "ビーチバレーボール"
-        ]
-      ]
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-024",
@@ -663,7 +658,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ゴルフボール"
@@ -691,7 +686,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "サッカー"
@@ -721,7 +716,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "スキージャンプ"
@@ -747,7 +742,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "スポーツ"
@@ -773,7 +768,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "クレー射撃"
@@ -800,7 +795,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "アルティメット"
@@ -826,7 +821,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ピックルボール",
@@ -854,7 +849,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "モルック"
@@ -887,7 +882,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "バスケットボール"
@@ -918,7 +913,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ビーチバレー"
@@ -945,7 +940,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "フィギュアスケート"
@@ -973,7 +968,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ボクシング"
@@ -1000,7 +995,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ボディビル"
@@ -1027,7 +1022,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "モンゴル相撲"
@@ -1054,7 +1049,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ランニング"
@@ -1080,7 +1075,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "公式のパラスポーツ"
@@ -1108,7 +1103,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "玉入れ"
@@ -1135,7 +1130,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ゲートボール"
@@ -1161,7 +1156,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "スポーツ"
@@ -1213,7 +1208,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "体操"
@@ -1243,7 +1238,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "卓球"
@@ -1273,7 +1268,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "近代五種"
@@ -1299,7 +1294,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "ボルダリング",
@@ -1326,7 +1321,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "野球"
@@ -1351,9 +1346,9 @@
         "離れ"
       ],
       "enabled": true,
-      "requires_visual_context": true,
+      "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。画像の内容を特定するテキストが取得できない場合は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "競歩"
@@ -1363,13 +1358,7 @@
         ]
       ],
       "answer_aliases": [],
-      "visual_text_alternatives": [
-        [
-          "ロスオブコンタクト",
-          "両足が地面から離れ",
-          "フライト"
-        ]
-      ]
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-049",
@@ -1385,7 +1374,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "鉄アレイ"
@@ -1411,7 +1400,7 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "notes": "問題文の登録キーワードだけで一意に識別し、正答表のsource_letter（A-D）を押す。画像・意味解析・選択肢本文の正誤判定は行わない。",
       "question_keywords": [
         [
           "国際柔道連盟"
