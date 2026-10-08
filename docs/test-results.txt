@@ -1,0 +1,2 @@
+PASS 1981 assertions. Includes submitted coprime example (63), 5 families, 120 seeded parameter sets, all 81 boxing pairs, and rejection/duplicate guards.
+PASS 15 actual UI-dump checks: correct button container, hidden-button wait, answered-message rejection, latest incomplete question guard.

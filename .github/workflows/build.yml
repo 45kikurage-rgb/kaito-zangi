@@ -1,0 +1,40 @@
+name: Build signed Android APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build with owner's fixed key
+        env:
+          KEY_BASE64: ${{ secrets.SIGNING_STORE_BASE64 }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$KEY_BASE64"
+          test -n "$SIGNING_STORE_PASSWORD"
+          umask 077
+          printf '%s' "$KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/kossacktouch.p12"
+          export SIGNING_STORE="$RUNNER_TEMP/kossacktouch.p12"
+          export ANDROID_JAR="$ANDROID_HOME/platforms/android-35/android.jar"
+          export ANDROID_BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          trap 'rm -f "$SIGNING_STORE"' EXIT
+          bash scripts/build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kossack-touch-test-apk
+          path: |
+            build/out/kossack-touch-0.1.0-test01.apk
+            build/SHA256SUMS
+            build/test-results.txt
+            build/signature-verification.txt

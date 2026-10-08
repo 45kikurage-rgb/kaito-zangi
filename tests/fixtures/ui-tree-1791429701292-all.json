@@ -1,0 +1,2318 @@
+{
+  "package": "jp.naver.line.androie",
+  "nodes": [
+    {
+      "id": 1,
+      "parent_id": null,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 2,
+      "parent_id": 1,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 3,
+      "parent_id": 2,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 4,
+      "parent_id": 3,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/action_bar_root"
+    },
+    {
+      "id": 5,
+      "parent_id": 4,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "android:id/content"
+    },
+    {
+      "id": 6,
+      "parent_id": 5,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 7,
+      "parent_id": 6,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_main_skin_view"
+    },
+    {
+      "id": 8,
+      "parent_id": 6,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edge_to_edge_container"
+    },
+    {
+      "id": 9,
+      "parent_id": 8,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_main_header"
+    },
+    {
+      "id": 10,
+      "parent_id": 8,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_pseudo_status_bar"
+    },
+    {
+      "id": 11,
+      "parent_id": 8,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_header_search_box_container"
+    },
+    {
+      "id": 12,
+      "parent_id": 8,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_fragment_container"
+    },
+    {
+      "id": 13,
+      "parent_id": 8,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/container"
+    },
+    {
+      "id": 14,
+      "parent_id": 8,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_main_content_container"
+    },
+    {
+      "id": 15,
+      "parent_id": 8,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_custom_expandable_input_container"
+    },
+    {
+      "id": 16,
+      "parent_id": 9,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_root"
+    },
+    {
+      "id": 17,
+      "parent_id": 13,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/coordinator"
+    },
+    {
+      "id": 18,
+      "parent_id": 14,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 19,
+      "parent_id": 15,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_ai_talk_component_result_panel_input_container"
+    },
+    {
+      "id": 20,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/seamless_header_background"
+    },
+    {
+      "id": 21,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/status_bar_background_scale_guide"
+    },
+    {
+      "id": 22,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/status_bar_background"
+    },
+    {
+      "id": 23,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/fallback_header_background"
+    },
+    {
+      "id": 24,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/default_color_animation_layer"
+    },
+    {
+      "id": 25,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_up_button_bg"
+    },
+    {
+      "id": 26,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_left_edge_to_edge_padding"
+    },
+    {
+      "id": 27,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/main_view_group"
+    },
+    {
+      "id": 28,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/left_header_button"
+    },
+    {
+      "id": 29,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/far_left_header_button"
+    },
+    {
+      "id": 30,
+      "parent_id": 16,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/right_header_button"
+    },
+    {
+      "id": 31,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/middle_header_button"
+    },
+    {
+      "id": 32,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/inner_right_header_button"
+    },
+    {
+      "id": 33,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_right_edge_to_edge_padding"
+    },
+    {
+      "id": 34,
+      "parent_id": 16,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/right_header_image_button"
+    },
+    {
+      "id": 35,
+      "parent_id": 17,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/touch_outside"
+    },
+    {
+      "id": 36,
+      "parent_id": 17,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/design_bottom_sheet"
+    },
+    {
+      "id": 37,
+      "parent_id": 18,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chathistory_status_bar_container"
+    },
+    {
+      "id": 38,
+      "parent_id": 18,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_main_content_area"
+    },
+    {
+      "id": 39,
+      "parent_id": 18,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_keyboard_container"
+    },
+    {
+      "id": 40,
+      "parent_id": 18,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 41,
+      "parent_id": 18,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_suspicious_naming_bottom_input_view"
+    },
+    {
+      "id": 42,
+      "parent_id": 18,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_status_view"
+    },
+    {
+      "id": 43,
+      "parent_id": 18,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_oa_bottombar_holder"
+    },
+    {
+      "id": 44,
+      "parent_id": 19,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 45,
+      "parent_id": 25,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_up_button"
+    },
+    {
+      "id": 46,
+      "parent_id": 27,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 47,
+      "parent_id": 28,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_button_layout"
+    },
+    {
+      "id": 48,
+      "parent_id": 30,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_button_layout"
+    },
+    {
+      "id": 49,
+      "parent_id": 36,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/main_container"
+    },
+    {
+      "id": 50,
+      "parent_id": 37,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_group_penalty_alert_view"
+    },
+    {
+      "id": 51,
+      "parent_id": 38,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edge_to_edge_main_content_area"
+    },
+    {
+      "id": 52,
+      "parent_id": 39,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_keyboard_placeholder"
+    },
+    {
+      "id": 53,
+      "parent_id": 41,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 54,
+      "parent_id": 42,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 55,
+      "parent_id": 43,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 56,
+      "parent_id": 46,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 57,
+      "parent_id": 46,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 58,
+      "parent_id": 47,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_button_img"
+    },
+    {
+      "id": 59,
+      "parent_id": 48,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_button_img"
+    },
+    {
+      "id": 60,
+      "parent_id": 49,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/handle_image_layout"
+    },
+    {
+      "id": 61,
+      "parent_id": 49,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/sticker_grid"
+    },
+    {
+      "id": 62,
+      "parent_id": 49,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/category_name_view"
+    },
+    {
+      "id": 63,
+      "parent_id": 49,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/close_icon"
+    },
+    {
+      "id": 64,
+      "parent_id": 49,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/tag_filter_view"
+    },
+    {
+      "id": 65,
+      "parent_id": 50,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 66,
+      "parent_id": 51,
+      "visible_to_user": true,
+      "enabled": false,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_list_refresh_layout"
+    },
+    {
+      "id": 67,
+      "parent_id": 51,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_snackbar_container"
+    },
+    {
+      "id": 68,
+      "parent_id": 51,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chathistory_preview_and_auto_suggestion_area"
+    },
+    {
+      "id": 69,
+      "parent_id": 51,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 70,
+      "parent_id": 51,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 71,
+      "parent_id": 55,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_oa_bottombar_keyboard_button"
+    },
+    {
+      "id": 72,
+      "parent_id": 55,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_oa_bottombar_promotion_menu_button"
+    },
+    {
+      "id": 73,
+      "parent_id": 56,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/header_title_left_container"
+    },
+    {
+      "id": 74,
+      "parent_id": 56,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "超良問ドリル",
+      "resource": "jp.naver.line.androie:id/header_title"
+    },
+    {
+      "id": 75,
+      "parent_id": 60,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/handle_image"
+    },
+    {
+      "id": 76,
+      "parent_id": 66,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chathistory_message_list"
+    },
+    {
+      "id": 77,
+      "parent_id": 67,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 78,
+      "parent_id": 69,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_top_floating_view_container"
+    },
+    {
+      "id": 79,
+      "parent_id": 70,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_mid_buttons_container"
+    },
+    {
+      "id": 80,
+      "parent_id": 72,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_oa_bottombar_menu_text"
+    },
+    {
+      "id": 81,
+      "parent_id": 72,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_oa_bottombar_menu_closed_icon"
+    },
+    {
+      "id": 82,
+      "parent_id": 73,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_header_official_account_icon"
+    },
+    {
+      "id": 83,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 84,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 85,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 86,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 87,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 88,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 89,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 90,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 91,
+      "parent_id": 76,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 92,
+      "parent_id": 77,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 93,
+      "parent_id": 78,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_scheduled_message_floating_button_compose_view"
+    },
+    {
+      "id": 94,
+      "parent_id": 78,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chathistory_banner_anchor"
+    },
+    {
+      "id": 95,
+      "parent_id": 83,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 96,
+      "parent_id": 84,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 97,
+      "parent_id": 85,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 98,
+      "parent_id": 86,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 99,
+      "parent_id": 87,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 100,
+      "parent_id": 88,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 101,
+      "parent_id": 89,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 102,
+      "parent_id": 90,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 103,
+      "parent_id": 91,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 104,
+      "parent_id": 93,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 105,
+      "parent_id": 95,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 106,
+      "parent_id": 96,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 107,
+      "parent_id": 97,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 108,
+      "parent_id": 98,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 109,
+      "parent_id": 99,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 110,
+      "parent_id": 100,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 111,
+      "parent_id": 101,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 112,
+      "parent_id": 102,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 113,
+      "parent_id": 103,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_swipeable_framelayout"
+    },
+    {
+      "id": 114,
+      "parent_id": 105,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 115,
+      "parent_id": 105,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 116,
+      "parent_id": 105,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 117,
+      "parent_id": 106,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 118,
+      "parent_id": 106,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 119,
+      "parent_id": 106,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 120,
+      "parent_id": 107,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 121,
+      "parent_id": 107,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 122,
+      "parent_id": 107,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 123,
+      "parent_id": 108,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 124,
+      "parent_id": 108,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 125,
+      "parent_id": 108,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 126,
+      "parent_id": 109,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 127,
+      "parent_id": 109,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 128,
+      "parent_id": 109,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 129,
+      "parent_id": 110,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 130,
+      "parent_id": 110,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 131,
+      "parent_id": 110,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 132,
+      "parent_id": 111,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 133,
+      "parent_id": 111,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 134,
+      "parent_id": 111,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 135,
+      "parent_id": 112,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 136,
+      "parent_id": 112,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 137,
+      "parent_id": 112,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 138,
+      "parent_id": 113,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_clicktarget"
+    },
+    {
+      "id": 139,
+      "parent_id": 113,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_contentview_container"
+    },
+    {
+      "id": 140,
+      "parent_id": 113,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_reply_indicator"
+    },
+    {
+      "id": 141,
+      "parent_id": 113,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_newest_message_bottom_space"
+    },
+    {
+      "id": 142,
+      "parent_id": 113,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_newest_message_quick_reply_extra_bottom_space"
+    },
+    {
+      "id": 143,
+      "parent_id": 115,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 144,
+      "parent_id": 118,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 145,
+      "parent_id": 121,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 146,
+      "parent_id": 124,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 147,
+      "parent_id": 127,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 148,
+      "parent_id": 130,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 149,
+      "parent_id": 133,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 150,
+      "parent_id": 136,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 151,
+      "parent_id": 139,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 152,
+      "parent_id": 143,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_thumbnail"
+    },
+    {
+      "id": 153,
+      "parent_id": 143,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 154,
+      "parent_id": 143,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_layout_metadata"
+    },
+    {
+      "id": 155,
+      "parent_id": 143,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 156,
+      "parent_id": 144,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_linear_layout_meta_data"
+    },
+    {
+      "id": 157,
+      "parent_id": 144,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 158,
+      "parent_id": 144,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 159,
+      "parent_id": 145,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_linear_layout_meta_data"
+    },
+    {
+      "id": 160,
+      "parent_id": 145,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 161,
+      "parent_id": 145,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 162,
+      "parent_id": 146,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_thumbnail"
+    },
+    {
+      "id": 163,
+      "parent_id": 146,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 164,
+      "parent_id": 146,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_layout_metadata"
+    },
+    {
+      "id": 165,
+      "parent_id": 146,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 166,
+      "parent_id": 147,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_linear_layout_meta_data"
+    },
+    {
+      "id": 167,
+      "parent_id": 147,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 168,
+      "parent_id": 147,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 169,
+      "parent_id": 148,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_linear_layout_meta_data"
+    },
+    {
+      "id": 170,
+      "parent_id": 148,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 171,
+      "parent_id": 148,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 172,
+      "parent_id": 149,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_thumbnail"
+    },
+    {
+      "id": 173,
+      "parent_id": 149,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 174,
+      "parent_id": 149,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_layout_metadata"
+    },
+    {
+      "id": 175,
+      "parent_id": 149,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 176,
+      "parent_id": 150,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_linear_layout_meta_data"
+    },
+    {
+      "id": 177,
+      "parent_id": 150,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 178,
+      "parent_id": 150,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 179,
+      "parent_id": 151,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_thumbnail"
+    },
+    {
+      "id": 180,
+      "parent_id": 151,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_layout"
+    },
+    {
+      "id": 181,
+      "parent_id": 151,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_layout_metadata"
+    },
+    {
+      "id": 182,
+      "parent_id": 151,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_message_share_button_container"
+    },
+    {
+      "id": 183,
+      "parent_id": 153,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_flex_message_frame"
+    },
+    {
+      "id": 184,
+      "parent_id": 154,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 185,
+      "parent_id": 156,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 186,
+      "parent_id": 156,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edited_and_read_container"
+    },
+    {
+      "id": 187,
+      "parent_id": 156,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 188,
+      "parent_id": 158,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_text_message"
+    },
+    {
+      "id": 189,
+      "parent_id": 159,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 190,
+      "parent_id": 159,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edited_and_read_container"
+    },
+    {
+      "id": 191,
+      "parent_id": 159,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 192,
+      "parent_id": 161,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_text_message"
+    },
+    {
+      "id": 193,
+      "parent_id": 163,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_flex_message_frame"
+    },
+    {
+      "id": 194,
+      "parent_id": 164,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 195,
+      "parent_id": 166,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 196,
+      "parent_id": 166,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edited_and_read_container"
+    },
+    {
+      "id": 197,
+      "parent_id": 166,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 198,
+      "parent_id": 168,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_text_message"
+    },
+    {
+      "id": 199,
+      "parent_id": 169,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 200,
+      "parent_id": 169,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edited_and_read_container"
+    },
+    {
+      "id": 201,
+      "parent_id": 169,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 202,
+      "parent_id": 171,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_text_message"
+    },
+    {
+      "id": 203,
+      "parent_id": 173,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_flex_message_frame"
+    },
+    {
+      "id": 204,
+      "parent_id": 174,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 205,
+      "parent_id": 176,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 206,
+      "parent_id": 176,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_edited_and_read_container"
+    },
+    {
+      "id": 207,
+      "parent_id": 176,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 208,
+      "parent_id": 178,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_text_message"
+    },
+    {
+      "id": 209,
+      "parent_id": 180,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_flex_message_frame"
+    },
+    {
+      "id": 210,
+      "parent_id": 181,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_timestamp"
+    },
+    {
+      "id": 211,
+      "parent_id": 183,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 212,
+      "parent_id": 186,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_read_count"
+    },
+    {
+      "id": 213,
+      "parent_id": 188,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_text_message_balloon_root"
+    },
+    {
+      "id": 214,
+      "parent_id": 190,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_read_count"
+    },
+    {
+      "id": 215,
+      "parent_id": 192,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_text_message_balloon_root"
+    },
+    {
+      "id": 216,
+      "parent_id": 193,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 217,
+      "parent_id": 196,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_read_count"
+    },
+    {
+      "id": 218,
+      "parent_id": 198,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_text_message_balloon_root"
+    },
+    {
+      "id": 219,
+      "parent_id": 200,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_read_count"
+    },
+    {
+      "id": 220,
+      "parent_id": 202,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_text_message_balloon_root"
+    },
+    {
+      "id": 221,
+      "parent_id": 203,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 222,
+      "parent_id": 206,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_row_read_count"
+    },
+    {
+      "id": 223,
+      "parent_id": 208,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_text_message_balloon_root"
+    },
+    {
+      "id": 224,
+      "parent_id": 209,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 225,
+      "parent_id": 211,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 226,
+      "parent_id": 213,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_text"
+    },
+    {
+      "id": 227,
+      "parent_id": 215,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_text"
+    },
+    {
+      "id": 228,
+      "parent_id": 216,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 229,
+      "parent_id": 218,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_text"
+    },
+    {
+      "id": 230,
+      "parent_id": 220,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_text"
+    },
+    {
+      "id": 231,
+      "parent_id": 221,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 232,
+      "parent_id": 223,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": true,
+      "text": "",
+      "resource": "jp.naver.line.androie:id/chat_ui_message_text"
+    },
+    {
+      "id": 233,
+      "parent_id": 224,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 234,
+      "parent_id": 225,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 235,
+      "parent_id": 228,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 236,
+      "parent_id": 231,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 237,
+      "parent_id": 233,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 238,
+      "parent_id": 233,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 239,
+      "parent_id": 234,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 240,
+      "parent_id": 235,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 241,
+      "parent_id": 236,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 242,
+      "parent_id": 237,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 243,
+      "parent_id": 238,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 244,
+      "parent_id": 239,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 245,
+      "parent_id": 239,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 246,
+      "parent_id": 240,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 247,
+      "parent_id": 241,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 248,
+      "parent_id": 242,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 249,
+      "parent_id": 243,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 250,
+      "parent_id": 243,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 251,
+      "parent_id": 244,
+      "visible_to_user": false,
+      "enabled": true,
+      "clickable": false,
+      "text": "残念！",
+      "resource": ""
+    },
+    {
+      "id": 252,
+      "parent_id": 245,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 253,
+      "parent_id": 246,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 254,
+      "parent_id": 247,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "",
+      "resource": ""
+    },
+    {
+      "id": 255,
+      "parent_id": 248,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "第1問 (スポーツ全般)",
+      "resource": ""
+    },
+    {
+      "id": 256,
+      "parent_id": 249,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "100m走の世界記録の速度でフルマラソンを走ると、タイムはおよそ何分になる？",
+      "resource": ""
+    },
+    {
+      "id": 257,
+      "parent_id": 250,
+      "visible_to_user": true,
+      "enabled": true,
+      "clickable": false,
+      "text": "【A】47分\n【B】57分\n【C】67分\n【D】77分",
+      "resource": ""
+    }
+  ]
+}

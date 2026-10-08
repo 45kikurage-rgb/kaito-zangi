@@ -1,0 +1,10 @@
+build/
+*.apk
+!site/downloads/*.apk
+*.aab
+*.jks
+*.p12
+*.keystore
+signing.env
+local.properties
+.gradle/

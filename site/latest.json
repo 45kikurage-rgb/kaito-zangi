@@ -1,0 +1,12 @@
+{
+  "name": "コサックタッチ",
+  "version": "0.1.0-test01",
+  "versionCode": 1,
+  "date": "2026-10-08",
+  "status": "test-unverified",
+  "package": "jp.kossacktouch.app",
+  "apk": "downloads/kossack-touch-0.1.0-test01.apk",
+  "sha256": "2a44536dbf620610f2da7bd9a48820f1ec193ef66ab59af7a1eaa7e33ff46a9a",
+  "sizeBytes": 49782,
+  "physicalDeviceVerified": false
+}

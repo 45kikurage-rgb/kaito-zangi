@@ -1,0 +1,836 @@
+{
+  "schema_version": 1,
+  "version": "sports6-2026-10-08",
+  "questions": [
+    {
+      "id": "sports6-001",
+      "category": "インターハイ",
+      "stem": "2026年のインターハイで総合開会式が行われた",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "京都府",
+      "source_letter": "B",
+      "answer_tokens": [
+        "京都府"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-002",
+      "category": "インターハイ",
+      "stem": "2026年のインターハイにおける自転車競技の",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "東京駅ー小田原駅",
+      "source_letter": "C",
+      "answer_tokens": [
+        "東京駅",
+        "小田原駅"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-003",
+      "category": "インターハイ",
+      "stem": "インターハイでも使われる「高体連マーク」は何色に塗られている？",
+      "question": "インターハイでも使われる「高体連マーク」は何色に塗られている？",
+      "question_completeness": "full",
+      "answer": "真紅",
+      "source_letter": "A",
+      "answer_tokens": [
+        "真紅"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-004",
+      "category": "インターハイ",
+      "stem": "インターハイにおけるソフトテニスの",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ダブルスのみで行う",
+      "source_letter": "C",
+      "answer_tokens": [
+        "ダブルス",
+        "のみ"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-005",
+      "category": "インターハイ",
+      "stem": "インターハイにおける相撲の説明として",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "体重別の階級がある",
+      "source_letter": "D",
+      "answer_tokens": [
+        "体重別",
+        "階級"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-006",
+      "category": "インターハイ",
+      "stem": "インターハイにおける男子レスリング",
+      "question": "インターハイにおける男子レスリングで、体重100kgの選手が参加するのは何kg級？",
+      "question_completeness": "full",
+      "answer": "125kg",
+      "source_letter": "D",
+      "answer_tokens": [
+        "125kg"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-007",
+      "category": "インターハイ",
+      "stem": "インターハイにおける登山の説明として",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ペーパーテストが課される",
+      "source_letter": "B",
+      "answer_tokens": [
+        "ペーパーテスト"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-008",
+      "category": "インターハイ",
+      "stem": "インターハイの陸上競技で女子のみが",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "100mハードル",
+      "source_letter": "B",
+      "answer_tokens": [
+        "100mハードル"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-009",
+      "category": "インターハイ",
+      "stem": "ヨットの種目において、インターハイで実施されていない",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "470級",
+      "source_letter": "A",
+      "answer_tokens": [
+        "470級"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-010",
+      "category": "インターハイ",
+      "stem": "武道の中で最も新しくインターハイに採用された競技",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "1人で行う種目がある",
+      "source_letter": "B",
+      "answer_tokens": [
+        "1人",
+        "種目"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-011",
+      "category": "栄養学",
+      "stem": "アスリートに重要な栄養素「BCAA」",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "分岐鎖アミノ酸ーバリン・ロイシン・イソロイシン",
+      "source_letter": "A",
+      "answer_tokens": [
+        "分岐鎖アミノ酸",
+        "バリン",
+        "ロイシン",
+        "イソロイシン"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-012",
+      "category": "栄養学",
+      "stem": "サプリメントにもなっている「CoQ10」",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "コエンザイム－体内で食物をエネルギーに変えるのをサポートする",
+      "source_letter": "A",
+      "answer_tokens": [
+        "コエンザイム",
+        "エネルギー"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-013",
+      "category": "栄養学",
+      "stem": "スポーツの補給食にも使われる「マルトデキストリン」の説明",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "水に解ける性質を持っている糖質",
+      "source_letter": "A",
+      "answer_tokens": [
+        "水",
+        "糖質"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-014",
+      "category": "栄養学",
+      "stem": "タンパク質の一種である「カゼイン」",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "「乳製品」カルシウムと結合",
+      "source_letter": "B",
+      "answer_tokens": [
+        "乳製品",
+        "カルシウム"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-015",
+      "category": "栄養学",
+      "stem": "ビタミンの中でも、最も鉄分の吸収を",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ビタミンCを含むパプリカ",
+      "source_letter": "C",
+      "answer_tokens": [
+        "ビタミンC",
+        "パプリカ"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-016",
+      "category": "栄養学",
+      "stem": "ヒトが2000kcalのエネルギーをタンパク質だけで",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "500g",
+      "source_letter": "B",
+      "answer_tokens": [
+        "500g"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-017",
+      "category": "栄養学",
+      "stem": "「ピリドキシン」などの成分からなるビタミンの種類",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ビタミンB6",
+      "source_letter": "C",
+      "answer_tokens": [
+        "ビタミンB6"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-018",
+      "category": "栄養学",
+      "stem": "五大栄養素に続く「第六の栄養素」と呼ばれる",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "食物繊維",
+      "source_letter": "A",
+      "answer_tokens": [
+        "食物繊維"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-019",
+      "category": "栄養学",
+      "stem": "食品に含まれる脂肪酸のうち",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "パルミチン酸おもにエネルギー源",
+      "source_letter": "D",
+      "answer_tokens": [
+        "パルミチン酸",
+        "エネルギー"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-020",
+      "category": "栄養学",
+      "stem": "肉の中でもビタミンB1を特に多く含むものと",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "豚肉✖️ニンニク",
+      "source_letter": "B",
+      "answer_tokens": [
+        "豚肉",
+        "ニンニク"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-021",
+      "category": "スポーツ全般",
+      "stem": "100m走の世界記録の速度でフルマラソンを",
+      "question": "100m走の世界記録の速度でフルマラソンを走ると、タイムはおよそ何分になる？",
+      "question_completeness": "full",
+      "answer": "67分",
+      "source_letter": "C",
+      "answer_tokens": [
+        "67分"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-022",
+      "category": "スポーツ全般",
+      "stem": "アメリカンフットボールの戦術の一つ",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "観客が相手チームの作戦伝達を妨害する",
+      "source_letter": "D",
+      "answer_tokens": [
+        "観客",
+        "作戦伝達",
+        "妨害"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-023",
+      "category": "スポーツ全般",
+      "stem": "このボールが使われるスポーツのルールで",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "守備位置のローテーションがない",
+      "source_letter": "D",
+      "answer_tokens": [
+        "ローテーション",
+        "ない"
+      ],
+      "enabled": false,
+      "requires_visual_context": true,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-024",
+      "category": "スポーツ全般",
+      "stem": "ゴルフボールの表面には「ディンプル」という",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "空気抵抗が減り、飛距離が長くなる",
+      "source_letter": "B",
+      "answer_tokens": [
+        "空気抵抗",
+        "飛距離"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-025",
+      "category": "スポーツ全般",
+      "stem": "サッカーで、スローインしたボールが誰にも触れず",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "得点とはならず、相手チームのコーナーキック",
+      "source_letter": "B",
+      "answer_tokens": [
+        "得点",
+        "ならず",
+        "コーナーキック"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-026",
+      "category": "スポーツ全般",
+      "stem": "スキージャンプにおける「テレマーク姿勢」の",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "地名",
+      "source_letter": "B",
+      "answer_tokens": [
+        "地名"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-027",
+      "category": "スポーツ全般",
+      "stem": "スポーツにおけるスラングで「GOAT」と",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "史上最高の選手",
+      "source_letter": "A",
+      "answer_tokens": [
+        "史上最高"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-028",
+      "category": "スポーツ全般",
+      "stem": "スポーツの「クレー射撃」は、もともと",
+      "question": "スポーツの「クレー射撃」は、もともとどんな動物を撃つ競技だった？",
+      "question_completeness": "full",
+      "answer": "ハト",
+      "source_letter": "D",
+      "answer_tokens": [
+        "ハト"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-029",
+      "category": "スポーツ全般",
+      "stem": "スポーツの一種「アルティメット」で使う用具",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "フライングディスクを使用",
+      "source_letter": "C",
+      "answer_tokens": [
+        "フライングディスク"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-030",
+      "category": "スポーツ全般",
+      "stem": "ニュースポーツ「ピックルポール」で使われる",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ボールの表面に多数の「穴」が",
+      "source_letter": "C",
+      "answer_tokens": [
+        "穴"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-031",
+      "category": "スポーツ全般",
+      "stem": "ニュースポーツ「モルック」で、1投で6番と12番",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "2点",
+      "source_letter": "A",
+      "answer_tokens": [
+        "2点"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-032",
+      "category": "スポーツ全般",
+      "stem": "バスケットボールで、ゴールの後ろにボードが",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "観客に邪魔されないように",
+      "source_letter": "B",
+      "answer_tokens": [
+        "観客",
+        "邪魔"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-033",
+      "category": "スポーツ全般",
+      "stem": "ビーチバレーの公式大会で、ルール違反と",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "靴を履く",
+      "source_letter": "C",
+      "answer_tokens": [
+        "靴",
+        "履く"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-034",
+      "category": "スポーツ全般",
+      "stem": "「フィギュアスケート」の「フィギュア(figure)",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "氷上にスケート靴で「図形」を",
+      "source_letter": "A",
+      "answer_tokens": [
+        "氷上",
+        "図形"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-035",
+      "category": "スポーツ全般",
+      "stem": "ボクシングで反則となる「サミング」とは",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "グローブの親指部分で",
+      "source_letter": "A",
+      "answer_tokens": [
+        "グローブ",
+        "親指"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-036",
+      "category": "スポーツ全般",
+      "stem": "ボディビルにおけるポーズのひとつ「モストマスキュラー」",
+      "question": "ボディビルにおけるポーズのひとつ「モストマスキュラー」。このポーズに関する説明として正しいものはどれ？",
+      "question_completeness": "full",
+      "answer": "規定ポーズではなく、フリーポーズ",
+      "source_letter": "B",
+      "answer_tokens": [
+        "規定ポーズではなく",
+        "フリーポーズ"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-037",
+      "category": "スポーツ全般",
+      "stem": "「モンゴル相撲」と呼ばれる格闘技「ブフ」",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "体重制限がない",
+      "source_letter": "D",
+      "answer_tokens": [
+        "体重制限",
+        "ない"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-038",
+      "category": "スポーツ全般",
+      "stem": "ランニングのトレーニングで行われる「LSD」",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "長い距離をゆっくり走る",
+      "source_letter": "A",
+      "answer_tokens": [
+        "長い距離",
+        "ゆっくり"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-039",
+      "category": "スポーツ全般",
+      "stem": "下記の中で1つだけ公式のパラスポーツが",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "6人",
+      "source_letter": "A",
+      "answer_tokens": [
+        "6人"
+      ],
+      "enabled": false,
+      "requires_visual_context": true,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-040",
+      "category": "スポーツ全般",
+      "stem": "玉入れをもとにした日本生まれのスポーツ",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "99個のアジャタボールと",
+      "source_letter": "C",
+      "answer_tokens": [
+        "99個",
+        "アジャタボール"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-041",
+      "category": "スポーツ全般",
+      "stem": "次のうち、ゲートボールに関する説明",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "子供用の遊び",
+      "source_letter": "A",
+      "answer_tokens": [
+        "子供"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-042",
+      "category": "スポーツ全般",
+      "stem": "次のスポーツ道具のうち、最も重いものは",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "25倍",
+      "source_letter": "D",
+      "answer_tokens": [
+        "25倍"
+      ],
+      "enabled": false,
+      "requires_visual_context": true,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-043",
+      "category": "スポーツ全般",
+      "stem": "体操競技に使われる「平均台」の横幅",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "通常はがきの短辺の長さ",
+      "source_letter": "A",
+      "answer_tokens": [
+        "はがき",
+        "短辺"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-044",
+      "category": "スポーツ全般",
+      "stem": "卓球などで使われる「スコンク」の本来の英語の意味",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "英語「完敗させる」日本「1点も取れずに完敗する」",
+      "source_letter": "C",
+      "answer_tokens": [
+        "完敗"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-045",
+      "category": "スポーツ全般",
+      "stem": "複合スポーツの「近代五種」で新種目",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "馬術に代わって採用",
+      "source_letter": "D",
+      "answer_tokens": [
+        "馬術",
+        "代わ"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-046",
+      "category": "スポーツ全般",
+      "stem": "壁を登るスポーツ「ボルダリング」の用語として",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "コース内で最も難しい箇所",
+      "source_letter": "B",
+      "answer_tokens": [
+        "最も難しい"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-047",
+      "category": "スポーツ全般",
+      "stem": "野球で、明らかにホームランとなりそう",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "ホームラン",
+      "source_letter": "A",
+      "answer_tokens": [
+        "ホームラン"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-048",
+      "category": "スポーツ全般",
+      "stem": "陸上競技の競歩で、この印は何を意味する？",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "両足が地面から離れているため",
+      "source_letter": "D",
+      "answer_tokens": [
+        "両足",
+        "離れ"
+      ],
+      "enabled": false,
+      "requires_visual_context": true,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-049",
+      "category": "スポーツ全般",
+      "stem": "腕のトレーニングに使う「鉄アレイ」「アレイ」の",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "亜鈴",
+      "source_letter": "D",
+      "answer_tokens": [
+        "亜鈴"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    },
+    {
+      "id": "sports6-050",
+      "category": "スポーツ全般",
+      "stem": "国際柔道連盟が規定する抑込技に存在しない",
+      "question": null,
+      "question_completeness": "source_prefix",
+      "answer": "下四方固",
+      "source_letter": "B",
+      "answer_tokens": [
+        "下四方固"
+      ],
+      "enabled": true,
+      "requires_visual_context": false,
+      "source": "user-supplied-answer-table-2026-10-06",
+      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+    }
+  ]
+}
