@@ -12,9 +12,13 @@ packageは `jp.kossacktouch.app`。初回署名証明書のSHA-256:
 
 ## 新規GitHubリポジトリ
 
-推奨名: `45kikurage-rgb/kossack-touch`。現在は独立ローカルGitリポジトリで作成している。既存ARUNOMATICのリポジトリへは一切反映しない。
+推奨名: `45kikurage-rgb/kossack-touch`。独立した公開GitHubリポジトリとテスト版Releasesを作成済み。既存ARUNOMATICのリポジトリへは一切反映しない。
 
-新規リポジトリを作成した後、ソースをpushする。署名鍵、signing.env、個人情報を含む元資料、toolchainはpushしない。`site/downloads` の署名済みAPKとSHA256SUMSを公開配布用に追加する。
+リポジトリ: https://github.com/45kikurage-rgb/kossack-touch
+
+テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.0-test01
+
+後続変更はこのリポジトリにpushする。署名鍵、signing.env、個人情報を含む元資料、toolchainはpushしない。`site/downloads` の署名済みAPKとSHA256SUMSを公開配布用に追加する。
 
 ## GitHub Releases
 
@@ -41,3 +45,7 @@ Cloudflareの新規Pagesプロジェクト `kossack-touch` を作成し、上記
 ## 配布範囲
 
 友人へ渡すのは公開ページURLまたは署名済みAPK。ソースZIPを共有しても、所有者用の署名鍵バックアップは共有しない。本版はテスト版。未検証の5問連続操作を実運用確認済みと表記しない。
+
+## 暫定GitHub Pages
+
+Cloudflareの認証が拒否されたため、同じsiteをGitHub ActionsからGitHub Pagesにも配信する設定を追加。Cloudflareへの公開が完了したという意味ではない。ActionsのPublish download pageワークフローでsiteをアップロードし公開する。Cloudflareへ移してもAPK・署名・packageを変える必要はない。

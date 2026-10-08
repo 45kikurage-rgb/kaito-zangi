@@ -16,7 +16,9 @@
 | 第5問の専用数字入力/回答ボタン | UI資料未確定・実機未検証 |
 | 初回参加登録の自動化 | 実装・選択ルールのテストPASS。登録UI全走査未提供、実機未検証 |
 | OCRの代替認識 | 未実装（安全停止） |
-| GitHub新規リポジトリ・Cloudflare Pages公開 | 接続で作成操作が不足。公開未完了 |
+| GitHub新規リポジトリ・Releases | 公開済み。Release SHA-256とビルドAPK一致 |
+| Cloudflare Pages公開 | Google認証後CloudflareがUnable to sign inを表示。公開未完了 |
+| 暫定GitHub Pages公開 | 設定中 |
 
 ## 根拠資料
 
