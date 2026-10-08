@@ -40,7 +40,7 @@
 ## 初回の実機確認（1台ずつ）
 
 1. APKをインストールし、アプリ名・バージョン・アイコンを確認する。既存ARUNOMATICがそのまま存在することも確認。
-2. アプリ内の権限ガイドからコサックタッチのアクセシビリティをON。スタートでフロートを表示。
+2. アプリ内の権限ガイドから回答ザンギのアクセシビリティをON。スタートでフロートを表示。
 3. LINEの超良問ドリルを開き、未回答問題を表示。フロートを回答ボタンと重ならない上部へ移動。
 4. ▶再生。問題文・答え・1/5表示を確認。A〜Dの遅延表示を待ち、正答本文に対応するボタンだけを1回押すことを確認。
 5. LINEが正解を表示し「次の問題に進む」で次問になることを確認。第2〜4問も継続。
@@ -76,7 +76,7 @@
 ## 公開確認（2026-10-08）
 
 - 独立GitHubリポジトリ: https://github.com/45kikurage-rgb/kossack-touch
-- テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.0-test01
+- テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.1-test02
 - 暫定配布ページ: https://45kikurage-rgb.github.io/kossack-touch/
 - ReleaseからAPKを再ダウンロードし、ビルドAPKとバイト単位の一致およびSHA-256を確認。
 - SHA-256: `2a44536dbf620610f2da7bd9a48820f1ec193ef66ab59af7a1eaa7e33ff46a9a`

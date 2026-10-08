@@ -1,17 +1,17 @@
-# コサックタッチ
+# 回答ザンギ
 
 LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算する独立Androidアプリ。ARUNOMATICとは別のpackage・署名・リポジトリです。
 
 ## ダウンロード
 
 - 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kossack-touch/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.0-test01
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.1-test02
 
 Cloudflare Pagesへの公開は未完了です。テスト版の一般公開と、実機での動作検証を区別しています。
 
 ## 現在の版
 
-- 0.1.0-test01 / versionCode 1
+- 0.1.1-test02 / versionCode 2
 - package: `jp.kossacktouch.app`（今後固定）
 - Android 8.0/API 26以上、target API 35
 - Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**

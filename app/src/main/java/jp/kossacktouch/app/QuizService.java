@@ -17,7 +17,7 @@ public final class QuizService extends AccessibilityService {
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,5000);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
  public void showFloat(){if(overlay!=null)return;overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(12),dp(8),dp(12),dp(8));overlay.setBackgroundColor(Color.rgb(17,40,51));
-  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(12);info.setText("コサックタッチ\n待機");overlay.addView(info);
+  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(12);info.setText("回答ザンギ\n待機");overlay.addView(info);
   LinearLayout row=new LinearLayout(this);play=new Button(this);play.setText("▶ 再生");play.setOnClickListener(v->{if(running)stop("停止","利用者が停止しました");else startRun();});row.addView(play);
   Button close=new Button(this);close.setText("×");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});row.addView(close);overlay.addView(row);
   layout=new WindowManager.LayoutParams(dp(200),WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT);layout.gravity=Gravity.TOP|Gravity.LEFT;layout.x=dp(12);layout.y=dp(95);
@@ -31,7 +31,7 @@ public final class QuizService extends AccessibilityService {
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending=Store.prefs(this).getString("registration_pending","");registrationPriorQuestion=Store.prefs(this).getString("registration_prior_question","");guard=new RunGuard();stable="";stableCount=0;current="";answer="";scrolls=0;transition="";lastAction=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","LINEの超良問ドリル画面を確認します");check();
  }
  public void stop(String state,String detail){running=false;if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
- private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText("コサックタッチ · "+state+"\n"+detail);}
+ private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText("回答ザンギ · "+state+"\n"+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(!running)return;int type=e.getEventType();String pkg=String.valueOf(e.getPackageName());
   if(type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED&&!pkg.equals(getPackageName())&&!pkg.contains("inputmethod")&&!pkg.contains("keyboard")&&!pkg.equals("com.android.systemui")){previousPackage=pkg;if(!Store.allowed(this,pkg)){stop("要確認","LINE以外の画面へ移動しました");return;}}
   if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)handler.post(this::check);

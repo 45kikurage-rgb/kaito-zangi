@@ -1,1 +1,1 @@
-<resources><string name="app_name">コサックタッチ</string><string name="service_description">利用者が再生した時だけ、許可されたLINEの超良問ドリルの問題と回答ボタンを読み取り、端末内で照合・計算・操作します。LINEの会話や認証情報を外部送信しません。フロートの停止ボタンで止められます。</string></resources>
+<resources><string name="app_name">回答ザンギ</string><string name="service_description">利用者が再生した時だけ、許可されたLINEの超良問ドリルの問題と回答ボタンを読み取り、端末内で照合・計算・操作します。LINEの会話や認証情報を外部送信しません。フロートの停止ボタンで止められます。</string></resources>
