@@ -12,11 +12,11 @@ packageは `jp.kossacktouch.app`。初回署名証明書のSHA-256:
 
 ## 新規GitHubリポジトリ
 
-推奨名: `45kikurage-rgb/kossack-touch`。独立した公開GitHubリポジトリとテスト版Releasesを作成済み。既存ARUNOMATICのリポジトリへは一切反映しない。
+リポジトリ名: `45kikurage-rgb/kaito-zangi`。独立した公開GitHubリポジトリとテスト版Releasesを作成済み。既存ARUNOMATICのリポジトリへは一切反映しない。
 
-リポジトリ: https://github.com/45kikurage-rgb/kossack-touch
+リポジトリ: https://github.com/45kikurage-rgb/kaito-zangi
 
-テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.4-test05
+テスト版Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.4-test05
 
 後続変更はこのリポジトリにpushする。署名鍵、signing.env、個人情報を含む元資料、toolchainはpushしない。`site/downloads` の署名済みAPKとSHA256SUMSを公開配布用に追加する。
 
@@ -28,7 +28,7 @@ GitHub Actionsでビルドする場合、`SIGNING_STORE_BASE64`, `SIGNING_STORE_
 
 ## Cloudflare Pages
 
-Cloudflareの新規Pagesプロジェクト `kossack-touch` を作成し、上記GitHubリポジトリのmainを連携する。
+Cloudflareの新規Pagesプロジェクト `kaito-zangi` を作成し、上記GitHubリポジトリのmainを連携する。
 
 | 設定 | 値 |
 |---|---|
@@ -50,5 +50,5 @@ Cloudflareの新規Pagesプロジェクト `kossack-touch` を作成し、上記
 
 Cloudflareの認証が拒否されたため、同じsiteをGitHub ActionsからGitHub Pagesにも配信する設定を追加。Cloudflareへの公開が完了したという意味ではない。ActionsのPublish download pageワークフローでsiteをアップロードし公開する。Cloudflareへ移してもAPK・署名・packageを変える必要はない。
 
-暫定配布URL: https://45kikurage-rgb.github.io/kossack-touch/
+暫定配布URL: https://45kikurage-rgb.github.io/kaito-zangi/
 公開確認済み。siteの変更をmainに反映するとGitHub Pagesが自動更新される。APK自体はGitHub Releasesで管理している。

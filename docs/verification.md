@@ -76,9 +76,9 @@
 
 ## 公開確認（2026-10-08）
 
-- 独立GitHubリポジトリ: https://github.com/45kikurage-rgb/kossack-touch
-- テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.1-test02
-- 暫定配布ページ: https://45kikurage-rgb.github.io/kossack-touch/
+- 独立GitHubリポジトリ: https://github.com/45kikurage-rgb/kaito-zangi
+- テスト版Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.4-test05
+- 暫定配布ページ: https://45kikurage-rgb.github.io/kaito-zangi/
 - ReleaseからAPKを再ダウンロードし、ビルドAPKとバイト単位の一致およびSHA-256を確認。
 - SHA-256: `7362cd308c6eba000069e0f518baee7555da3468f261b0c90a58d9a702c90348`
 - 署名・実機未検証表示・初回設定説明・登録説明・ダウンロード導線を確認。

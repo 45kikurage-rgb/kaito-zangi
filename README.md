@@ -4,8 +4,8 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 
 ## ダウンロード
 
-- 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kossack-touch/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.4-test05
+- 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.4-test05
 
 Cloudflare Pagesへの公開は未完了です。テスト版の一般公開と、実機での動作検証を区別しています。
 
