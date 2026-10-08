@@ -5,6 +5,11 @@ public final class QuizFlow {
  public static boolean complete(UiModel m){return m.quick("もう一度挑戦する")<0&&m.quick("問題を見る")<0&&!answerControls(m)&&(m.newerContains("5問連続正解")||m.newerContains("見事難問をクリア")||m.newerContains("クーポンを表示する"));}
  public static boolean correct(UiModel m){return m.newerContains("正解！")||m.newerContains("正解!");}
  public static boolean failed(UiModel m){return m.newerContains("残念！")||m.newerContains("不正解")||m.newerContains("チャレンジ失敗");}
+ public static boolean finalGuide(UiModel m){
+  String text=m.latest+"\n"+m.registrationContext();
+  return (m.question==null||m.question.number==4)&&text.contains("ついに最終問題")&&text.contains("回答方法")&&!answerControls(m)&&m.quick("答え方確認しました！")<0;
+ }
+ public static boolean finalRevealForward(int step){return step%2==0;}
  public static boolean answerControls(UiModel m){for(String l:new String[]{"A","B","C","D"})if(m.quick(l)>=0)return true;return false;}
  public static String transition(UiModel m){
   if(complete(m))return "";

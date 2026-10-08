@@ -14,7 +14,7 @@ public final class QuizService extends AccessibilityService {
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private Button play;private WindowManager.LayoutParams layout;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String stable="",current="",answer="",transition="";private int stableCount=0,scrolls=0;private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
- private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
+ private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0,finalRevealSteps=0;private long finalRevealAt=0;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,5000);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
  public void showFloat(){if(overlay!=null)return;overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(12),dp(8),dp(12),dp(8));overlay.setBackgroundColor(Color.rgb(17,40,51));
@@ -28,7 +28,7 @@ public final class QuizService extends AccessibilityService {
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
-  savedPending=Store.prefs(this).getString("pending","");savedPackage=Store.prefs(this).getString("pending_package","");resumeChecked=false;transitionSteps=0;transitionScreen="";
+  savedPending=Store.prefs(this).getString("pending","");savedPackage=Store.prefs(this).getString("pending_package","");resumeChecked=false;transitionSteps=0;transitionScreen="";finalRevealSteps=0;finalRevealAt=0;
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending=Store.prefs(this).getString("registration_pending","");registrationPriorQuestion=Store.prefs(this).getString("registration_prior_question","");guard=new RunGuard();stable="";stableCount=0;current="";answer="";scrolls=0;transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){running=false;if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
@@ -45,10 +45,15 @@ public final class QuizService extends AccessibilityService {
   try(Screen s=new Screen(root)){
    if(!Store.allowed(this,s.pkg)||!s.title||s.overflow){stop("要確認","対象LINE画面を確認できません（権限・トーク・要素数を確認）");return;}
    previousPackage=s.pkg;
-   if(now-lastAction<4500)return;
    boolean complete=QuizFlow.complete(s.model);
    if(complete){clearPending();guard.pending="";stop("完了","クイズの完了表示を確認しました");return;}
    String next=QuizFlow.transition(s.model);
+   if(next.isEmpty()&&QuizFlow.finalGuide(s.model)){
+    if(finalRevealSteps>=6){stop("要確認","最終問題の確認ボタンを上下に探しましたが表示されません");return;}
+    if(now-finalRevealAt>=900){revealFinalButton(s,now);handler.postDelayed(this::check,1100);}
+    return;
+   }
+   if(now-lastAction<4500)return;
    if(!resumeChecked){
     if(s.question!=null||!next.isEmpty()||s.registrationStage()!=Registration.Stage.UNKNOWN){
      if(!savedPending.isEmpty()&&savedPending.equals(s.question==null?"":s.question.key)&&(savedPackage.isEmpty()||savedPackage.equals(s.pkg))&&!next.equals("もう一度挑戦する")&&!next.equals("問題を見る")&&s.registrationStage()==Registration.Stage.UNKNOWN)guard.restore(savedPending,now);
@@ -62,7 +67,7 @@ public final class QuizService extends AccessibilityService {
      if(transitionSteps>=20){stop("要確認","画面遷移の操作上限に達しました");return;}
      AccessibilityNodeInfo b=s.quick(next);
      if(b==null||!click(s,b)){stop("要確認","クイズ専用の進行ボタンを押せません");return;}
-     transitionScreen=identity;transitionSteps++;questionSince=now;scrolls=0;
+     transitionScreen=identity;transitionSteps++;questionSince=now;scrolls=0;finalRevealSteps=0;finalRevealAt=0;
      if(next.equals("もう一度挑戦する")||next.equals("問題を見る")){clearPending();guard=new RunGuard();current="";answer="";stable="";stableCount=0;transition="";}
      else if(guard.pending.isEmpty()&&s.question!=null){guard.mark(s.question,now);guard.lastConfirmed=s.question.number-1;}
      status("自動進行",next);return;
@@ -72,7 +77,7 @@ public final class QuizService extends AccessibilityService {
    }
    if(handleRegistration(s,now))return;
    if(QuizFlow.failed(s.model)){stop("要確認","不正解表示。再挑戦ボタンを確認できません");return;}
-   Question q=s.question;
+   Question q=s.question;if(q!=null&&q.number==5){finalRevealSteps=0;finalRevealAt=0;}
    if(q!=null&&!q.key.equals(stable)){stable=q.key;stableCount=1;}else if(q!=null)stableCount++;
    if(!guard.pending.isEmpty()){
     if(q!=null&&!q.key.equals(guard.pending)&&guard.confirmNext(q)){clearPending();Store.log(this,"回答確認",current,answer,"次の問題の表示を確認");questionSince=now;transition="";scrolls=0;}
@@ -167,6 +172,14 @@ public final class QuizService extends AccessibilityService {
   // Fallback is a bounded swipe inside LINE's chat area; no coordinate answer taps.
   Rect r=new Rect();for(AccessibilityNodeInfo n:s.nodes)if(Screen.id(n).endsWith(":id/chat_ui_main_content_area")){n.getBoundsInScreen(r);break;}
   if(r.height()>dp(200)){Path p=new Path();p.moveTo(r.centerX(),r.top+r.height()*.75f);p.lineTo(r.centerX(),r.top+r.height()*.25f);lastAction=SystemClock.elapsedRealtime();dispatchGesture(new GestureDescription.Builder().addStroke(new GestureDescription.StrokeDescription(p,0,350)).build(),null,null);status("スクロール",scrolls+"/8 · ボタン表示を待機");}else status("待機","画面要素の更新を待っています");
+ }
+ private void revealFinalButton(Screen s,long now){
+  boolean forward=QuizFlow.finalRevealForward(finalRevealSteps);finalRevealSteps++;finalRevealAt=now;
+  AccessibilityNodeInfo list=s.scrollable();boolean moved=list!=null&&list.performAction(forward?AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD);
+  if(!moved){Rect r=new Rect();for(AccessibilityNodeInfo n:s.nodes)if(Screen.id(n).endsWith(":id/chat_ui_main_content_area")){n.getBoundsInScreen(r);break;}
+   if(r.height()>dp(200)){Path p=new Path();float from=forward?0.72f:0.35f,to=forward?0.35f:0.72f;p.moveTo(r.centerX(),r.top+r.height()*from);p.lineTo(r.centerX(),r.top+r.height()*to);dispatchGesture(new GestureDescription.Builder().addStroke(new GestureDescription.StrokeDescription(p,0,300)).build(),null,null);}
+  }
+  status("最終問題へ移動",finalRevealSteps+"/6 · "+(forward?"上へ移動":"少し下へ戻す")+" · 確認ボタンを探索");
  }
  @Override public void onInterrupt(){stop("要確認","アクセシビリティ処理が中断されました");}
  @Override public void onDestroy(){running=false;handler.removeCallbacksAndMessages(null);hideFloat();instance=null;Store.prefs(this).edit().putString("state","権限未接続").apply();super.onDestroy();}

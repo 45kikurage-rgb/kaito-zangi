@@ -9,6 +9,12 @@ public class FlowTests {
   check(QuizFlow.transition(screen(q,"正解！","次の問題に進む")).equals("次の問題に進む"));
   check(QuizFlow.transition(screen(q,"正解！","最後の問題へ進む")).equals("最後の問題へ進む"));
   check(QuizFlow.transition(screen(q,"回答方法を確認","答え方確認しました！")).equals("答え方確認しました！"));
+  check(QuizFlow.finalGuide(screen(q,"ついに最終問題！\n★回答方法\n答え方を確認したらボタンを押してください")));
+  check(QuizFlow.finalGuide(screen("","ついに最終問題！\n★回答方法")));
+  check(!QuizFlow.finalGuide(screen(q,"最終問題では回答方法が違います")));
+  check(!QuizFlow.finalGuide(screen(q,"ついに最終問題！\n★回答方法","答え方確認しました！")));
+  check(!QuizFlow.finalGuide(screen(q.replace("第4問","第5問"),"★回答方法")));
+  check(QuizFlow.finalRevealForward(0));check(!QuizFlow.finalRevealForward(1));check(QuizFlow.finalRevealForward(2));
   check(QuizFlow.complete(screen(q,"5問連続正解！")));
   check(!QuizFlow.complete(screen(q,"5問連続正解！\n再挑戦","問題を見る")));
   check(QuizFlow.transition(screen(q,"不正解！","A","もう一度挑戦する")).isEmpty());
