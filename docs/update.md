@@ -49,3 +49,6 @@ Cloudflareの新規Pagesプロジェクト `kossack-touch` を作成し、上記
 ## 暫定GitHub Pages
 
 Cloudflareの認証が拒否されたため、同じsiteをGitHub ActionsからGitHub Pagesにも配信する設定を追加。Cloudflareへの公開が完了したという意味ではない。ActionsのPublish download pageワークフローでsiteをアップロードし公開する。Cloudflareへ移してもAPK・署名・packageを変える必要はない。
+
+暫定配布URL: https://45kikurage-rgb.github.io/kossack-touch/
+公開確認済み。siteの変更をmainに反映するとGitHub Pagesが自動更新される。APK自体はGitHub Releasesで管理している。

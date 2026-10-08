@@ -2,6 +2,13 @@
 
 LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算する独立Androidアプリ。ARUNOMATICとは別のpackage・署名・リポジトリです。
 
+## ダウンロード
+
+- 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kossack-touch/
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.0-test01
+
+Cloudflare Pagesへの公開は未完了です。テスト版の一般公開と、実機での動作検証を区別しています。
+
 ## 現在の版
 
 - 0.1.0-test01 / versionCode 1

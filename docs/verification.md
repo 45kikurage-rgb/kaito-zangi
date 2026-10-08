@@ -18,7 +18,7 @@
 | OCRの代替認識 | 未実装（安全停止） |
 | GitHub新規リポジトリ・Releases | 公開済み。Release SHA-256とビルドAPK一致 |
 | Cloudflare Pages公開 | Google認証後CloudflareがUnable to sign inを表示。公開未完了 |
-| 暫定GitHub Pages公開 | 設定中 |
+| 暫定GitHub Pages公開 | 公開済み。ページ表示・登録ガイド・APKリンク・SHA-256を確認 |
 
 ## 根拠資料
 
@@ -72,3 +72,13 @@
 6. 同じ登録画面が残る、未対応画面、45秒の反映待ち、30操作/5分上限では停止。停止・再起動後にも登録選択の未確認記録を保持する。
 
 追加で必要な素材: 初回登録の各選択画面（特に生年・性別・学校一覧・規約ボタン）のUI全走査JSON、ならびに第5問の数字入力画面・専用回答ボタン・完了画面の全走査JSONと短い動画。個人情報は隠してよい。動画で文字は確認できてもresource ID・クリック可能な親ノードは確定できない。
+
+## 公開確認（2026-10-08）
+
+- 独立GitHubリポジトリ: https://github.com/45kikurage-rgb/kossack-touch
+- テスト版Release: https://github.com/45kikurage-rgb/kossack-touch/releases/tag/v0.1.0-test01
+- 暫定配布ページ: https://45kikurage-rgb.github.io/kossack-touch/
+- ReleaseからAPKを再ダウンロードし、ビルドAPKとバイト単位の一致およびSHA-256を確認。
+- SHA-256: `2a44536dbf620610f2da7bd9a48820f1ec193ef66ab59af7a1eaa7e33ff46a9a`
+- 署名・実機未検証表示・初回設定説明・登録説明・ダウンロード導線を確認。
+- CloudflareはGoogle本人確認後にログイン拒否を表示。このブラウザーでのCloudflare Pages公開は未完了。既存ARUNOMATICの環境は変更していない。
