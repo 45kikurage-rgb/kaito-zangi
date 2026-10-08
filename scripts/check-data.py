@@ -8,6 +8,9 @@ for q in d['questions']:
     assert n not in stems, 'duplicate stem'
     assert q['source_letter'] in 'ABCD'
     assert q['answer_tokens'] and all(q['answer_tokens'])
-    assert not(q['enabled'] and q['requires_visual_context'])
+    assert q['question_keywords'] and all(g and all(g) for g in q['question_keywords'])
+    assert not q['requires_visual_context'] or q['visual_text_alternatives']
+    assert q['answer_aliases'] is not None
     ids.add(q['id']);stems.add(n)
-print(f"Answer data: {len(ids)} unique entries; {sum(q['enabled'] for q in d['questions'])} text-enabled; {sum(q['requires_visual_context'] for q in d['questions'])} visual-only blocked")
+assert len(ids)==50
+print(f"Answer data: {len(ids)} unique entries; {sum(q['enabled'] and not q['requires_visual_context'] for q in d['questions'])} text-enabled; {sum(q['requires_visual_context'] for q in d['questions'])} visual context guarded")

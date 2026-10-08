@@ -7,7 +7,7 @@ import jp.kossacktouch.core.*;
 public final class Screen implements AutoCloseable {
  public final List<AccessibilityNodeInfo> nodes=new ArrayList<>();
  public final List<String> flex=new ArrayList<>();
- public Question question;public int qRow=-1;public String latest="",pkg="";public boolean title=false,overflow=false;private UiModel model;
+ public Question question;public int qRow=-1;public String latest="",pkg="";public boolean title=false,overflow=false;public UiModel model;
  private final List<UiModel.Node> snapshot=new ArrayList<>();
  public Screen(AccessibilityNodeInfo root){if(root==null)return;pkg=String.valueOf(root.getPackageName());walk(root,0,-1);model=new UiModel(snapshot);question=model.question;qRow=model.qRow;latest=model.latest;title=model.title;flex.addAll(model.flex);}
  private void walk(AccessibilityNodeInfo n,int depth,int parent){if(depth>45||nodes.size()>2500){overflow=true;n.recycle();return;}int index=nodes.size();nodes.add(n);snapshot.add(new UiModel.Node(parent,id(n),text(n),n.isVisibleToUser(),n.isEnabled(),n.isClickable()));for(int i=0;i<n.getChildCount();i++){AccessibilityNodeInfo child=n.getChild(i);if(child!=null)walk(child,depth+1,index);}}

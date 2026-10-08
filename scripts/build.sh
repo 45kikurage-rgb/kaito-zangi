@@ -18,7 +18,7 @@ java -cp "$ANDROID_BUILD_TOOLS/lib/d8.jar" com.android.tools.r8.D8 --release --m
 cp build/out/unsigned.apk build/out/uncompressed.apk
 (cd build/dex && zip -q -j ../out/uncompressed.apk classes*.dex)
 "$ANDROID_BUILD_TOOLS/zipalign" -f -p 4 build/out/uncompressed.apk build/out/aligned.apk
-java -jar "$ANDROID_BUILD_TOOLS/lib/apksigner.jar" sign --ks "$SIGNING_STORE" --ks-key-alias "$SIGNING_ALIAS" --ks-pass env:SIGNING_STORE_PASSWORD --key-pass env:SIGNING_STORE_PASSWORD --out build/out/kossack-touch-0.1.1-test02.apk build/out/aligned.apk
-java -jar "$ANDROID_BUILD_TOOLS/lib/apksigner.jar" verify --verbose --print-certs build/out/kossack-touch-0.1.1-test02.apk > build/signature-verification.txt
-sha256sum build/out/kossack-touch-0.1.1-test02.apk > build/SHA256SUMS
+java -jar "$ANDROID_BUILD_TOOLS/lib/apksigner.jar" sign --ks "$SIGNING_STORE" --ks-key-alias "$SIGNING_ALIAS" --ks-pass env:SIGNING_STORE_PASSWORD --key-pass env:SIGNING_STORE_PASSWORD --out build/out/kossack-touch-0.1.2-test03.apk build/out/aligned.apk
+java -jar "$ANDROID_BUILD_TOOLS/lib/apksigner.jar" verify --verbose --print-certs build/out/kossack-touch-0.1.2-test03.apk > build/signature-verification.txt
+sha256sum build/out/kossack-touch-0.1.2-test03.apk > build/SHA256SUMS
 printf 'APK built and signature verified.\n'

@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "version": "sports6-2026-10-08",
+  "schema_version": 2,
+  "version": "sports6-2026-10-08-keywords1",
   "questions": [
     {
       "id": "sports6-001",
@@ -16,7 +16,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "2026"
+        ],
+        [
+          "インターハイ"
+        ],
+        [
+          "総合開会式"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-002",
@@ -33,7 +46,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "2026"
+        ],
+        [
+          "インターハイ"
+        ],
+        [
+          "自転車競技"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-003",
@@ -49,7 +75,18 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "高体連マーク",
+          "国体連マーク"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-004",
@@ -66,7 +103,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "ソフトテニス"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-005",
@@ -83,7 +130,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "相撲"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-006",
@@ -99,7 +156,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "男子レスリング"
+        ],
+        [
+          "100kg",
+          "100キログラム"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-007",
@@ -115,7 +186,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "登山"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-008",
@@ -131,7 +212,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "インターハイ"
+        ],
+        [
+          "陸上競技"
+        ],
+        [
+          "女子のみ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-009",
@@ -147,7 +241,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ヨット"
+        ],
+        [
+          "インターハイ"
+        ],
+        [
+          "実施されていない",
+          "実施していない"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-010",
@@ -164,7 +272,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "武道"
+        ],
+        [
+          "最も新しく"
+        ],
+        [
+          "インターハイ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-011",
@@ -183,7 +304,14 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "BCAA"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-012",
@@ -200,7 +328,15 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "CoQ10",
+          "コエンザイムQ10"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-013",
@@ -217,7 +353,26 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "マルトデキストリン"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": [],
+      "answer_keyword_groups": [
+        [
+          "水"
+        ],
+        [
+          "解ける",
+          "溶ける"
+        ],
+        [
+          "糖質"
+        ]
+      ]
     },
     {
       "id": "sports6-014",
@@ -234,7 +389,14 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "カゼイン"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-015",
@@ -251,7 +413,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ビタミン"
+        ],
+        [
+          "鉄分"
+        ],
+        [
+          "吸収"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-016",
@@ -267,7 +442,18 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "2000kcal",
+          "2000キロカロリー"
+        ],
+        [
+          "タンパク質だけ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-017",
@@ -283,7 +469,14 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ピリドキシン"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-018",
@@ -299,7 +492,15 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "第六の栄養素",
+          "第6の栄養素"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-019",
@@ -316,7 +517,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "脂肪酸"
+        ],
+        [
+          "食品"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-020",
@@ -333,7 +544,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ビタミンB1"
+        ],
+        [
+          "肉"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-021",
@@ -349,7 +570,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "100m走",
+          "100メートル走"
+        ],
+        [
+          "世界記録"
+        ],
+        [
+          "フルマラソン"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-022",
@@ -367,7 +602,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "アメリカンフットボール"
+        ],
+        [
+          "戦術"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-023",
@@ -381,10 +626,25 @@
         "ローテーション",
         "ない"
       ],
-      "enabled": false,
+      "enabled": true,
       "requires_visual_context": true,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。画像の内容を特定するテキストが取得できない場合は停止。",
+      "question_keywords": [
+        [
+          "このボール"
+        ],
+        [
+          "ルール"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": [
+        [
+          "ビーチバレー",
+          "ビーチバレーボール"
+        ]
+      ]
     },
     {
       "id": "sports6-024",
@@ -396,12 +656,24 @@
       "source_letter": "B",
       "answer_tokens": [
         "空気抵抗",
-        "飛距離"
+        "減",
+        "飛距離",
+        "長"
       ],
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ゴルフボール"
+        ],
+        [
+          "ディンプル"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-025",
@@ -419,7 +691,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "サッカー"
+        ],
+        [
+          "スローイン"
+        ],
+        [
+          "誰にも触れず",
+          "誰にもふれず"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-026",
@@ -435,7 +721,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "スキージャンプ"
+        ],
+        [
+          "テレマーク"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-027",
@@ -451,7 +747,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "スポーツ"
+        ],
+        [
+          "GOAT"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-028",
@@ -467,7 +773,18 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "クレー射撃"
+        ],
+        [
+          "もともと",
+          "元々"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-029",
@@ -483,7 +800,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "アルティメット"
+        ],
+        [
+          "用具"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-030",
@@ -499,7 +826,19 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ピックルボール",
+          "ピックルポール"
+        ],
+        [
+          "使われる",
+          "使用"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-031",
@@ -515,7 +854,23 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "モルック"
+        ],
+        [
+          "1投"
+        ],
+        [
+          "6番"
+        ],
+        [
+          "12番"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-032",
@@ -532,7 +887,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "バスケットボール"
+        ],
+        [
+          "ボード"
+        ],
+        [
+          "後ろ",
+          "うしろ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-033",
@@ -549,7 +918,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ビーチバレー"
+        ],
+        [
+          "ルール違反"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-034",
@@ -566,7 +945,18 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "フィギュアスケート"
+        ],
+        [
+          "フィギュア",
+          "figure"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-035",
@@ -583,7 +973,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ボクシング"
+        ],
+        [
+          "サミング"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-036",
@@ -600,7 +1000,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ボディビル"
+        ],
+        [
+          "モストマスキュラー"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-037",
@@ -617,7 +1027,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "モンゴル相撲"
+        ],
+        [
+          "ブフ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-038",
@@ -634,7 +1054,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ランニング"
+        ],
+        [
+          "LSD"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-039",
@@ -647,10 +1077,21 @@
       "answer_tokens": [
         "6人"
       ],
-      "enabled": false,
-      "requires_visual_context": true,
+      "enabled": true,
+      "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "公式のパラスポーツ"
+        ],
+        [
+          "1つだけ",
+          "一つだけ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-040",
@@ -667,7 +1108,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "玉入れ"
+        ],
+        [
+          "日本生まれ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-041",
@@ -678,12 +1129,23 @@
       "answer": "子供用の遊び",
       "source_letter": "A",
       "answer_tokens": [
-        "子供"
+        "子供",
+        "遊び"
       ],
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ゲートボール"
+        ],
+        [
+          "説明"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-042",
@@ -696,10 +1158,45 @@
       "answer_tokens": [
         "25倍"
       ],
-      "enabled": false,
-      "requires_visual_context": true,
+      "enabled": true,
+      "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "スポーツ"
+        ],
+        [
+          "道具"
+        ],
+        [
+          "最も重い"
+        ],
+        [
+          "最も軽い"
+        ]
+      ],
+      "answer_aliases": [
+        "約25倍"
+      ],
+      "visual_text_alternatives": [],
+      "context_keywords": [
+        [
+          "男子砲丸投"
+        ],
+        [
+          "16ポンド"
+        ],
+        [
+          "男子やり投"
+        ],
+        [
+          "カーリング"
+        ],
+        [
+          "ストーン"
+        ]
+      ]
     },
     {
       "id": "sports6-043",
@@ -716,7 +1213,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "体操"
+        ],
+        [
+          "平均台"
+        ],
+        [
+          "横幅",
+          "横はば"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-044",
@@ -732,7 +1243,20 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "卓球"
+        ],
+        [
+          "スコンク"
+        ],
+        [
+          "英語"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-045",
@@ -749,7 +1273,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "近代五種"
+        ],
+        [
+          "新種目"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-046",
@@ -765,7 +1299,18 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "ボルダリング",
+          "ボルタリング"
+        ],
+        [
+          "用語"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-047",
@@ -781,7 +1326,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "野球"
+        ],
+        [
+          "明らかにホームラン"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-048",
@@ -795,10 +1350,26 @@
         "両足",
         "離れ"
       ],
-      "enabled": false,
+      "enabled": true,
       "requires_visual_context": true,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。画像の内容を特定するテキストが取得できない場合は停止。",
+      "question_keywords": [
+        [
+          "競歩"
+        ],
+        [
+          "この印"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": [
+        [
+          "ロスオブコンタクト",
+          "両足が地面から離れ",
+          "フライト"
+        ]
+      ]
     },
     {
       "id": "sports6-049",
@@ -814,7 +1385,17 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "鉄アレイ"
+        ],
+        [
+          "アレイ"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     },
     {
       "id": "sports6-050",
@@ -830,7 +1411,21 @@
       "enabled": true,
       "requires_visual_context": false,
       "source": "user-supplied-answer-table-2026-10-06",
-      "notes": "選択肢本文による照合必須。画像依存問題は自動回答無効。"
+      "notes": "問題の全キーワード群と選択肢本文を照合。原表のA-Dは照合に使わない。複数一致時は停止。",
+      "question_keywords": [
+        [
+          "国際柔道連盟"
+        ],
+        [
+          "抑込技",
+          "抑え込み技"
+        ],
+        [
+          "存在しない"
+        ]
+      ],
+      "answer_aliases": [],
+      "visual_text_alternatives": []
     }
   ]
 }

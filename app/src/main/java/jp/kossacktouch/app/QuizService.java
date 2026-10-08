@@ -14,6 +14,7 @@ public final class QuizService extends AccessibilityService {
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private Button play;private WindowManager.LayoutParams layout;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String stable="",current="",answer="",transition="";private int stableCount=0,scrolls=0;private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
+ private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,5000);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
  public void showFloat(){if(overlay!=null)return;overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(12),dp(8),dp(12),dp(8));overlay.setBackgroundColor(Color.rgb(17,40,51));
@@ -27,8 +28,8 @@ public final class QuizService extends AccessibilityService {
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
-  if(!Store.prefs(this).getString("pending","").isEmpty()){stop("要確認","前回の回答確定が未確認です。LINEの結果を確認し、本体で未確認記録を解除してください");return;}
-  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending=Store.prefs(this).getString("registration_pending","");registrationPriorQuestion=Store.prefs(this).getString("registration_prior_question","");guard=new RunGuard();stable="";stableCount=0;current="";answer="";scrolls=0;transition="";lastAction=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","LINEの超良問ドリル画面を確認します");check();
+  savedPending=Store.prefs(this).getString("pending","");savedPackage=Store.prefs(this).getString("pending_package","");resumeChecked=false;transitionSteps=0;transitionScreen="";
+  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending=Store.prefs(this).getString("registration_pending","");registrationPriorQuestion=Store.prefs(this).getString("registration_prior_question","");guard=new RunGuard();stable="";stableCount=0;current="";answer="";scrolls=0;transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){running=false;if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
  private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText("回答ザンギ · "+state+"\n"+detail);}
@@ -43,29 +44,47 @@ public final class QuizService extends AccessibilityService {
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();stop("要確認","許可したLINE以外の画面です");return;}
   try(Screen s=new Screen(root)){
    if(!Store.allowed(this,s.pkg)||!s.title||s.overflow){stop("要確認","対象LINE画面を確認できません（権限・トーク・要素数を確認）");return;}
+   previousPackage=s.pkg;
    if(now-lastAction<4500)return;
+   boolean complete=QuizFlow.complete(s.model);
+   if(complete){clearPending();guard.pending="";stop("完了","クイズの完了表示を確認しました");return;}
+   String next=QuizFlow.transition(s.model);
+   if(!resumeChecked){
+    if(s.question!=null||!next.isEmpty()||s.registrationStage()!=Registration.Stage.UNKNOWN){
+     if(!savedPending.isEmpty()&&savedPending.equals(s.question==null?"":s.question.key)&&(savedPackage.isEmpty()||savedPackage.equals(s.pkg))&&!next.equals("もう一度挑戦する")&&!next.equals("問題を見る")&&s.registrationStage()==Registration.Stage.UNKNOWN)guard.restore(savedPending,now);
+     else if(!savedPending.isEmpty()){clearPending();Store.log(this,"画面から再開","","","現在の問題が前回の記録と異なるため現在画面を採用");}
+     resumeChecked=true;
+    }
+   }
+   if(!next.isEmpty()){
+    String identity=s.pkg+":"+next+":"+(s.question==null?"":s.question.key)+":"+s.latest;
+    if(!identity.equals(transitionScreen)){
+     if(transitionSteps>=20){stop("要確認","画面遷移の操作上限に達しました");return;}
+     AccessibilityNodeInfo b=s.quick(next);
+     if(b==null||!click(s,b)){stop("要確認","クイズ専用の進行ボタンを押せません");return;}
+     transitionScreen=identity;transitionSteps++;questionSince=now;scrolls=0;
+     if(next.equals("もう一度挑戦する")||next.equals("問題を見る")){clearPending();guard=new RunGuard();current="";answer="";stable="";stableCount=0;transition="";}
+     else if(guard.pending.isEmpty()&&s.question!=null){guard.mark(s.question,now);guard.lastConfirmed=s.question.number-1;}
+     status("自動進行",next);return;
+    }
+    if(now-questionSince>60000){stop("要確認","進行ボタンの反映を確認できません");return;}
+    status("画面待機",next+" の反映を待っています");return;
+   }
    if(handleRegistration(s,now))return;
-   if(s.newerContains("残念！")||s.newerContains("不正解")||s.newerContains("チャレンジ失敗")){stop("要確認","不正解・失敗表示を検知しました");return;}
-   boolean complete=s.newerContains("5問連続正解")||s.newerContains("見事難問をクリア")||s.newerContains("クーポンを表示する");
-   if(complete&&guard.finalPending){clearPending();guard.pending="";stop("完了","5問目の完了表示を確認しました");return;}
+   if(QuizFlow.failed(s.model)){stop("要確認","不正解表示。再挑戦ボタンを確認できません");return;}
    Question q=s.question;
    if(q!=null&&!q.key.equals(stable)){stable=q.key;stableCount=1;}else if(q!=null)stableCount++;
    if(!guard.pending.isEmpty()){
     if(q!=null&&!q.key.equals(guard.pending)&&guard.confirmNext(q)){clearPending();Store.log(this,"回答確認",current,answer,"次の問題の表示を確認");questionSince=now;transition="";scrolls=0;}
     else {
      if(now-guard.sentAt>90000){stop("要確認","回答の反映を確認できません。再回答せず停止");return;}
-     if(s.newerContains("正解！")||s.newerContains("正解!")){
-      String label=guard.finalPending?"クーポンをゲットする":guard.lastConfirmed==3?"最後の問題へ進む":"次の問題に進む";
-      AccessibilityNodeInfo b=s.quick(label);if(b!=null&&!transition.equals(label)){transition=label;if(!click(s,b)){stop("要確認","次の問題ボタンを押せません");}else status("次問待機",label);return;}
-     }
-     if(guard.lastConfirmed==3&&s.latest.contains("回答方法")){AccessibilityNodeInfo b=s.quick("答え方確認しました！");if(b!=null&&!transition.equals("答え方確認しました！")){transition="答え方確認しました！";click(s,b);return;}}
      status("確定確認待ち","同じ問題への再タップを防止しています");return;
     }
    }
-   if(q==null){AccessibilityNodeInfo b=s.quick("問題を見る");if(b!=null&&transition.isEmpty()){transition="問題を見る";click(s,b);return;}if(now-questionSince>60000){stop("要確認","最新問題を取得できません");return;}scroll(s);return;}
+   if(q==null){if(now-questionSince>60000){stop("要確認","最新問題を取得できません");return;}scroll(s);return;}
    if(current.isEmpty())guard.lastConfirmed=q.number-1;
    current="第"+q.number+"問\n"+q.body;
-   if(s.newerContains("正解！")||complete){stop("要確認","表示中の問題は回答済みです。次の問題を表示してください");return;}
+   if(QuizFlow.correct(s.model)){if(now-questionSince>60000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
    if(stableCount<2){status("照合中",q.number+"/5 · 問題文の安定を確認");return;}
    if(!guard.canAnswer(q)){stop("要確認","問題番号が想定した順序と異なります");return;}
    if(!s.visibleQuestion()){scroll(s);return;}
@@ -128,8 +147,8 @@ public final class QuizService extends AccessibilityService {
   if(overlay!=null){int[] xy=new int[2];overlay.getLocationOnScreen(xy);Rect cover=new Rect(xy[0],xy[1],xy[0]+overlay.getWidth(),xy[1]+overlay.getHeight());if(Rect.intersects(bounds,cover)){status("要確認","フロートがボタンに重なっています。ドラッグで移動してください");return false;}}
   lastAction=SystemClock.elapsedRealtime();return target.performAction(AccessibilityNodeInfo.ACTION_CLICK);
  }
- private void mark(Question q,long now){guard.mark(q,now);Store.prefs(this).edit().putString("pending",q.key).commit();Store.log(this,"回答操作",current,answer,"二重操作防止記録を保存");}
- private void clearPending(){Store.prefs(this).edit().remove("pending").commit();}
+ private void mark(Question q,long now){guard.mark(q,now);transitionScreen="";Store.prefs(this).edit().putString("pending",q.key).putString("pending_package",previousPackage).commit();Store.log(this,"回答操作",current,answer,"二重操作防止記録を保存");}
+ private void clearPending(){Store.prefs(this).edit().remove("pending").remove("pending_package").commit();savedPending="";savedPackage="";}
  private boolean click(Screen original,AccessibilityNodeInfo old){
   AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null)return false;
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();return false;}

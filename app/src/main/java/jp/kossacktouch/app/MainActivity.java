@@ -18,11 +18,11 @@ public final class MainActivity extends Activity {
  @Override public void onResume(){super.onResume();handler.post(refresh);}
  @Override public void onPause(){handler.removeCallbacks(refresh);super.onPause();}
  private void build(){ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(20),dp(28),dp(20),dp(36));body.setBackgroundColor(Color.rgb(247,248,244));scroll.addView(body);setContentView(scroll);scroll.setOnApplyWindowInsetsListener((v,insets)->{body.setPadding(dp(20),dp(28)+insets.getSystemWindowInsetTop(),dp(20),dp(36)+insets.getSystemWindowInsetBottom());return insets;});
-  title("回答ザンギ",28);label("超良問ドリル · テスト版 "+Store.VERSION+" / code 2",13);label("この端末だけで問題を確認・計算します。\n実機での5問連続動作は未検証です。",15);
+  title("回答ザンギ",28);label("超良問ドリル · テスト版 "+Store.VERSION+" / code 3",13);label("この端末だけで問題を確認・計算します。\n実機での5問連続動作は未検証です。",15);
   state=label("待機",20);question=label("認識した問題がここに表示されます",16);answer=label("答え: —",22);
   button("スタート · フロートを表示",()->{if(QuizService.instance==null){guide();return;}if(!Store.prefs(this).getBoolean("disclosure",false)){new AlertDialog.Builder(this).setTitle("操作の許可について").setMessage("回答ザンギはアクセシビリティで、許可したLINEの超良問ドリル画面の問題文と回答ボタンを読み取り、利用者が再生した時に操作します。初回参加登録では既存情報を変更せず、新規項目をランダムに選び、参加規約に同意して進みます。問題・回答・エラー履歴はこの端末に保存します。認証情報や会話を外部へ送信しません。停止ボタンでいつでも止められます。").setNegativeButton("取消",null).setPositiveButton("確認して表示",(d,w)->{Store.prefs(this).edit().putBoolean("disclosure",true).apply();QuizService.instance.showFloat();}).show();}else QuizService.instance.showFloat();});
   button("停止",()->{if(QuizService.instance!=null)QuizService.instance.stop("停止","アプリから停止しました");});
-  title("はじめての設定",19);label("① 下の権限設定を開き、回答ザンギをON。\n② スタートを押してフロートを表示。\n③ LINEの超良問ドリルで問題を表示。\n④ フロートの▶再生を押す。\n⑤ 完了後は待機に戻ります。\n\nフロート上部をドラッグすると移動できます。初回登録画面も自動で進みます。既存情報の「変更する」は選びません。新しい登録項目は表示された選択肢からランダムに選び、参加規約に同意して登録します。実機では未検証です。",15);
+  title("はじめての設定",19);label("① 下の権限設定を開き、回答ザンギをON。\n② スタートを押してフロートを表示。\n③ LINEの超良問ドリルを開く。\n④ 現在の画面でフロートの▶再生を押す。\n⑤ 再挑戦・問題表示・次の問題へ自動で進み、完了後は待機に戻ります。\n\nフロート上部をドラッグすると移動できます。初回登録画面も自動で進みます。既存情報の「変更する」は選びません。新しい登録項目は表示された選択肢からランダムに選び、参加規約に同意して登録します。実機では未検証です。",15);
   button("アクセシビリティ権限の設定",this::guide);
   button("対応するLINEの設定",this::packages);
   button("回答・エラー履歴",this::history);
