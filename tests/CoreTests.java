@@ -16,6 +16,12 @@ public class CoreTests {
   eq("91001",MathEngine.solve("ハンドボールの人数を初項a、アイスホッケーの人数を公差bとする等差数列の第100項から第200項までの和を求めよ。").answer);
   eq("18",MathEngine.solve("a=7,b=6の等差数列の第1項からの和が1000を初めて超える項を求めよ。").answer);
   eq("46",MathEngine.solve("バレーボールの人数をa、水球の人数をbとする。a人とb人を一列に並べるとき両端が同じスポーツの確率は何%か。小数点以下を四捨五入。").answer);
+  String endsReported="「ホッケー」「水球」の各1チーム(スターティングメンバー)の選手をランダムで1列に並べる。両端が別のスポーツの選手になる確率は何%か。小数点以下を四捨五入して答えよ。";
+  eq("50",MathEngine.solve(endsReported).answer);
+  eq("50",MathEngine.solve(endsReported.replace("別の", "同じ")).answer);
+  reject(()->MathEngine.solve(endsReported.replace("各1チーム", "各2チーム")));
+  reject(()->MathEngine.solve(endsReported.replace("水球", "未登録競技")));
+  eq("69",MathEngine.solve("「ホッケー」「カーリング」の1チームのスターティングメンバーの数をそれぞれa,bとする。初項a、公差bの等差数列の和が初めて10000を超えるのは、第何項まで足したときか。").answer);
   eq("72",MathEngine.solve("ホッケーの人数をa、ビーチサッカーの人数をbとする。1から100までの自然数から1つ選ぶときaの倍数でもbの倍数でもない確率。小数点以下を四捨五入。").answer);
   String reported="「サッカー」「ビーチサッカー」の1チームのスターティングメンバーの数をそれぞれa,bとする。1から100までの数字をランダムに1つ選んだ時、その数字がaの倍数であり、なおかつbの倍数でない確率が何%かを求めよ。";
   eq("8",MathEngine.solve(reported).answer);

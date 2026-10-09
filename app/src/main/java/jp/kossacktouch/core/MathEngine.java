@@ -53,6 +53,9 @@ public final class MathEngine {
   if(boxing&&!(q.contains("女子")&&q.contains("エリート")&&q.contains("WB")))throw new IllegalArgumentException("ボクシング階級の体系が未対応");
   List<Integer> v=named(q,boxing?BOXING:SPORTS);
   if(v.size()!=2)throw new IllegalArgumentException("競技名・階級のa,bが一意でない");
+  // The observed ends-of-a-row problem names each team without introducing a or b.
+  // Only this symmetric family can omit roles; no other family infers variable definitions.
+  if(!boxing&&!q.contains("a")&&!q.contains("b")&&q.contains("各1チーム")&&q.contains("スターティングメンバー")&&q.contains("両端")&&(q.contains("1列")||q.contains("一列")))return new int[]{v.get(0),v.get(1)};
   // Preserve semantic role; don't silently swap initial term and difference.
   if(!boxing&&q.contains("初項")&&q.contains("公差")&&q.indexOf("公差")<q.indexOf("初項"))throw new IllegalArgumentException("a,bの順序を要確認");
   if(!q.contains("a")||!q.contains("b")||q.indexOf("b")<q.indexOf("a"))throw new IllegalArgumentException("a,bの定義を要確認");

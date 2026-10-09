@@ -27,6 +27,7 @@ public class Test06Tests {
   String reported="「サッカー」「ビーチサッカー」の1チームのスターティングメンバーの数をそれぞれa,bとする。1から100までの数字をランダムに1つ選んだ時、その数字がaの倍数であり、なおかつbの倍数でない確率が何%かを求めよ。";
   UiModel reportedUi=numeric(reportedGuide,reported);check(reportedUi.question!=null&&reportedUi.question.number==5);check(MathEngine.solve(reportedUi.question.body).answer.equals("8"));check(FinalSubmission.messageFormat(reportedUi));check(FinalSubmission.route(false,0,false,FinalSubmission.messageFormat(reportedUi),1,true)==FinalSubmission.Route.MESSAGE);
   check(!FinalSubmission.messageFormat(numeric(reportedGuide.replace("整数または小数", "文章"),reported)));
+  check(FinalSubmission.numericGuide(reportedGuide));check(!FinalSubmission.numericGuide("計算結果69。第5問の回答形式を確認できません"));check(!FinalSubmission.numericGuide("答え方確認しました！"));check(!FinalSubmission.numericGuide("答えは整数または小数で入力してください"));
   check(!FinalSubmission.messageFormat(numeric("",q)));check(!FinalSubmission.messageFormat(numeric("★回答方法★\n専用回答ボタンを押す",q)));
   check(FinalSubmission.route(true,1,true,true,1,true)==FinalSubmission.Route.FORM);
   check(FinalSubmission.route(true,0,false,true,1,true)==FinalSubmission.Route.WAIT);

@@ -32,6 +32,13 @@ public final class Screen implements AutoCloseable {
  public String allVisibleText(){StringBuilder b=new StringBuilder();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.getChildCount()==0)b.append(text(n)).append('\n');return b.toString();}
  public String registrationContext(){return model.registrationContext();}
  public boolean trusted(){return !overflow&&LineIdentity.target(pkg,snapshot);}
+ public String confirmationKey(){
+  StringBuilder key=new StringBuilder(pkg).append('|').append(question==null?"":question.key).append('|').append(visibleQuestion()).append('|').append(latest).append('|').append(registrationContext());
+  key.append('|').append(QuizFlow.transition(model)).append('|').append(QuizFlow.complete(model)).append('|').append(QuizFlow.correct(model)).append('|').append(QuizFlow.failed(model)).append('|').append(formEvidence());
+  for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&(n.isEditable()||n.isClickable()||id(n).endsWith(":id/chat_ui_oa_bottombar_keyboard_button"))&&!n.isScrollable()){
+   Rect b=new Rect();n.getBoundsInScreen(b);key.append('|').append(id(n)).append(':').append(n.getChildCount()==0?text(n):content(n)).append(':').append(n.isEnabled()).append(':').append(n.isClickable()).append(':').append(b.flattenToString());
+  }return key.toString();
+ }
  public AccessibilityNodeInfo uniqueId(String... suffixes){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes){if(!n.isVisibleToUser()||!n.isEnabled())continue;for(String suffix:suffixes)if(id(n).endsWith(":id/"+suffix)){if(found!=null&&found!=n)return null;found=n;break;}}return found;}
  public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isEditable()&&!n.isPassword()&&(id(n).endsWith(":id/chat_ui_input_edit")||id(n).endsWith(":id/chat_ui_input_edit_text")||id(n).endsWith(":id/chat_ui_input_message_edit_text")))found.add(n);return found;}
  public AccessibilityNodeInfo composerSend(){AccessibilityNodeInfo n=uniqueId("chat_ui_input_send","chat_ui_input_send_button","chat_ui_send_button");return n!=null&&n.isClickable()?n:null;}

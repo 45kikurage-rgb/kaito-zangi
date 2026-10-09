@@ -2,12 +2,11 @@ package jp.kossacktouch.core;
 /** Dedicated forms win. LINE messages require the observed numeric-answer guide before Q5. */
 public final class FinalSubmission {
  public enum Route { FORM, MESSAGE, WAIT, STOP }
+ public static boolean numericGuide(String guide){String t=Text.norm(guide);boolean numeric=t.contains("答えは数字")||t.contains("答えは整数または小数で入力してください");return t.contains("回答方法")&&numeric&&(t.contains("小数点")||t.contains("スペース"));}
  public static boolean messageFormat(UiModel m){
   if(m.question==null||m.question.number!=5||QuizFlow.correct(m)||QuizFlow.failed(m)||QuizFlow.complete(m)||QuizFlow.answerControls(m))return false;
   for(int i=Math.max(0,m.qRow-3);i<m.qRow;i++){
-   String t=Text.norm(m.flex.get(i));
-   boolean numericGuide=t.contains("答えは数字")||t.contains("答えは整数または小数で入力してください");
-   if(t.contains("回答方法")&&numericGuide&&(t.contains("小数点")||t.contains("スペース")))return true;
+   if(numericGuide(m.flex.get(i)))return true;
   }return false;
  }
  public static Route route(boolean formEvidence,int formInputs,boolean formSubmit,boolean messageFormat,int composers,boolean send){
