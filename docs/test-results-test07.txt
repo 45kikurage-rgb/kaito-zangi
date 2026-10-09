@@ -6,5 +6,5 @@ PASS 175 test06 checks: cloned LINE guards, visible-only registration, personal 
 PASS 53 interaction checks: 1-second two-observation confirmation, interrupted observations, missing-target threshold, three pairs, and 1:2 swipe distance.
 
 Android API35 javac + D8: PASS (2026-10-09, additional fixes).
-Signed APK: BLOCKED, fixed signer unavailable; CI Secrets empty.
+Signed APK: PASS. Owner backup restored; v2/v3; same fixed certificate as codes 1–6. CI signing Secrets remain unconfigured.
 Physical device / swipe inertia / message send: NOT VERIFIED.

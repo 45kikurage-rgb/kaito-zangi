@@ -4,15 +4,15 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 
 ## ダウンロード
 
-- code 6 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
-- 既存ページ（code 5を保持）: https://45kikurage-rgb.github.io/kaito-zangi/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.5-test06
+- code 7 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- 配布ページ（GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.6-test07
 
-新しいテスト版専用ページをSitesで一般公開。既存GitHub Pagesの改修ブランチからの更新は失敗し、既存URLは前版を保持。mainソース統合はPR #1で未マージ。テスト版の一般公開と、実機での動作検証を区別しています。
+配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合と署名済テストAPKの公開を行います。実機での動作検証とは区別し、旧APKは保持します。
 
 ## 現在の版
 
-- 0.1.5-test06 / versionCode 6
+- 0.1.6-test07 / versionCode 7
 - package: `jp.kossacktouch.app`（今後固定）
 - Android 8.0/API 26以上、target API 35
 - Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**
@@ -66,8 +66,8 @@ bash scripts/build.sh
 
 **署名鍵とパスワードはGitHub・配布ページ・友人向けソースZIPに含めません。** 更新には同じ鍵を使用し、versionCodeを増やします。
 
-## 第5問停止の追加修正（code 7ソース）
+## code 7追加改修
 
-添付画像の「aの倍数であり、なおかつbの倍数でない」および「答えは整数または小数で入力」の表記に対応。丸め指定がない場合は正確な有限小数のみ使用。2,367チェック・Android35コンパイル合格。0.1.6-test07の署名済APKはまだ配布していない。署名鍵の旧ローカル保存先が利用不可で、GitHub署名Secretsも未設定のため、配布リンクはcode6のまま保持。詳細はdocs/verification-test07.md。
+1秒間隔・2回一致で操作、要素未検出2回で上半画面/速い下2倍の探索を最大3往復。登録画面は探索対象外。第5問の実際の文言と整数・小数案内、a,bのない各1チーム両端問題に対応。数値は入力欄をタップせず一括設定し、数値を確認後に1回だけ送信。フロートは既存サイズ維持。
 
-code7ソースでは、1秒間隔・2回一致で操作、必要要素を2回未検出で上半画面/下2倍の探索を最大3セット実装。登録画面は探索対象外。a,bのない各1チーム両端問題も対応。署名済APKは引き続き未配布。
+2,367チェック・Android API35コンパイル・v2/v3署名・旧版証明書一致合格。固定署名鍵は所有者用バックアップから復元。CI署名Secretsは未設定ですがローカルで同じ鍵を使用。実機インストール・起動・登録・送信・全問完了は未検証。詳細はdocs/verification-test07.md。
