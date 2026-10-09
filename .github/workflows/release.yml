@@ -1,9 +1,9 @@
 name: Publish signed test APK
 on:
   push:
-    tags: ["v0.1.8-test09"]
+    tags: ["v0.1.9-test10"]
     branches: [main, fix/test06-line-registration]
-    paths: ["site/downloads/kossack-touch-0.1.8-test09.apk", ".github/workflows/release.yml"]
+    paths: ["site/downloads/kossack-touch-0.1.9-test10.apk", ".github/workflows/release.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,8 +19,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view v0.1.8-test09 >/dev/null 2>&1; then
+          if gh release view v0.1.9-test10 >/dev/null 2>&1; then
             echo 'This version is already published; preserving existing release assets.'
             exit 0
           fi
-          gh release create v0.1.8-test09 site/downloads/kossack-touch-0.1.8-test09.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.8-test09' --notes-file docs/release-notes.md
+          gh release create v0.1.9-test10 site/downloads/kossack-touch-0.1.9-test10.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.9-test10' --notes-file docs/release-notes.md
