@@ -19,7 +19,7 @@ public final class Screen implements AutoCloseable {
  public AccessibilityNodeInfo quick(String label){int index=model.quick(label);return index<0?null:nodes.get(index);}
  public boolean newerContains(String s){for(int i=qRow+1;i<flex.size();i++)if(flex.get(i).contains(s))return true;return false;}
  public AccessibilityNodeInfo exact(String label,String suffix){for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&text(n).equals(label)&&(suffix.isEmpty()||id(n).endsWith(suffix)))return n;return null;}
- public boolean visibleQuestion(){if(question==null)return false;for(AccessibilityNodeInfo n:nodes)if(text(n).contains(question.body)&&n.isVisibleToUser())return true;return false;}
+ public boolean visibleQuestion(){return model.visibleQuestion();}
  public AccessibilityNodeInfo scrollable(){for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isScrollable()&&id(n).contains("chat")&&id(n).contains("list"))return n;return null;}
  public List<AccessibilityNodeInfo> numericInputs(){List<AccessibilityNodeInfo> a=new ArrayList<>();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEditable()&&n.isEnabled()&&!n.isPassword()&&!id(n).contains("chat_ui_input")&&!id(n).contains("message_edit")){
    // Only input embedded in a WebView with an explicitly labelled numeric quiz form.

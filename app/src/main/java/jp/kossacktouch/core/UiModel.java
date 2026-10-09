@@ -20,6 +20,8 @@ public final class UiModel {
  public String registrationContext(){StringBuilder s=new StringBuilder();for(int i=Math.max(qRow+1,flex.size()-2);i<flex.size();i++)s.append(flex.get(i)).append('\n');return s.toString();}
  public int rowOf(int index){int i=index;while(i>=0){int row=flexRoots.indexOf(i);if(row>=0)return row;i=nodes.get(i).parent;}return -1;}
  public int parentOf(int index){return nodes.get(index).parent;}
+ // The selected last question row is authoritative; an older duplicate elsewhere cannot make it visible.
+ public boolean visibleQuestion(){if(question==null)return false;for(int i=0;i<nodes.size();i++)if(rowOf(i)==qRow&&nodes.get(i).visible&&nodes.get(i).text.contains(question.body))return true;return false;}
  public boolean leaf(int index){return children.get(index).isEmpty();}
  public Map<String,Integer> registrationControls(Registration.Stage stage){
   Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();
