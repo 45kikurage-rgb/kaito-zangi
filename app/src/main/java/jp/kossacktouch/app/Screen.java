@@ -8,11 +8,12 @@ public final class Screen implements AutoCloseable {
  public final List<AccessibilityNodeInfo> nodes=new ArrayList<>();
  public final List<String> flex=new ArrayList<>();
  public Question question;public int qRow=-1;public String latest="",pkg="";public boolean title=false,overflow=false;public UiModel model;
- private final List<UiModel.Node> snapshot=new ArrayList<>();
+ private NativeComposer composerModel;private final List<UiModel.Node> snapshot=new ArrayList<>();
  public Screen(AccessibilityNodeInfo root){if(root==null)return;pkg=String.valueOf(root.getPackageName());walk(root,0,-1);model=new UiModel(snapshot);question=model.question;qRow=model.qRow;latest=model.latest;title=model.title;flex.addAll(model.flex);}
  private void walk(AccessibilityNodeInfo n,int depth,int parent){if(depth>45||nodes.size()>2500){overflow=true;n.recycle();return;}int index=nodes.size();nodes.add(n);snapshot.add(new UiModel.Node(parent,id(n),text(n),n.isVisibleToUser(),n.isEnabled(),n.isClickable()));for(int i=0;i<n.getChildCount();i++){AccessibilityNodeInfo child=n.getChild(i);if(child!=null)walk(child,depth+1,index);}}
  public static String id(AccessibilityNodeInfo n){String x=n.getViewIdResourceName();return x==null?"":x;}
  public static String text(AccessibilityNodeInfo n){CharSequence t=n.getText();if(t==null||t.length()==0)t=n.getContentDescription();return t==null?"":t.toString();}
+ public static String inputValue(AccessibilityNodeInfo n){CharSequence t=n.getText();return t==null?"":t.toString();}
  public String content(AccessibilityNodeInfo parent){StringBuilder b=new StringBuilder();Set<String> seen=new HashSet<>();collect(parent,b,seen,0);return b.toString();}
  private void collect(AccessibilityNodeInfo n,StringBuilder b,Set<String> seen,int depth){if(depth>45)return;String t=text(n);if(n.getChildCount()==0&&!t.isEmpty()&&seen.add(t))b.append(t).append('\n');for(int i=0;i<n.getChildCount();i++){AccessibilityNodeInfo c=n.getChild(i);if(c!=null){collect(c,b,seen,depth+1);c.recycle();}}}
  public AccessibilityNodeInfo quick(String label){int index=model.quick(label);return index<0?null:nodes.get(index);}
@@ -40,8 +41,10 @@ public final class Screen implements AutoCloseable {
   }return key.toString();
  }
  public AccessibilityNodeInfo uniqueId(String... suffixes){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes){if(!n.isVisibleToUser()||!n.isEnabled())continue;for(String suffix:suffixes)if(id(n).endsWith(":id/"+suffix)){if(found!=null&&found!=n)return null;found=n;break;}}return found;}
- public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isEditable()&&!n.isPassword()&&(id(n).endsWith(":id/chat_ui_input_edit")||id(n).endsWith(":id/chat_ui_input_edit_text")||id(n).endsWith(":id/chat_ui_input_message_edit_text")))found.add(n);return found;}
- public AccessibilityNodeInfo composerSend(){AccessibilityNodeInfo n=uniqueId("chat_ui_input_send","chat_ui_input_send_button","chat_ui_send_button");return n!=null&&n.isClickable()?n:null;}
+ private NativeComposer nativeComposer(){if(composerModel!=null)return composerModel;List<NativeComposer.Node> ns=new ArrayList<>();for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);ns.add(new NativeComposer.Node(model.parentOf(i),id(n),n.isClickable()&&text(n).isEmpty()&&n.getChildCount()>0?content(n).trim():text(n),n.isVisibleToUser(),n.isEnabled(),n.isEditable(),n.isPassword(),n.isClickable(),String.valueOf(n.getClassName()).equals("android.webkit.WebView")));}composerModel=new NativeComposer(ns,pkg);return composerModel;}
+ public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(int i:nativeComposer().inputs())found.add(nodes.get(i));return found;}
+ public AccessibilityNodeInfo composerSend(){int i=nativeComposer().send();return i<0?null:nodes.get(i);}
+ public boolean composerSurface(){AccessibilityNodeInfo n=uniqueId("chat_ui_custom_expandable_input_container");return n!=null&&n.isVisibleToUser();}
  public boolean formEvidence(){if(!numericInputs().isEmpty()||submit()!=null)return true;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&String.valueOf(n.getClassName()).equals("android.webkit.WebView"))return true;return false;}
  public boolean numericForm(){String t=Text.clean(allVisibleText());return t.contains("第5問")&&t.contains("回答");}
  public AccessibilityNodeInfo keyboardButton(){return uniqueId("chat_ui_oa_bottombar_keyboard_button");}

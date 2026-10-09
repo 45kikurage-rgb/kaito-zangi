@@ -1,18 +1,18 @@
 {
   "name": "回答ザンギ",
-  "version": "0.1.6-test07",
-  "versionCode": 7,
+  "version": "0.1.7-test08",
+  "versionCode": 8,
   "date": "2026-10-09",
   "status": "test-unverified",
   "package": "jp.kossacktouch.app",
-  "apk": "downloads/kossack-touch-0.1.6-test07.apk",
-  "sha256": "802a31ff39e32411846bd70868550826e4cb63a6b975e0237b554734f16cff78",
-  "sizeBytes": 459628,
+  "apk": "downloads/kossack-touch-0.1.7-test08.apk",
+  "sha256": "cd50dbe944e6f64ee7bb67c29ab5d1d8c7cc2859e6c0af4c62121749694e8c3b",
+  "sizeBytes": 463724,
   "physicalDeviceVerified": false,
-  "automatedChecks": 2367,
+  "automatedChecks": 2411,
   "videoQuestionChecks": 6,
   "keywordEntries": 50,
   "textEntries": 50,
   "visualGuardEntries": 0,
-  "additionalVideosReviewed": 3
+  "additionalVideosReviewed": 4
 }
