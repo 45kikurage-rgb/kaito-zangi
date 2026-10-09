@@ -8,7 +8,7 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 - 配布ページ（GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
 - テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.6-test07
 
-配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合と署名済テストAPKの公開を行います。実機での動作検証とは区別し、旧APKは保持します。
+配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合・署名済テストAPKの公開・両配布ページ更新を完了しました。実機での動作検証とは区別し、旧APKは保持します。
 
 ## 現在の版
 

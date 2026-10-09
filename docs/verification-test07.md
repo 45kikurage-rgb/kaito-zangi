@@ -1,5 +1,25 @@
 # 回答ザンギ 第5問停止修正 / code 7
 
+現在の状態（2026-10-09）：
+
+| 項目 | 状態 |
+|---|---|
+| 指定3動画 | 全編確認済み。詳細はverification-test06.md |
+| 追加改修 | 完了。1秒/2回確認、3往復探索、直接数値入力、フロート維持 |
+| GitHub main | PR #1をマージ済み。cce12681a36a23eb4e711334aa975bf6651f7954 |
+| 新APK | 0.1.6-test07/code7を生成。同じ固定署名、旧APKは全て保持 |
+| GitHub Release | 公開済み。再取得してサイズ・SHA-256・署名一致を確認 |
+| GitHub Pages | 公開済み。latest.json/code7とAPK再取得・ハッシュ一致を確認 |
+| Sites配布ページ | 同じ既存URLでcode7へ更新。deploy succeeded。ブラウザQAは未実施 |
+| 自動検証 | 2,367チェック、API35ビルド合格。mainのCIも合格 |
+| 実機検証 | インストール・起動・LINE切替・登録・数値送信・全問完了・15台受入は未実施 |
+
+公開URL：https://45kikurage-rgb.github.io/kaito-zangi/
+Sites：https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+Release：https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.6-test07
+CI：https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/37907601358
+Pages：https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/37907601368
+
 基準方針：ARUNO_統括確定方針_CURRENT.md Version 2026-10-09.1、更新2026-10-08T20:50:11.617998Z（前回確認時と同じ）。
 
 ## 画像で確認した不具合

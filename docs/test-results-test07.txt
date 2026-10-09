@@ -8,3 +8,9 @@ PASS 53 interaction checks: 1-second two-observation confirmation, interrupted o
 Android API35 javac + D8: PASS (2026-10-09, additional fixes).
 Signed APK: PASS. Owner backup restored; v2/v3; same fixed certificate as codes 1–6. CI signing Secrets remain unconfigured.
 Physical device / swipe inertia / message send: NOT VERIFIED.
+
+GitHub main CI: PASS, run 37907601358.
+GitHub Pages: deploy PASS, run 37907601368; latest.json code7; APK downloaded and SHA-256 matches.
+Release: published; APK downloaded and SHA-256 / fixed signature matches.
+Sites: production deployment succeeded, appgdep_6ac8ab8c87d88191bb1367ea054208e3.
+PR #1: merged, cce12681a36a23eb4e711334aa975bf6651f7954.
