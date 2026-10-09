@@ -14,7 +14,7 @@ public final class QuizService extends AccessibilityService {
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private Button play;private WindowManager.LayoutParams layout;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String current="",answer="",transition="";private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
- private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";private boolean composerOpened=false,inputFocused=false;
+ private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";private boolean composerOpened=false;
  private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
  private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false,numericGuideConfirmed=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
@@ -31,7 +31,7 @@ public final class QuizService extends AccessibilityService {
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
   elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;numericGuideConfirmed=false;
-  session=null;runPackage="";finalPrepared="";composerOpened=false;inputFocused=false;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
+  session=null;runPackage="";finalPrepared="";composerOpened=false;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
@@ -195,11 +195,11 @@ public final class QuizService extends AccessibilityService {
    if(!elementsStable){status("照合中","第5問の入力・送信要素を2回確認しています");return;}
    AccessibilityNodeInfo input=message?composers.get(0):forms.get(0);String prepared=q.key+":"+answer;
    if(!FinalSubmission.draftSafe(Screen.text(input),answer,finalPrepared.equals(prepared))){stop("要確認","入力欄に既存の文字があります。書き換えず停止します");return;}
-   if(!inputFocused){inputFocused=true;if(input.isClickable()&&!performChecked(input)){stop("要確認","数値欄をタップできません");return;}input.performAction(AccessibilityNodeInfo.ACTION_FOCUS);elementMonitor.reset();revealSearch.reset();lastAction=now;status("数字入力待機","数値欄を選択しました");return;}
    if(!finalPrepared.equals(prepared)){
+    if(!input.refresh()||!input.isVisibleToUser()||!input.isEnabled()||!input.isEditable()||!FinalSubmission.draftSafe(Screen.text(input),answer,false)){stop("要確認","入力欄が変化したため直接入力せず停止します");return;}
     if(!session.edit().putString("final_prepared",prepared).commit()){stop("要確認","数値入力の記録を保存できません");return;}finalPrepared=prepared;
     Bundle args=new Bundle();args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,answer);
-    if(!input.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,args)){stop("要確認","数字を入力できません");return;}
+    if(!input.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,args)){stop("要確認","数字の直接入力に対応していません。入力欄のUI全走査が必要です");return;}
     elementMonitor.reset();revealSearch.reset();lastAction=now;status("数字入力確認","入力結果を確認してから1回だけ回答します");return;
    }
    if(!input.refresh()||!answer.equals(Screen.text(input))){stop("要確認","入力した数値が計算結果と一致しません");return;}
