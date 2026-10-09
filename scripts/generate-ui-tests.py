@@ -8,7 +8,7 @@ for name in ['ui-tree-1791429612812-all.json','ui-tree-1791429701292-all.json','
     for n in nodes:
         vals=[str(indices.get(n['parent_id'],-1)),json.dumps(n['resource'],ensure_ascii=False),json.dumps(n['text'],ensure_ascii=False)]+[str(n[k]).lower() for k in ['visible_to_user','enabled','clickable']]
         out.append('ns.add(new UiModel.Node('+','.join(vals)+'));')
-    out.append('UiModel m=new UiModel(ns);check(m.title);check(m.question!=null&&m.question.number==1);')
+    out.append('UiModel m=new UiModel(ns);check(m.title);check(LineIdentity.target("jp.naver.line.androif",ns));check(!LineIdentity.target("com.android.chrome",ns));check(m.question!=null&&m.question.number==1);')
     if '1791429612812' in name:
         out.append('check(m.quick("C")>=0);check(ns.get(m.quick("C")).resource.endsWith("chat_ui_quick_reply_item_root"));check(m.question.choices.get("C").equals("67分"));')
         out.append('ns.add(new UiModel.Node(-1,"p:id/chat_ui_quick_reply_item_root","C",true,true,true));check(new UiModel(ns).quick("C")==-1);')

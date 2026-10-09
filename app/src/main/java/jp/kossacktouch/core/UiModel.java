@@ -21,4 +21,15 @@ public final class UiModel {
  public int rowOf(int index){int i=index;while(i>=0){int row=flexRoots.indexOf(i);if(row>=0)return row;i=nodes.get(i).parent;}return -1;}
  public int parentOf(int index){return nodes.get(index).parent;}
  public boolean leaf(int index){return children.get(index).isEmpty();}
+ public Map<String,Integer> registrationControls(Registration.Stage stage){
+  Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();
+  for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);String label=n.text.trim();if(!n.visible||!n.enabled||!leaf(i)||!Registration.eligible(stage,label))continue;
+   int quick=quick(label);if(quick>=0){result.put(label,quick);continue;}
+   int row=rowOf(i);if(row<0||row!=flex.size()-1||row<=qRow)continue;
+   int target=-1,index=i;for(int d=0;index>=0&&d<6;d++,index=parentOf(index)){
+    if(rowOf(index)!=row)break;Node p=nodes.get(index);if(p.visible&&p.enabled&&p.clickable&&content(index).trim().equals(label)){target=index;break;}
+   }
+   if(target<0)continue;if(result.containsKey(label)&&result.get(label)!=target)ambiguous.add(label);else result.put(label,target);
+  }for(String label:ambiguous)result.remove(label);return result;
+ }
 }
