@@ -4,15 +4,15 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 
 ## ダウンロード
 
-- code 7 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- code 8 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
 - 配布ページ（GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.6-test07
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.7-test08
 
 配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合・署名済テストAPKの公開・両配布ページ更新を完了しました。実機での動作検証とは区別し、旧APKは保持します。
 
 ## 現在の版
 
-- 0.1.6-test07 / versionCode 7
+- 0.1.7-test08 / versionCode 8
 - package: `jp.kossacktouch.app`（今後固定）
 - Android 8.0/API 26以上、target API 35
 - Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**
@@ -71,3 +71,7 @@ bash scripts/build.sh
 1秒間隔・2回一致で操作、要素未検出2回で上半画面/速い下2倍の探索を最大3往復。登録画面は探索対象外。第5問の実際の文言と整数・小数案内、a,bのない各1チーム両端問題に対応。数値は入力欄をタップせず一括設定し、数値を確認後に1回だけ送信。フロートは既存サイズ維持。
 
 2,367チェック・Android API35コンパイル・v2/v3署名・旧版証明書一致合格。固定署名鍵は所有者用バックアップから復元。CI署名Secretsは未設定ですがローカルで同じ鍵を使用。実機インストール・起動・登録・送信・全問完了は未検証。詳細はdocs/verification-test07.md。
+
+## code8 第5問入力停止修正
+
+追加動画に対応し、LINE入力領域内の編集要素も認識。入力欄/送信要素を取得できない場合はトークをスワイプせず停止。探索で過去の問題へ戻った場合は回答せず、最新位置へ1回だけ復帰します。2,411チェック・固定署名APK生成合格。修正版の実機入力/送信/完了は再確認待ち。詳細はdocs/verification-test08.md。
