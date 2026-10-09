@@ -4,10 +4,11 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 
 ## ダウンロード
 
-- 配布ページ（暫定GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
+- code 6 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- 既存ページ（code 5を保持）: https://45kikurage-rgb.github.io/kaito-zangi/
 - テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.5-test06
 
-Cloudflare Pagesへの公開は未完了です。テスト版の一般公開と、実機での動作検証を区別しています。
+新しいテスト版専用ページをSitesで一般公開。既存GitHub Pagesの改修ブランチからの更新は失敗し、既存URLは前版を保持。mainソース統合はPR #1で未マージ。テスト版の一般公開と、実機での動作検証を区別しています。
 
 ## 現在の版
 

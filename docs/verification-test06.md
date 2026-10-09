@@ -69,4 +69,13 @@
 
 ## GitHub反映経路
 
-mainへの直接pushは自動承認レビューで拒否されたため、`fix/test06-line-registration`とPRで反映する。テストAPKは独立したprerelease、配布ページはこの改修ブランチからGitHub Pagesへ公開する。mainのソース統合、テスト版公開、実機検証は別の状態として扱う。旧APKは保持し、mainへの直接pushや未承認の間接統合は行わない。
+mainへの直接pushは自動承認レビューで拒否されたため、`fix/test06-line-registration`とPRで反映する。テストAPKは独立したprerelease、改修ブランチからのGitHub Pages更新は失敗したため、Sitesでテスト版専用ページを一般公開した。既存GitHub Pagesはcode 5を保持。mainのソース統合、テスト版公開、実機検証は別の状態として扱う。旧APKは保持し、mainへの直接pushや未承認の間接統合は行わない。
+
+## 6. 公開確認結果
+
+- GitHub改修ブランチ: `fix/test06-line-registration`。PR #1作成済み、mainへ未統合。
+- GitHub Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.5-test06 。prereleaseとして公開成功。署名済APKとチェックサムを添付。Release workflow成功。
+- テスト版専用サイト: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site 。Sitesで公開成功、一般公開。
+- 既存サイト: https://45kikurage-rgb.github.io/kaito-zangi/ はcode 5を保持。Pagesブランチ公開workflowはfailureで、取得できたjob情報にsteps/log詳細がなく、具体的原因は未確定。制限設定は変更しない。
+- GitHub ReleaseからAPKを実際に取得し、459,628 bytesとSHA-256 `44ef087f32a34ae3f44c7509775a3c1ffca7f2bd27f351612598eea80aec7878` の一致を確認。
+- 実機インストール・起動・LINE登録/回答操作は未検証。公開成功を実機合格とは扱わない。
