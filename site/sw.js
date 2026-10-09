@@ -1,4 +1,4 @@
-const CACHE='kaito-zangi-test09';
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./icon-192.png?v=9','./icon-512.png?v=9','./manifest.webmanifest'])));});
+const CACHE='kaito-zangi-test10';
+self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./','./icon-192.png?v=10','./icon-512.png?v=10','./manifest.webmanifest'])));});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==self.location.origin||e.request.url.endsWith('.apk'))return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});

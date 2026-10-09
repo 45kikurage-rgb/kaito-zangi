@@ -15,6 +15,6 @@ if ! grep -q "^Signer #1 certificate SHA-256 digest: $EXPECTED_CERT$" build/sign
   printf 'Existing application signing certificate mismatch.\n' >&2
   exit 1
 fi
-mv build/out/signed-candidate.apk build/out/kossack-touch-0.1.8-test09.apk
-sha256sum build/out/kossack-touch-0.1.8-test09.apk > build/SHA256SUMS
+mv build/out/signed-candidate.apk build/out/kossack-touch-0.1.9-test10.apk
+sha256sum build/out/kossack-touch-0.1.9-test10.apk > build/SHA256SUMS
 printf 'APK built and signature verified.\n'

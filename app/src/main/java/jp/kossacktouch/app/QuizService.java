@@ -14,9 +14,9 @@ public final class QuizService extends AccessibilityService {
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private Button play;private WindowManager.LayoutParams layout;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String current="",answer="",transition="";private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
- private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";private boolean composerOpened=false;
+ private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";
  private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
- private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false,numericGuideConfirmed=false;
+ private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
  public void showFloat(){if(overlay!=null)return;overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(12),dp(8),dp(12),dp(8));overlay.setBackgroundColor(Color.rgb(17,40,51));
@@ -30,8 +30,8 @@ public final class QuizService extends AccessibilityService {
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
-  finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;numericGuideConfirmed=false;
-  session=null;runPackage="";finalPrepared="";composerOpened=false;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
+  manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
+  session=null;runPackage="";finalPrepared="";savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
@@ -65,6 +65,7 @@ public final class QuizService extends AccessibilityService {
    }else if(!runPackage.equals(s.pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}
    previousPackage=s.pkg;elementsStable=elementMonitor.observe(s.confirmationKey(),now);
    if(finalAnchor.mismatch(s.question)){
+    if(manualFinal.started()){stop("要確認","第5問 · 答え: "+answer+"\n現在の問題を確認できないため停止。入力・送信は行いません");return;}
     if(!elementsStable){status("照合中","探索で別の問題へ移ったため2回確認しています");return;}
     AccessibilityNodeInfo bottom=s.uniqueId("chat_ui_scroll_to_bottom_button");
     if(bottom==null||!finalAnchor.recoverOnce()){stop("要確認","探索で第5問の現在位置を失いました。過去の問題は操作しません。最新メッセージへ戻して▶再生してください");return;}
@@ -72,7 +73,7 @@ public final class QuizService extends AccessibilityService {
     status("現在位置復帰","過去の問題を操作せず、最新メッセージへ戻しています");return;
    }
    if(elementsStable&&s.currentFinal()&&s.visibleQuestion())finalAnchor.bind(s.question);
-   if(elementsStable&&(QuizFlow.finalGuide(s.model)||s.currentFinal())&&FinalSubmission.numericGuide(s.allVisibleText()))numericGuideConfirmed=true;
+   if(manualFinal.started()&&!s.currentFinal()){showFinalAnswer("入力・送信は本人操作");return;}
    boolean complete=QuizFlow.complete(s.model);
    if(complete){if(!elementsStable){status("照合中","完了表示を2回確認しています");return;}clearPending();guard.pending="";stop("完了","クイズの完了表示を確認しました");return;}
    String next=QuizFlow.transition(s.model);
@@ -97,7 +98,7 @@ public final class QuizService extends AccessibilityService {
      AccessibilityNodeInfo b=s.quick(next);
      if(b==null||!click(s,b)){stop("要確認","クイズ専用の進行ボタンを押せません");return;}
      transitionScreen=identity;transitionSteps++;questionSince=now;
-     if(next.equals("もう一度挑戦する")||next.equals("問題を見る")){finalAnchor.reset();numericGuideConfirmed=false;clearPending();registrationPending="";registrationPriorQuestion="";session.edit().remove("registration_pending").remove("registration_prior_question").commit();guard=new RunGuard();current="";answer="";transition="";}
+     if(next.equals("もう一度挑戦する")||next.equals("問題を見る")){manualFinal.reset();finalAnchor.reset();clearPending();registrationPending="";registrationPriorQuestion="";session.edit().remove("registration_pending").remove("registration_prior_question").commit();guard=new RunGuard();current="";answer="";transition="";}
      else if(guard.pending.isEmpty()&&s.question!=null){guard.mark(s.question,now);guard.lastConfirmed=s.question.number-1;}
      status("自動進行",next);return;
     }
@@ -129,14 +130,14 @@ public final class QuizService extends AccessibilityService {
    current="第"+q.number+"問\n"+q.body;
    if(QuizFlow.correct(s.model)){if(now-questionSince>60000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
    if(!guard.canAnswer(q)){stop("要確認","問題番号が想定した順序と異なります");return;}
-   if(!s.visibleQuestion()){scroll(s);return;}
+   if(!s.visibleQuestion()&&!(q.number==5&&manualFinal.started())){scroll(s);return;}
    try{
     if(q.number<5){answer=bank.match(q);status("回答待機",q.number+"/5 · 答え "+answer);AccessibilityNodeInfo b=s.quick(answer);
      if(b==null){if(now-questionSince>60000){stop("要確認","回答ボタンが表示されません");return;}scroll(s);return;}
      if(!elementsStable){status("照合中",q.number+"/5 · 問題文と回答ボタンを2回確認しています");return;}
      mark(q,now);if(!click(s,b)){stop("要確認","回答タップ失敗（未確認記録を保持）");return;}status("確定確認待ち",q.number+"/5 · "+answer+" を操作しました");
     }else{
-     MathEngine.Result r=MathEngine.solve(q.body);answer=r.answer;status("数字入力待機","5/5 · "+answer);
+     MathEngine.Result r=MathEngine.solve(q.body);answer=r.answer;
      handleFinal(s,q,now);
     }
    }catch(IllegalArgumentException e){stop("要確認",e.getMessage());}
@@ -192,40 +193,32 @@ public final class QuizService extends AccessibilityService {
  }
  private void mark(Question q,long now){if(!session.edit().putString("pending",q.key).commit())throw new IllegalArgumentException("二重操作防止記録を保存できません");guard.mark(q,now);transitionScreen="";Store.log(this,"回答操作",current,answer,"二重操作防止記録を保存");}
  private void clearPending(){if(session!=null)session.edit().remove("pending").remove("final_prepared").commit();savedPending="";savedPackage="";finalPrepared="";}
+ private boolean keyboardVisible(){
+  java.util.List<AccessibilityWindowInfo> windows=getWindows();
+  try{for(AccessibilityWindowInfo w:windows)if(w.getType()==AccessibilityWindowInfo.TYPE_INPUT_METHOD){Rect bounds=new Rect();w.getBoundsInScreen(bounds);if(!bounds.isEmpty())return true;}return false;}
+  finally{for(AccessibilityWindowInfo w:windows)w.recycle();}
+ }
+ private void showFinalAnswer(String detail){stop("回答表示","第5問 · 答え: "+answer+"\n"+detail);}
  private void handleFinal(Screen original,Question q,long now){
   if(!FinalSubmission.numeric(answer)){stop("要確認","計算結果が数値だけではありません");return;}
-  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","数字入力前の画面を取得できません");return;}
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","第5問 · 答え: "+answer+"\n前面のLINE画面を確認できません");return;}
   try(Screen s=new Screen(root)){
-   if(!running||!s.trusted()||!s.pkg.equals(runPackage)||!s.currentFinal()||!s.question.key.equals(q.key)||!s.confirmationKey().equals(original.confirmationKey())){elementMonitor.reset();status("照合中","第5問の画面が変わったため再確認します");return;}
-   java.util.List<AccessibilityNodeInfo> forms=s.numericInputs(),composers=s.composers();boolean form=s.formEvidence();
-   boolean messageFormat=FinalSubmission.messageFormat(s.model)||numericGuideConfirmed;
-   if(!form&&!messageFormat){status("回答方法探索","計算結果 "+answer+"。数字入力の案内を再確認します");scroll(s);return;}
-   FinalSubmission.Route route=FinalSubmission.route(form,forms.size(),s.submit()!=null,messageFormat,composers.size(),s.composerSend()!=null);
-   if(route==FinalSubmission.Route.STOP){stop("要確認","計算結果 "+answer+"。第5問の回答形式を確認できません");return;}
-   if(route==FinalSubmission.Route.WAIT){
-    if(!form&&s.composerSurface()&&composers.isEmpty()){stop("要確認","LINE入力欄の領域は見えていますが編集要素を取得できません。スライドせず停止します。入力画面のUI全走査が必要です");return;}
-    if(!form&&composers.isEmpty()&&!composerOpened&&s.keyboardButton()!=null){
-     if(!elementsStable){status("照合中","キーボードボタンを2回確認しています");return;}
-     composerOpened=true;if(!click(s,s.keyboardButton())){stop("要確認","LINEの入力欄を表示できません");return;}status("数字入力待機","第5問のLINE入力欄を表示しています");return;
-    }
-    if(!form&&composerOpened){if(now-questionSince>10000)stop("要確認","LINEの入力欄を要素で確認できません。入力画面のUI全走査が必要です");else status("入力欄待機","LINEの編集要素を待っています。トークはスライドしません");return;}
-    scroll(s);return;
+   if(!running||!s.trusted()||!s.pkg.equals(runPackage)||!s.currentFinal()||(!s.visibleQuestion()&&!manualFinal.started())||!s.question.key.equals(q.key)||!s.confirmationKey().equals(original.confirmationKey())){elementMonitor.reset();status("照合中","第5問の画面が変わったため再確認します");return;}
+   // A visible IME completes the handoff even if LINE does not expose an editable node.
+   boolean shown=keyboardVisible();AccessibilityNodeInfo opener=s.keyboardButton();
+   java.util.List<AccessibilityNodeInfo> inputs=shown?java.util.Collections.emptyList():s.composers();
+   ManualFinal.Step step=manualFinal.observe(q.key,elementsStable,shown,opener!=null,inputs.size(),inputs.size()==1&&inputs.get(0).isClickable(),now);
+   switch(step){
+    case DISPLAY:showFinalAnswer("入力・送信は本人操作");return;
+    case MANUAL_OPEN:showFinalAnswer("入力欄を開いて本人が入力・送信してください");return;
+    case TIMEOUT:showFinalAnswer("キーボード未確認。本人が入力・送信してください");return;
+    case OPEN_KEYBOARD:
+    case FOCUS_INPUT:
+     AccessibilityNodeInfo target=step==ManualFinal.Step.OPEN_KEYBOARD?opener:inputs.get(0);
+     if(!click(s,target)){showFinalAnswer("入力欄を開いて本人が入力・送信してください");return;}
+     status("キーボード表示待ち","第5問 · 答え: "+answer+"\n入力・送信は本人操作");return;
+    default:status("回答表示準備","第5問 · 答え: "+answer+"\nキーボード表示を確認しています");return;
    }
-   boolean message=route==FinalSubmission.Route.MESSAGE;if(!message&&!s.numericForm()){stop("要確認","専用回答フォームの第5問を確認できません");return;}
-   if(!elementsStable){status("照合中","第5問の入力・送信要素を2回確認しています");return;}
-   AccessibilityNodeInfo input=message?composers.get(0):forms.get(0);String prepared=q.key+":"+answer;
-   if(!FinalSubmission.draftSafe(Screen.inputValue(input),answer,finalPrepared.equals(prepared))){stop("要確認","入力欄に既存の文字があります。書き換えず停止します");return;}
-   if(!finalPrepared.equals(prepared)){
-    if(!input.refresh()||!input.isVisibleToUser()||!input.isEnabled()||!input.isEditable()||!FinalSubmission.draftSafe(Screen.inputValue(input),answer,false)){stop("要確認","入力欄が変化したため直接入力せず停止します");return;}
-    if(!session.edit().putString("final_prepared",prepared).commit()){stop("要確認","数値入力の記録を保存できません");return;}finalPrepared=prepared;
-    Bundle args=new Bundle();args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,answer);
-    if(!input.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,args)){stop("要確認","数字の直接入力に対応していません。入力欄のUI全走査が必要です");return;}
-    elementMonitor.reset();revealSearch.reset();lastAction=now;status("数字入力確認","入力結果を確認してから1回だけ回答します");return;
-   }
-   if(!input.refresh()||!answer.equals(Screen.inputValue(input))){stop("要確認","入力した数値が計算結果と一致しません");return;}
-   AccessibilityNodeInfo submit=message?s.composerSend():s.submit();if(submit==null){if(message){stop("要確認","送信ボタンを要素で確認できません。入力した数字は残し、スライドしません。入力画面のUI全走査が必要です");return;}if(now-questionSince>60000)stop("要確認","回答ボタンを確認できません。入力した数字は残します");else scroll(s);return;}
-   mark(q,now);if(!click(s,submit)){stop("要確認","回答操作を確認できません。再送せず停止します");return;}
-   status("確定確認待ち","5/5 · "+answer+" を"+(message?"LINEで送信":"専用ボタンで回答")+"しました");
   }
  }
  private boolean click(Screen original,AccessibilityNodeInfo old){return click(original,old,true);}

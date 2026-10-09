@@ -1,0 +1,1 @@
+Static check PASS: QuizService has no ACTION_SET_TEXT; Q5 handler has no submit/composerSend/mark/scroll call. It only opens keyboard or focuses confirmed LINE input, shows answer, stops.

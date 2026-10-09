@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Kossack Touch Release, OU=Independent App
+Signer #1 certificate SHA-256 digest: 20f8f43972be30b9b3ac94f83e3bcb8d5bf98d3c81b0b47bb7a24b19aa57d302
+Signer #1 certificate SHA-1 digest: 68dd76fe74e35bdcd1925d8afc82948d433cc2c2
+Signer #1 certificate MD5 digest: 3956d62dcbde657794186976cc608314
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 6b19ab60acb96c834980319181e8beffcb7176249e4c64108162c7c1a2d8d07b
+Signer #1 public key SHA-1 digest: 1c221e6e300fdb9271d1558b2105262079f590a4
+Signer #1 public key MD5 digest: b2f9daa376bf9eb5c3dbe7b852e84ec9
