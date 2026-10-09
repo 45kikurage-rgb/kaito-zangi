@@ -1,9 +1,9 @@
 name: Publish signed test APK
 on:
   push:
-    tags: ["v0.1.9-test10"]
+    tags: ["v0.1.10-test11"]
     branches: [main, fix/test06-line-registration]
-    paths: ["site/downloads/kossack-touch-0.1.9-test10.apk", ".github/workflows/release.yml"]
+    paths: ["site/downloads/kossack-touch-0.1.10-test11.apk", "release-assets/**", ".github/workflows/release.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: python3 scripts/assemble-release-apk.py
       - name: Verify downloaded APK checksum
         working-directory: site/downloads
         run: sha256sum -c SHA256SUMS
@@ -19,8 +20,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view v0.1.9-test10 >/dev/null 2>&1; then
+          if gh release view v0.1.10-test11 >/dev/null 2>&1; then
             echo 'This version is already published; preserving existing release assets.'
             exit 0
           fi
-          gh release create v0.1.9-test10 site/downloads/kossack-touch-0.1.9-test10.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.9-test10' --notes-file docs/release-notes.md
+          gh release create v0.1.10-test11 site/downloads/kossack-touch-0.1.10-test11.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.10-test11' --notes-file docs/release-notes.md

@@ -8,3 +8,5 @@ build/
 signing.env
 local.properties
 .gradle/
+
+app/build/

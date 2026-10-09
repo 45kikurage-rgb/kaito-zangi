@@ -2,7 +2,7 @@ name: Verify Android and build signed APK
 on:
   push:
     branches: [main, fix/test06-line-registration]
-    paths: ["app/**", "scripts/**", "tests/**", ".github/workflows/build.yml"]
+    paths: ["app/**", "scripts/**", "tests/**", "*.gradle", "gradle.properties", "gradle/**", "gradlew*", ".github/workflows/build.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -28,7 +28,10 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: verification-results
-          path: build/test-results.txt
+          path: |
+            build/test-results.txt
+            app/build/reports/lint-results-release.html
+            app/build/reports/lint-results-release.xml
   build:
     if: github.event_name == 'workflow_dispatch'
     needs: verify
@@ -66,7 +69,7 @@ jobs:
         with:
           name: kossack-touch-test-apk
           path: |
-            build/out/kossack-touch-0.1.9-test10.apk
+            build/out/kossack-touch-0.1.10-test11.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt

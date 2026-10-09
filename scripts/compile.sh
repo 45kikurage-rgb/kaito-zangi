@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
-: "${ANDROID_JAR:?Set ANDROID_JAR to platform android.jar}"
-: "${ANDROID_BUILD_TOOLS:?Set ANDROID_BUILD_TOOLS to SDK build-tools directory}"
-mkdir -p build/classes build/generated build/dex build/out
+: "${ANDROID_HOME:?Set ANDROID_HOME to the Android SDK root}"
+mkdir -p build/out
 python3 scripts/check-data.py
 bash scripts/test.sh
-"$ANDROID_BUILD_TOOLS/aapt" package -f -m -J build/generated -M app/src/main/AndroidManifest.xml -S app/src/main/res -A app/src/main/assets -I "$ANDROID_JAR"
-find app/src/main/java build/generated -name '*.java' -print > build/sources.txt
-java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath "$ANDROID_JAR" -d build/classes @build/sources.txt
-find build/classes -name '*.class' -print > build/classes.txt
-java -cp "$ANDROID_BUILD_TOOLS/lib/d8.jar" com.android.tools.r8.D8 --release --min-api 26 --lib "$ANDROID_JAR" --output build/dex @build/classes.txt
-"$ANDROID_BUILD_TOOLS/aapt" package -f -M app/src/main/AndroidManifest.xml -S app/src/main/res -A app/src/main/assets -I "$ANDROID_JAR" -F build/out/unsigned.apk
-cp build/out/unsigned.apk build/out/uncompressed.apk
-(cd build/dex && zip -q -j ../out/uncompressed.apk classes*.dex)
-"$ANDROID_BUILD_TOOLS/zipalign" -f -p 4 build/out/uncompressed.apk build/out/aligned.apk
-printf 'Android compilation, D8 and unsigned packaging verified.\n'
+GRADLE_BIN="${GRADLE_BIN:-./gradlew}"
+"$GRADLE_BIN" --no-daemon :app:assembleRelease :app:lintRelease
+cp app/build/outputs/apk/release/app-release-unsigned.apk build/out/aligned.apk
+printf 'Android compilation, bundled Japanese OCR, manifest merging and lint verified.\n'

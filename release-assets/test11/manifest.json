@@ -1,0 +1,27 @@
+{
+  "filename": "kossack-touch-0.1.10-test11.apk",
+  "sizeBytes": 24303036,
+  "sha256": "d5e4acaa301c4233d2327f0b79d15ecfd47b5890e0fff67ac4f9352c7c6d7cfd",
+  "parts": [
+    {
+      "name": "part-01.bin",
+      "sizeBytes": 6291360,
+      "sha256": "52b0ddda0352e91b6bfd045922083332fb0f3e0f51a6ee90a5771122cb580c1d"
+    },
+    {
+      "name": "part-02.bin",
+      "sizeBytes": 6291360,
+      "sha256": "e33e6f2e8e87ed24b75c93ab7c97ff08ae638a9ca55b2489c277931cc9ef1bde"
+    },
+    {
+      "name": "part-03.bin",
+      "sizeBytes": 6291360,
+      "sha256": "1adf13d632abc0f320ef7c0549bc8749aaca6503394a525e8eb0a1d5036c63dd"
+    },
+    {
+      "name": "part-04.bin",
+      "sizeBytes": 5428956,
+      "sha256": "e54f721c641c61b69208fd09e930f8d056ee7eee1692467ee8c8409d65e97019"
+    }
+  ]
+}
