@@ -27,8 +27,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -n "$KEY_BASE64"
-          test -n "$SIGNING_STORE_PASSWORD"
+          if [[ -z "$KEY_BASE64" || -z "$SIGNING_STORE_PASSWORD" ]]; then
+            echo "::error::Fixed owner signing key is unavailable. Set SIGNING_STORE_BASE64 and SIGNING_STORE_PASSWORD using the existing kossacktouch key backup."
+            exit 1
+          fi
           umask 077
           printf '%s' "$KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/kossacktouch.p12"
           export SIGNING_STORE="$RUNNER_TEMP/kossacktouch.p12"

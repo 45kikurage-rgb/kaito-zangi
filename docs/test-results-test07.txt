@@ -1,0 +1,9 @@
+PASS 1992 assertions. Includes submitted coprime example (63), 5 families, 120 seeded parameter sets, all 81 boxing pairs, and rejection/duplicate guards.
+PASS 21 actual UI-dump checks: correct button container, hidden-button wait, answered-message rejection, latest incomplete question guard.
+PASS 95 keyword-to-letter checks: question text only, 6 observed screens, wording variants, missing button, ambiguous/unknown/changed conditions, and all 50 registered mappings.
+PASS 26 flow checks: retry/open/correct/final/completion, duplicate and conflicting controls, resumed pending and current question numbering.
+PASS 171 test06 checks: cloned LINE guards, visible-only registration, personal confirmation, numeric message/form routing, observed 67, completion and no duplicate submission.
+
+Android API35 javac + D8: PASS (2026-10-09).
+Signed APK: BLOCKED, fixed signer unavailable; CI Secrets empty.
+Physical device: NOT VERIFIED.
