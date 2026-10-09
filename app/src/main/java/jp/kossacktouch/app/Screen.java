@@ -31,6 +31,25 @@ public final class Screen implements AutoCloseable {
   }return found;}
  public String allVisibleText(){StringBuilder b=new StringBuilder();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.getChildCount()==0)b.append(text(n)).append('\n');return b.toString();}
  public String registrationContext(){return model.registrationContext();}
+ public boolean trusted(){return !overflow&&LineIdentity.target(pkg,snapshot);}
+ public String confirmationKey(){
+  StringBuilder key=new StringBuilder(pkg).append('|').append(question==null?"":question.key).append('|').append(visibleQuestion()).append('|').append(latest).append('|').append(registrationContext());
+  key.append('|').append(QuizFlow.transition(model)).append('|').append(QuizFlow.complete(model)).append('|').append(QuizFlow.correct(model)).append('|').append(QuizFlow.failed(model)).append('|').append(formEvidence());
+  for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&(n.isEditable()||n.isClickable()||id(n).endsWith(":id/chat_ui_oa_bottombar_keyboard_button"))&&!n.isScrollable()){
+   Rect b=new Rect();n.getBoundsInScreen(b);key.append('|').append(id(n)).append(':').append(n.getChildCount()==0?text(n):content(n)).append(':').append(n.isEnabled()).append(':').append(n.isClickable()).append(':').append(b.flattenToString());
+  }return key.toString();
+ }
+ public AccessibilityNodeInfo uniqueId(String... suffixes){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes){if(!n.isVisibleToUser()||!n.isEnabled())continue;for(String suffix:suffixes)if(id(n).endsWith(":id/"+suffix)){if(found!=null&&found!=n)return null;found=n;break;}}return found;}
+ public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isEditable()&&!n.isPassword()&&(id(n).endsWith(":id/chat_ui_input_edit")||id(n).endsWith(":id/chat_ui_input_edit_text")||id(n).endsWith(":id/chat_ui_input_message_edit_text")))found.add(n);return found;}
+ public AccessibilityNodeInfo composerSend(){AccessibilityNodeInfo n=uniqueId("chat_ui_input_send","chat_ui_input_send_button","chat_ui_send_button");return n!=null&&n.isClickable()?n:null;}
+ public boolean formEvidence(){if(!numericInputs().isEmpty()||submit()!=null)return true;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&String.valueOf(n.getClassName()).equals("android.webkit.WebView"))return true;return false;}
+ public boolean numericForm(){String t=Text.clean(allVisibleText());return t.contains("第5問")&&t.contains("回答");}
+ public AccessibilityNodeInfo keyboardButton(){return uniqueId("chat_ui_oa_bottombar_keyboard_button");}
+ public boolean currentFinal(){return question!=null&&question.number==5&&!QuizFlow.correct(model)&&!QuizFlow.failed(model)&&!QuizFlow.complete(model)&&!QuizFlow.answerControls(model);}
+ public boolean registrationChoicesVisible(){for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);if(model.rowOf(i)>qRow&&model.rowOf(i)==flex.size()-1&&n.isVisibleToUser()&&(text(n).contains("一つ前に戻る")||text(n).contains("生まれた年を選")||text(n).contains("性別を選")||text(n).contains("高校の頭文字")))return true;}return false;}
+ public AccessibilityNodeInfo richStart(){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isClickable()&&text(n).equals("開始")){
+  AccessibilityNodeInfo p=n.getParent();boolean rich=false;for(int d=0;p!=null&&d<12;d++){if(id(p).endsWith(":id/chat_ui_oa_richmenu"))rich=true;AccessibilityNodeInfo next=p.getParent();p.recycle();p=next;}if(p!=null)p.recycle();if(rich){if(found!=null)return null;found=n;}
+ }return found;}
  public Registration.Stage registrationStage(){
   // Live quick replies identify intro/confirmation even when the prompt is an ordinary chat message.
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.SUMMARY,Registration.Stage.INTRO}){
@@ -42,12 +61,11 @@ public final class Screen implements AutoCloseable {
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.PREFECTURE,Registration.Stage.SCHOOL_INITIAL,Registration.Stage.SCHOOL})if(!registrationControls(st).isEmpty()){if(found!=Registration.Stage.UNKNOWN)return Registration.Stage.UNKNOWN;found=st;}
   return found;
  }
- public Map<String,AccessibilityNodeInfo> registrationControls(Registration.Stage stage){Map<String,AccessibilityNodeInfo> found=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo leaf=nodes.get(i);String label=text(leaf).trim();if(!leaf.isVisibleToUser()||!leaf.isEnabled()||!model.leaf(i)||!Registration.eligible(stage,label))continue;
-   AccessibilityNodeInfo quick=quick(label);if(quick!=null){found.put(label,quick);continue;}
-   int row=model.rowOf(i);if(row<0||row!=flex.size()-1||row<=qRow)continue;
-   // Restrict card selection to a visible button in the newest incoming flex card.
-   AccessibilityNodeInfo target=null;int index=i;for(int depth=0;index>=0&&depth<6;depth++,index=model.parentOf(index)){if(model.rowOf(index)!=row)break;AccessibilityNodeInfo candidate=nodes.get(index);if(candidate.isClickable()&&candidate.isVisibleToUser()&&candidate.isEnabled()&&content(candidate).trim().equals(label)){target=candidate;break;}}
-   if(target==null)continue;if(found.containsKey(label)&&found.get(label)!=target)ambiguous.add(label);else found.put(label,target);
-  }for(String label:ambiguous)found.remove(label);return found;}
+ public Map<String,AccessibilityNodeInfo> registrationControls(Registration.Stage stage){Map<String,AccessibilityNodeInfo> result=new LinkedHashMap<>();for(Map.Entry<String,Integer> e:model.registrationControls(stage).entrySet()){
+  AccessibilityNodeInfo target=nodes.get(e.getValue());Rect bounds=new Rect();target.getBoundsInScreen(bounds);android.util.DisplayMetrics metrics=android.content.res.Resources.getSystem().getDisplayMetrics();
+  // Require the centre of the visible hit area on screen; never scroll to a hidden registration choice.
+  if(bounds.width()>0&&bounds.height()>0&&bounds.centerX()>=0&&bounds.centerY()>=0&&bounds.centerX()<metrics.widthPixels&&bounds.centerY()<metrics.heightPixels)result.put(e.getKey(),target);
+ }return result;}
+
  @Override public void close(){for(AccessibilityNodeInfo n:nodes)n.recycle();nodes.clear();}
 }

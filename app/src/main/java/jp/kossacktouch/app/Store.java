@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import jp.kossacktouch.core.*;
 public final class Store {
- public static final String VERSION="0.1.4-test05";
+ public static final String VERSION="0.1.6-test07";
  public static android.content.SharedPreferences prefs(Context c){return c.getSharedPreferences("local",Context.MODE_PRIVATE);}
  public static void log(Context c,String state,String question,String answer,String detail){
   try{JSONArray old=new JSONArray(prefs(c).getString("history","[]")),arr=new JSONArray();JSONObject item=new JSONObject();item.put("time",new SimpleDateFormat("MM/dd HH:mm:ss",Locale.JAPAN).format(new Date()));item.put("state",state);item.put("question",question);item.put("answer",answer);item.put("detail",detail);arr.put(item);for(int i=0;i<Math.min(old.length(),199);i++)arr.put(old.get(i));prefs(c).edit().putString("history",arr.toString()).apply();}catch(JSONException ignored){}
@@ -18,5 +18,16 @@ public final class Store {
  }
  private static List<String> strings(JSONArray a)throws JSONException{List<String> result=new ArrayList<>();if(a!=null)for(int i=0;i<a.length();i++)result.add(a.getString(i));return result;}
  private static List<List<String>> groups(JSONArray a)throws JSONException{List<List<String>> result=new ArrayList<>();if(a!=null)for(int i=0;i<a.length();i++)result.add(strings(a.getJSONArray(i)));return result;}
- public static boolean allowed(Context c,String pkg){String csv=prefs(c).getString("packages","jp.naver.line.android,jp.naver.line.androie");for(String p:csv.split(","))if(p.trim().equals(pkg))return true;return false;}
+ public static boolean allowed(Context c,String pkg){return LineIdentity.candidate(pkg);}
+ public static android.content.SharedPreferences session(Context c,String pkg){return c.getSharedPreferences("line_"+pkg,Context.MODE_PRIVATE);}
+ public static void migrateSession(Context c,String pkg){
+  android.content.SharedPreferences old=prefs(c),scoped=session(c,pkg);
+  if(old.getBoolean("session_migrated",false))return;
+  String owner=old.getString("pending_package","");
+  // Legacy unscoped records are retained until an explicit result review; never silently re-send.
+  if(owner.isEmpty()||owner.equals(pkg)){
+   android.content.SharedPreferences.Editor e=scoped.edit();for(String k:new String[]{"pending","registration_pending","registration_prior_question"})if(!scoped.contains(k))e.putString(k,old.getString(k,""));
+   if(e.commit())old.edit().putBoolean("session_migrated",true).commit();
+  }
+ }
 }

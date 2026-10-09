@@ -12,3 +12,7 @@ python3 scripts/generate-answer-tests.py
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests build/AnswerFixture.java tests/VideoFixture.java tests/AnswerTests.java tests/FlowTests.java
 java -cp build/tests AnswerTests | tee -a build/test-results.txt
 java -cp build/tests FlowTests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Test06Tests.java
+java -cp build/tests Test06Tests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/InteractionTests.java
+java -cp build/tests InteractionTests | tee -a build/test-results.txt

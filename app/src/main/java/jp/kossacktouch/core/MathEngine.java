@@ -17,7 +17,11 @@ public final class MathEngine {
  }
  public static long gcd(long a,long b){while(b!=0){long t=a%b;a=b;b=t;}return Math.abs(a);}
  private static void positive(long... n){for(long x:n)if(x<=0||x>1000000)throw new IllegalArgumentException("数値の範囲外");}
- private static String percent(long count,long total,int digits){return BigDecimal.valueOf(count).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(total),digits,RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();}
+ private static String percent(long count,long total,int digits){
+  BigDecimal numerator=BigDecimal.valueOf(count).multiply(BigDecimal.valueOf(100));
+  if(digits==-1){try{return numerator.divide(BigDecimal.valueOf(total)).stripTrailingZeros().toPlainString();}catch(ArithmeticException e){throw new IllegalArgumentException("循環小数の丸め方法を確認してください");}}
+  return numerator.divide(BigDecimal.valueOf(total),digits,RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
+ }
  public static Result coprime(int a,int b,boolean inverse,int digits){positive(a,b);long c=0;for(int n=1;n<=a;n++)if(gcd(n,b)==1)c++;if(inverse)c=a-c;return new Result("互いに素",percent(c,a,digits),"a="+a+", b="+b+", 該当="+c+"/"+a);}
  public static Result divisorDifference(int a,int b,boolean inverse,int digits){positive(a,b);if(a<2)throw new IllegalArgumentException("2数が選べない");long c=0;for(int d=1;d<a;d++)if(b%d==0)c+=a-d;long total=(long)a*(a-1)/2;if(inverse)c=total-c;return new Result("差と約数",percent(c,total,digits),"a="+a+", b="+b+", 該当="+c+"/"+total);}
  public static Result triangle(int a,int b,int digits){positive(a,b);return new Result("三角形",BigDecimal.valueOf(Math.hypot(a,b)).setScale(digits,RoundingMode.HALF_UP).stripTrailingZeros().toPlainString(),"直角時に面積最大: x=√("+a+"²+"+b+"²)");}
@@ -49,6 +53,9 @@ public final class MathEngine {
   if(boxing&&!(q.contains("女子")&&q.contains("エリート")&&q.contains("WB")))throw new IllegalArgumentException("ボクシング階級の体系が未対応");
   List<Integer> v=named(q,boxing?BOXING:SPORTS);
   if(v.size()!=2)throw new IllegalArgumentException("競技名・階級のa,bが一意でない");
+  // The observed ends-of-a-row problem names each team without introducing a or b.
+  // Only this symmetric family can omit roles; no other family infers variable definitions.
+  if(!boxing&&!q.contains("a")&&!q.contains("b")&&q.contains("各1チーム")&&q.contains("スターティングメンバー")&&q.contains("両端")&&(q.contains("1列")||q.contains("一列")))return new int[]{v.get(0),v.get(1)};
   // Preserve semantic role; don't silently swap initial term and difference.
   if(!boxing&&q.contains("初項")&&q.contains("公差")&&q.indexOf("公差")<q.indexOf("初項"))throw new IllegalArgumentException("a,bの順序を要確認");
   if(!q.contains("a")||!q.contains("b")||q.indexOf("b")<q.indexOf("a"))throw new IllegalArgumentException("a,bの定義を要確認");
@@ -72,11 +79,12 @@ public final class MathEngine {
   if(q.contains("両端")&&(q.contains("並")||q.contains("一列"))){if(Pattern.compile("同じ(?:スポーツ|競技)?(?:ではない|でない)").matcher(q).find())return ends(a,b,false,rounding(q));if(q.contains("同じ")&&(q.contains("異なる")||q.contains("別の")))throw new IllegalArgumentException("両端の条件が曖昧です");if(q.contains("同じ"))return ends(a,b,true,rounding(q));if(q.contains("異なる")||q.contains("別の"))return ends(a,b,false,rounding(q));}
   if(q.contains("倍数")&&(q.contains("1つ")||q.contains("1個"))){int n=number(q,"1から([0-9]+)まで");String mode=null;
    if(q.contains("aの倍数でもbの倍数でもない"))mode="neither";
-   else if(Pattern.compile("aの倍数で(?:あり[、,]?|[、,]|かつ)bの倍数ではない").matcher(q).find())mode="a-not-b";
-   else if(Pattern.compile("bの倍数で(?:あり[、,]?|[、,]|かつ)aの倍数ではない").matcher(q).find())mode="b-not-a";
+   else if(Pattern.compile("aの倍数で(?:あり[、,]?(?:(?:なお)?かつ)?|[、,](?:(?:なお)?かつ)?|かつ)bの倍数で(?:は)?ない").matcher(q).find())mode="a-not-b";
+   else if(Pattern.compile("bの倍数で(?:あり[、,]?(?:(?:なお)?かつ)?|[、,](?:(?:なお)?かつ)?|かつ)aの倍数で(?:は)?ない").matcher(q).find())mode="b-not-a";
    else if(q.contains("両方の倍数")||q.contains("aの倍数かつbの倍数"))mode="both";
    else if(q.contains("少なくとも一方")||q.contains("aまたはbの倍数"))mode="either";
-   if(mode!=null)return multiples(a,b,n,mode,rounding(q));
+   // With no rounding instruction, only a mathematically exact terminating decimal is allowed.
+   if(mode!=null)return multiples(a,b,n,mode,q.contains("四捨五入")||q.contains("小数第")||q.contains("小数点第")?rounding(q):-1);
   }
   throw new IllegalArgumentException("計算形式・条件が未対応です");
  }
