@@ -34,3 +34,10 @@ APK 0.1.9-test10 / code10 / 463,724 bytes / SHA-256 29ab64dbede5d16036577c81a638
 
 ## 実機確認待ち
 新APKの上書きインストール・起動・15台/各複製LINE・入力表示操作・キーボード検出・正しい答えを残して停止することは未検証。本人入力/送信/正解/完了は今回から本人確認の範囲。添付動画は旧版の停止状況の証拠であり、新APKの成功証拠ではない。ブラウザで配布ページの表示は未検証。
+## 公開確認（2026-10-09 19:13 JST）
+- PR #4をmainへ統合。マージSHA a09edf0bf8506338213c4f42ccd65c1dea302922。
+- main CI合格：https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/37916097108
+- GitHub Release公開成功：https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.9-test10 。公開APKの再取得、サイズ・SHA-256・固定署名一致を確認。
+- GitHub Pages公開成功：https://45kikurage-rgb.github.io/kaito-zangi/ 。latest.jsonのcode10/manual modeと公開APKの再取得・SHA-256一致を確認。
+- Sites既存一般公開URL更新成功：https://kaito-zangi-test06.regal-elk-8007.chatgpt.site 。deployment appgdep_6ac8be3e10408191bbdb30a8c9c3d7d6 succeeded。
+- 新APKの実機インストール・キーボード表示・答えを残して停止する動作は未検証。本人入力・送信・正解/完了確認は本人操作の範囲。
