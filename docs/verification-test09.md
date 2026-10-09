@@ -34,3 +34,11 @@ APK 0.1.8-test09 / code9 / 463,724 bytes / SHA-256 0e6ce3fe233a641f54f418851d4be
 code9の実機インストール・起動・標準/複製LINEの入力フォーカス・54の入力と1回送信・正解・完了は未検証。入力要素が取得できない場合は、末尾第5問と入力欄が見える状態のUI全走査JSONが必要。今回の動画は旧動作の不具合証拠であり、新APKの成功証拠ではない。ブラウザでの配布ページ表示も未検証。
 
 Android API資料: https://developer.android.com/reference/android/accessibilityservice/AccessibilityService#getWindows() 、https://developer.android.com/reference/android/view/accessibility/AccessibilityEvent#getPackageName()
+
+## 公開確認（2026-10-09 18:50 JST）
+- PR #3をmainへ統合。マージSHA c534c8f9fbc018f65be1b5abedc72e2f3584bf08。
+- main CI合格：https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/37913692543
+- Release公開成功：https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.8-test09 。配布APKを再取得し、サイズ・SHA-256・固定署名一致を確認。
+- GitHub Pages公開成功：https://45kikurage-rgb.github.io/kaito-zangi/ 。latest.jsonのcode9を確認。
+- Sites既存一般公開URL更新成功：https://kaito-zangi-test06.regal-elk-8007.chatgpt.site 。deployment appgdep_6ac8b8923c9c8191986351a020cf8fac succeeded。
+- 新APKの実機インストール・起動・入力・送信・完了は未検証。

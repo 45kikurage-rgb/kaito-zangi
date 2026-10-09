@@ -1,0 +1,9 @@
+GitHub Release: download/hash/signature PASS
+URL https://github.com/45kikurage-rgb/kaito-zangi/releases/download/v0.1.8-test09/kossack-touch-0.1.8-test09.apk
+Size 463724
+SHA-256 0e6ce3fe233a641f54f418851d4be584d2b4218bb115649785acd8694bc1d598
+Fixed certificate matched
+GitHub Pages: latest code9 and download/hash PASS
+URL https://45kikurage-rgb.github.io/kaito-zangi/downloads/kossack-touch-0.1.8-test09.apk
+Size 463724
+SHA-256 0e6ce3fe233a641f54f418851d4be584d2b4218bb115649785acd8694bc1d598
