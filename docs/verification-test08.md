@@ -33,3 +33,11 @@ APK：0.1.7-test08 / code8 / 463,724 bytes / SHA-256 cd50dbe944e6f64ee7bb67c29ab
 
 ## 実機確認待ち
 code8のインストール、現在のLINE入力/送信要素の認識、91の一括入力・1回送信・正解・完了を確認できていない。今回の動画は不具合の実機証拠であり、修正版の成功証拠ではない。入力の要素取得ができなければ、この第5問と入力欄が見えている状態のUI全走査JSONが必要。空欄状態と数字入力後（送信を押す前）の2状態が望ましい。
+
+## 公開確認（2026-10-09 18:19 JST）
+- PR #2をmainへ統合。マージSHA 5974f1c2708a91aa0a3ecc64f0e67237460322e9。
+- main CI合格：https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/37910313206
+- GitHub Release公開済み。APKを再取得し、463,724 bytes・SHA-256 cd50dbe944e6f64ee7bb67c29ab5d1d8c7cc2859e6c0af4c62121749694e8c3b・旧版固定署名を照合して合格。
+- GitHub Pages公開済み。latest.jsonのcode8とAPKの再取得・ハッシュ一致を確認。https://45kikurage-rgb.github.io/kaito-zangi/
+- Sitesの既存一般公開URLもcode8へ更新。deploy succeeded、appgdep_6ac8b18fb4148191aec09b868fde67aa。https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- ブラウザの表示確認とcode8の実機インストール・入力・送信・完了確認は未実施。公開成功と実機成功は区別する。

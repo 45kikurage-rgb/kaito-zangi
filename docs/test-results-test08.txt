@@ -5,3 +5,10 @@ PASS 26 flow checks: retry/open/correct/final/completion, duplicate and conflict
 PASS 175 test06 checks: cloned LINE guards, visible-only registration, personal confirmation, numeric message/form routing, observed 67, completion and no duplicate submission.
 PASS 53 interaction checks: 1-second two-observation confirmation, interrupted observations, missing-target threshold, three pairs, and 1:2 swipe distance.
 PASS 44 final-input checks: native composer boundaries, changed IDs, draft/send validation, ambiguous and WebView rejection, current-Q5 anchor and bounded history recovery.
+
+Android API35 compilation / D8 / APK packaging: PASS.
+Fixed signing certificate, v2/v3: PASS.
+GitHub main CI 37910313206: PASS.
+Release / Pages APK download hash checks: PASS.
+Sites production deployment: SUCCEEDED.
+Code8 physical input / send / completion: NOT VERIFIED.
