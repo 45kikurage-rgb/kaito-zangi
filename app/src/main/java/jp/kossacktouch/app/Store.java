@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import jp.kossacktouch.core.*;
 public final class Store {
- public static final String VERSION="0.1.5-test06";
+ public static final String VERSION="0.1.6-test07";
  public static android.content.SharedPreferences prefs(Context c){return c.getSharedPreferences("local",Context.MODE_PRIVATE);}
  public static void log(Context c,String state,String question,String answer,String detail){
   try{JSONArray old=new JSONArray(prefs(c).getString("history","[]")),arr=new JSONArray();JSONObject item=new JSONObject();item.put("time",new SimpleDateFormat("MM/dd HH:mm:ss",Locale.JAPAN).format(new Date()));item.put("state",state);item.put("question",question);item.put("answer",answer);item.put("detail",detail);arr.put(item);for(int i=0;i<Math.min(old.length(),199);i++)arr.put(old.get(i));prefs(c).edit().putString("history",arr.toString()).apply();}catch(JSONException ignored){}

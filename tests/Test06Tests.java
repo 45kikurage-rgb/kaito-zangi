@@ -23,6 +23,10 @@ public class Test06Tests {
   String guide="ついに最終問題！\n★回答方法★\n答えは数字をそのまま入力してください。小数点を含む答えが出る場合があります。スペースなど答えに関係のない文字が含まれているとチャレンジ失敗となります。";
   String q="アマチュアボクシングの「女子エリートWB新階級」における、「フェザー級の最大体重(kg)」をa、「ライト級の最大体重(kg)」をbとする。1からaまでの自然数から異なる2つの数字をランダムで選んだ時、2数の差がbの正の約数ではない確率は何％か。小数点以下を四捨五入して答えよ。";
   m=numeric(guide,q);check(m.question!=null&&m.question.number==5);check(FinalSubmission.messageFormat(m));check(MathEngine.solve(m.question.body).answer.equals("67"));
+  String reportedGuide="★回答方法★\n答えは整数または小数で入力してください（小数点「.」の使用可）。スペースなど、答えに関係のない文字が含まれていると間違いと判断されチャレンジ失敗となります。";
+  String reported="「サッカー」「ビーチサッカー」の1チームのスターティングメンバーの数をそれぞれa,bとする。1から100までの数字をランダムに1つ選んだ時、その数字がaの倍数であり、なおかつbの倍数でない確率が何%かを求めよ。";
+  UiModel reportedUi=numeric(reportedGuide,reported);check(reportedUi.question!=null&&reportedUi.question.number==5);check(MathEngine.solve(reportedUi.question.body).answer.equals("8"));check(FinalSubmission.messageFormat(reportedUi));check(FinalSubmission.route(false,0,false,FinalSubmission.messageFormat(reportedUi),1,true)==FinalSubmission.Route.MESSAGE);
+  check(!FinalSubmission.messageFormat(numeric(reportedGuide.replace("整数または小数", "文章"),reported)));
   check(!FinalSubmission.messageFormat(numeric("",q)));check(!FinalSubmission.messageFormat(numeric("★回答方法★\n専用回答ボタンを押す",q)));
   check(FinalSubmission.route(true,1,true,true,1,true)==FinalSubmission.Route.FORM);
   check(FinalSubmission.route(true,0,false,true,1,true)==FinalSubmission.Route.WAIT);

@@ -17,6 +17,18 @@ public class CoreTests {
   eq("18",MathEngine.solve("a=7,b=6の等差数列の第1項からの和が1000を初めて超える項を求めよ。").answer);
   eq("46",MathEngine.solve("バレーボールの人数をa、水球の人数をbとする。a人とb人を一列に並べるとき両端が同じスポーツの確率は何%か。小数点以下を四捨五入。").answer);
   eq("72",MathEngine.solve("ホッケーの人数をa、ビーチサッカーの人数をbとする。1から100までの自然数から1つ選ぶときaの倍数でもbの倍数でもない確率。小数点以下を四捨五入。").answer);
+  String reported="「サッカー」「ビーチサッカー」の1チームのスターティングメンバーの数をそれぞれa,bとする。1から100までの数字をランダムに1つ選んだ時、その数字がaの倍数であり、なおかつbの倍数でない確率が何%かを求めよ。";
+  eq("8",MathEngine.solve(reported).answer);
+  eq("a=11, b=5, N=100, 条件=a-not-b, 該当=8",MathEngine.solve(reported).detail);
+  eq("8",MathEngine.solve(reported.replace("でない","ではない")).answer);
+  eq("19",MathEngine.solve(reported.replace("aの倍数であり、なおかつb", "bの倍数であり、なおかつa")).answer);
+  eq("8",MathEngine.solve(reported.replace("なおかつ","かつ").replace("あり、","あり")).answer);
+  eq("8",MathEngine.solve(reported.replace("であり、なおかつ","で、")).answer);
+  eq("8",MathEngine.solve(reported.replace("1から100", "１から１００").replace("a,b", "ａ，ｂ").replace("aの", "ａの").replace("bの", "ｂの")).answer);
+  eq("6.25",MathEngine.solve("a=11,b=5。1から16までの数字から1つ選ぶ。aの倍数であり、なおかつbの倍数でない確率。何%か。").answer);
+  reject(()->MathEngine.solve("a=11,b=5。1から17までの数字から1つ選ぶ。aの倍数であり、なおかつbの倍数でない確率。何%か。"));
+  reject(()->MathEngine.solve(reported.replace("であり、なおかつ", "ではなく、")));
+  reject(()->MathEngine.solve(reported+"小数第2位まで答えよ。"));
   eq("11",MathEngine.solve("アマチュアボクシング女子エリートWB新階級のライトフライ級の最大体重をa、フライ級の最大体重をbとする。1からaまでの自然数から異なる2つを選び、2数の差がbの正の約数となる確率。小数点以下を四捨五入。").answer);
   // Variable numbers tested against independent enumeration, not copied formulas.
   Random random=new Random(6382);

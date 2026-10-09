@@ -1,5 +1,8 @@
 name: Build signed Android APK
 on:
+  push:
+    branches: [fix/test06-line-registration]
+    paths: ["app/**", "scripts/**", "tests/**", ".github/workflows/build.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,7 +37,7 @@ jobs:
         with:
           name: kossack-touch-test-apk
           path: |
-            build/out/kossack-touch-0.1.5-test06.apk
+            build/out/kossack-touch-0.1.6-test07.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt
