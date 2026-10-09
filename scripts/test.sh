@@ -19,3 +19,5 @@ java -cp build/tests InteractionTests | tee -a build/test-results.txt
 
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/FinalInputTests.java
 java -cp build/tests FinalInputTests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/ForegroundTests.java
+java -cp build/tests ForegroundTests | tee -a build/test-results.txt

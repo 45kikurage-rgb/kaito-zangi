@@ -36,15 +36,25 @@ public final class QuizService extends AccessibilityService {
  }
  public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
  private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText("回答ザンギ · "+state+"\n"+detail);}
- @Override public void onAccessibilityEvent(AccessibilityEvent e){if(!running)return;int type=e.getEventType();String pkg=String.valueOf(e.getPackageName());
-  if(type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED&&!pkg.equals(getPackageName())&&!pkg.contains("inputmethod")&&!pkg.contains("keyboard")&&!pkg.equals("com.android.systemui")){if(!runPackage.isEmpty()&&Store.allowed(this,pkg)&&!runPackage.equals(pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}previousPackage=pkg;if(!Store.allowed(this,pkg)){stop("要確認","LINE以外の画面へ移動しました");return;}}
-  if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)handler.post(this::check);
+ @Override public void onAccessibilityEvent(AccessibilityEvent e){if(!running)return;int type=e.getEventType();
+  // Event package identifies its source, not the foreground application (e.g. an IME).
+  if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||type==AccessibilityEvent.TYPE_WINDOWS_CHANGED||type==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)handler.post(this::check);
+ }
+ private AccessibilityNodeInfo foregroundLineRoot(){
+  java.util.List<AccessibilityWindowInfo> windows=new java.util.ArrayList<>();
+  java.util.List<ForegroundWindow.Window> descriptions=new java.util.ArrayList<>();java.util.List<AccessibilityNodeInfo> roots=new java.util.ArrayList<>();
+  int selected=-1;
+  try{
+   windows=getWindows();
+   for(AccessibilityWindowInfo w:windows){AccessibilityNodeInfo root=w.getRoot();roots.add(root);descriptions.add(new ForegroundWindow.Window(w.getType(),w.getLayer(),w.isActive(),w.isFocused(),root==null?"":String.valueOf(root.getPackageName())));}
+   selected=ForegroundWindow.select(descriptions);return selected<0?null:roots.get(selected);
+  }catch(RuntimeException ex){selected=-1;return null;}finally{for(int i=0;i<roots.size();i++)if(i!=selected&&roots.get(i)!=null)roots.get(i).recycle();for(AccessibilityWindowInfo w:windows)w.recycle();}
  }
  private void check(){if(!running)return;long now=SystemClock.elapsedRealtime();if(now-lastTick<ElementMonitor.INTERVAL_MS)return;lastTick=now;
   if(((KeyguardManager)getSystemService(KEYGUARD_SERVICE)).isKeyguardLocked()||!((PowerManager)getSystemService(POWER_SERVICE)).isInteractive()){stop("要確認","画面ロック・画面OFFを検知しました");return;}
   if(now-questionSince>240000){stop("要確認","問題の制限時間に近づいたため停止しました");return;}
   if(gesturePending)return;
-  AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null){stop("要確認","画面要素を取得できません");return;}
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","前面のLINE画面を確認できません（別アプリ・ダイアログ・権限）");return;}
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();stop("要確認","対応するLINEの画面ではありません");return;}
   try(Screen s=new Screen(root)){
    if(!s.trusted()){stop("要確認","対象LINE画面を確認できません（権限・トーク・要素数を確認）");return;}
@@ -166,7 +176,7 @@ public final class QuizService extends AccessibilityService {
   questionSince=now;status("登録中","既存情報の変更を避けて進めています · "+registrationSteps+"/30");return true;
  }
  private boolean clickRegistration(Screen original,Registration.Stage stage,String label){
-  AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null)return false;
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null)return false;
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();return false;}
   try(Screen fresh=new Screen(root)){
    if(!running||!fresh.trusted()||!fresh.pkg.equals(original.pkg)||fresh.registrationStage()!=stage||!fresh.confirmationKey().equals(original.confirmationKey()))return false;
@@ -184,7 +194,7 @@ public final class QuizService extends AccessibilityService {
  private void clearPending(){if(session!=null)session.edit().remove("pending").remove("final_prepared").commit();savedPending="";savedPackage="";finalPrepared="";}
  private void handleFinal(Screen original,Question q,long now){
   if(!FinalSubmission.numeric(answer)){stop("要確認","計算結果が数値だけではありません");return;}
-  AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null){stop("要確認","数字入力前の画面を取得できません");return;}
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","数字入力前の画面を取得できません");return;}
   try(Screen s=new Screen(root)){
    if(!running||!s.trusted()||!s.pkg.equals(runPackage)||!s.currentFinal()||!s.question.key.equals(q.key)||!s.confirmationKey().equals(original.confirmationKey())){elementMonitor.reset();status("照合中","第5問の画面が変わったため再確認します");return;}
    java.util.List<AccessibilityNodeInfo> forms=s.numericInputs(),composers=s.composers();boolean form=s.formEvidence();
@@ -220,7 +230,7 @@ public final class QuizService extends AccessibilityService {
  }
  private boolean click(Screen original,AccessibilityNodeInfo old){return click(original,old,true);}
  private boolean click(Screen original,AccessibilityNodeInfo old,boolean resetSearch){
-  AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null)return false;
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null)return false;
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();return false;}
   try(Screen fresh=new Screen(root)){
    if(!running||!fresh.trusted()||!fresh.pkg.equals(original.pkg)||!fresh.confirmationKey().equals(original.confirmationKey()))return false;
@@ -238,7 +248,7 @@ public final class QuizService extends AccessibilityService {
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime());
   if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、1秒後に再確認します");return;}
   if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上半画面・下2倍の探索を3回行いましたが要素を確認できません");return;}
-  AccessibilityNodeInfo root=getRootInActiveWindow();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
    if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()){
     elementMonitor.reset();revealSearch.found();status("照合中","スライド前に画面が変わったため再確認します");return;

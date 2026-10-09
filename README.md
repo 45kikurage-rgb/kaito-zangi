@@ -4,15 +4,15 @@ LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算
 
 ## ダウンロード
 
-- code 8 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- code 9 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
 - 配布ページ（GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.7-test08
+- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.8-test09
 
 配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合・署名済テストAPKの公開・両配布ページ更新を完了しました。実機での動作検証とは区別し、旧APKは保持します。
 
 ## 現在の版
 
-- 0.1.7-test08 / versionCode 8
+- 0.1.8-test09 / versionCode 9
 - package: `jp.kossacktouch.app`（今後固定）
 - Android 8.0/API 26以上、target API 35
 - Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**
@@ -54,7 +54,7 @@ bash scripts/build.sh
 
 ## 最新の検証資料
 
-- `docs/verification-test06.md`: 動画確認・実装・未検証を分離した改修報告。
+- `docs/verification-test09.md`: 最新の動画確認・実装・未検証を分離した改修報告。
 
 ## 成果物・追加資料
 
@@ -75,3 +75,7 @@ bash scripts/build.sh
 ## code8 第5問入力停止修正
 
 追加動画に対応し、LINE入力領域内の編集要素も認識。入力欄/送信要素を取得できない場合はトークをスワイプせず停止。探索で過去の問題へ戻った場合は回答せず、最新位置へ1回だけ復帰します。2,411チェック・固定署名APK生成合格。修正版の実機入力/送信/完了は再確認待ち。詳細はdocs/verification-test08.md。
+
+## code9 キーボード表示時のLINE誤判定修正
+
+15712.mp4の全区間を確認。イベントのpackageだけで別アプリと判定する処理を削除し、前面アプリのウィンドウ種別・レイヤー・フォーカスを確認。入力方式にかかわらずIMEは入力補助として区別し、対象LINEトークを再確認して操作します。別アプリ・ダイアログでは操作しません。既存の末尾問題選択を維持し、可視性もその問題行の中だけで確認。2,441チェック・固定署名APK生成合格。実機は再確認待ち。詳細はdocs/verification-test09.md。
