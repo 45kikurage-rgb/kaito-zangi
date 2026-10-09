@@ -2,6 +2,8 @@ name: Publish signed test APK
 on:
   push:
     tags: ["v0.1.5-test06"]
+    branches: [fix/test06-line-registration]
+    paths: ["site/downloads/kossack-touch-0.1.5-test06.apk", ".github/workflows/release.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -17,4 +19,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.1.5-test06 site/downloads/kossack-touch-0.1.5-test06.apk site/downloads/SHA256SUMS --prerelease --title '回答ザンギ 0.1.5-test06' --notes-file docs/release-notes.md
+          gh release create v0.1.5-test06 site/downloads/kossack-touch-0.1.5-test06.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.5-test06' --notes-file docs/release-notes.md
