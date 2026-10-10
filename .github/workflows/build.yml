@@ -30,6 +30,7 @@ jobs:
           name: verification-results
           path: |
             build/test-results.txt
+            build/out/aligned.apk
             app/build/reports/lint-results-release.html
             app/build/reports/lint-results-release.xml
   build:
