@@ -1,12 +1,12 @@
 {
-  "name": "回答ザンギ",
-  "version": "0.1.12-icon13",
-  "versionCode": 13,
+  "name": "怪盗ザンギ",
+  "version": "0.1.13-name14",
+  "versionCode": 14,
   "date": "2026-10-10",
   "status": "test-unverified",
   "package": "jp.kossacktouch.app",
-  "apk": "downloads/kossack-touch-0.1.12-icon13.apk",
-  "sha256": "17f8e0a9b1e435e2ae017af0cf6eafd474576177fd2c49fde190fd56c6ecdb68",
+  "apk": "downloads/kaito-zangi-0.1.13-name14.apk",
+  "sha256": "8849306dc8d98116011508ab2d2166a11959a7121a220206ed0f97ebd2730b60",
   "sizeBytes": 455532,
   "physicalDeviceVerified": false,
   "automatedChecks": 2494,
@@ -19,5 +19,5 @@
   "rollbackFromVersionCode": 11,
   "restoredBehaviorVersionCode": 10,
   "cameraMode": "removed",
-  "icon": "icon-512.png?v=13"
+  "icon": "icon-512.png?v=14"
 }

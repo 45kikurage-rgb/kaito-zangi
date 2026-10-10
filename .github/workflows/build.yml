@@ -66,9 +66,9 @@ jobs:
           bash scripts/build.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: kossack-touch-test-apk
+          name: kaito-zangi-test-apk
           path: |
-            build/out/kossack-touch-0.1.11-rollback12.apk
+            build/out/kaito-zangi-0.1.13-name14.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt

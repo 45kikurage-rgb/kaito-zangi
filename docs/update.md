@@ -1,4 +1,4 @@
-# 更新と再配布
+# 怪盗ザンギの更新と再配布
 
 ## 署名の維持
 
@@ -16,7 +16,7 @@ packageは `jp.kossacktouch.app`。初回署名証明書のSHA-256:
 
 リポジトリ: https://github.com/45kikurage-rgb/kaito-zangi
 
-テスト版Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.4-test05
+テスト版Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.13-name14
 
 後続変更はこのリポジトリにpushする。署名鍵、signing.env、個人情報を含む元資料、toolchainはpushしない。`site/downloads` の署名済みAPKとSHA256SUMSを公開配布用に追加する。
 

@@ -1,9 +1,9 @@
 name: Publish signed test APK
 on:
   push:
-    tags: ["v0.1.12-icon13"]
+    tags: ["v0.1.13-name14"]
     branches: [main, fix/test06-line-registration]
-    paths: ["site/downloads/kossack-touch-0.1.12-icon13.apk", "release-assets/**", ".github/workflows/release.yml"]
+    paths: ["site/downloads/kaito-zangi-0.1.13-name14.apk", "release-assets/**", ".github/workflows/release.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,8 +20,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view v0.1.12-icon13 >/dev/null 2>&1; then
+          if gh release view v0.1.13-name14 >/dev/null 2>&1; then
             echo 'This version is already published; preserving existing release assets.'
             exit 0
           fi
-          gh release create v0.1.12-icon13 site/downloads/kossack-touch-0.1.12-icon13.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '回答ザンギ 0.1.12-icon13' --notes-file docs/release-notes.md
+          gh release create v0.1.13-name14 site/downloads/kaito-zangi-0.1.13-name14.apk site/downloads/SHA256SUMS --target "$GITHUB_SHA" --prerelease --title '怪盗ザンギ 0.1.13-name14' --notes-file docs/release-notes.md
