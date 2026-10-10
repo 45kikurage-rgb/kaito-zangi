@@ -23,6 +23,3 @@ java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests
 java -cp build/tests ForegroundTests | tee -a build/test-results.txt
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/ManualFinalTests.java
 java -cp build/tests ManualFinalTests | tee -a build/test-results.txt
-java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/CameraTests.java
-java -cp build/tests CameraTests | tee -a build/test-results.txt
-python3 tests/ReleaseAssemblyTests.py | tee -a build/test-results.txt

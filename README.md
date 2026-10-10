@@ -1,92 +1,26 @@
 # 回答ザンギ
 
-LINEの「超良問スポーツ6」を端末内で認識・正答照合・計算する独立Androidアプリ。ARUNOMATICとは別のpackage・署名・リポジトリです。
+カメラ追加前のcode10の動作に戻したAndroidアプリです。第1〜4問はLINEの画面要素から登録キーワードと50件の正答表を照合して専用A〜Dをタップ。第5問はローカル計算結果とキーボードを表示したところで停止し、入力・送信は本人操作です。標準／対象複製LINEの認識、初回参加／再挑戦、第4問後の上下スワイプを維持しています。
 
-## ダウンロード
+現在版: **0.1.11-rollback12 / versionCode12**。code11から上書き更新できるよう更新番号だけ進めています。package `jp.kossacktouch.app`、署名、設定・履歴の保存先を維持。カメラボタン・CameraActivity・OCR・カメラ権限はありません。外部通信・端末間連携もありません。
 
-- code 11 テスト版配布ページ: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
-- 配布ページ（GitHub Pages）: https://45kikurage-rgb.github.io/kaito-zangi/
-- テスト版APK / ソース: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.10-test11
+- 配布: https://45kikurage-rgb.github.io/kaito-zangi/
+- 配布: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site
+- Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.11-rollback12
+- 検証: [docs/verification-rollback12.md](docs/verification-rollback12.md)
 
-配布ページはGitHub Pagesと既存SitesのURLを使用。mainへの統合・署名済テストAPKの公開・両配布ページ更新を完了しました。実機での動作検証とは区別し、旧APKは保持します。
-
-## 現在の版
-
-- 0.1.10-test11 / versionCode 11
-- package: `jp.kossacktouch.app`（今後固定）
-- Android 8.0/API 26以上、target API 35
-- Nothing Phone 2a / CMF Phone 1でのインストール・5問連続操作は**未検証**
-- 第1〜4問: 50件の正答表を構造化。50件すべてを問題文の固有キーワードで識別し、正答表に登録したA〜Dへ直接照合。画像や選択肢本文は判定に使用しません。
-- 第5問: 三角形、等差数列（区間和・閾値）、両端の並び、倍数5条件、ボクシング（差と約数・互いに素）の演算を実装。毎回の条件を抽出し、固定の数字を回答しません。
-- 実例「ライトフライ48kg・フェザー57kg・互いに素」の期待値63をテスト。
-- 第5問: 計算結果をフロートに表示し、LINEのキーボードを開いて自動処理を終了。数字の入力・送信は本人操作。編集要素の取得を待たず、IMEウィンドウの表示を2回確認して回答表示で停止。入力欄を開けない場合も答えを残して本人操作へ戻す。専用フォームへの自動入力・送信も行わない。実機は再確認待ち。
-- 第4問後の回答方法画面では、提供動画どおりトーク領域を上へ移動して少し下へ戻す操作を交互に行い、隠れている「答え方確認しました！」を最大6回まで探索します。見つかった専用ボタンだけを押し、第5問を表示します。
-- フロート📷からライブカメラモード。日本語OCRを1秒ごとに実行し、同じ問題を2回確認してから既存の50件の正答表／計算処理で答え表示。問題が変わる・読めない・認識が途切れる時は旧答えを消す。カメラ映像は保存しない。通常のLINE自動操作ではOCRに切り替えず、UI要素取得不可時は停止。
-- 初回参加登録: 3本の追加動画を確認し、導入の専用選択肢と既存情報の「登録する」に対応。「変更する」は押さない。都道府県・高校は現在見えている候補からランダムに選び、スクロールしない。生年・性別・規約同意は本人がLINEで操作した後に再生して続行。登録UI全走査は未提供、クリック成功は実機確認待ち。
-- 標準/複製LINE: jp.naver.line系列のpackage、超良問ドリルのタイトル、LINE固有の画面構造を併せて認識。package名入力画面を削除。実行中のLINE切替で停止し、新しい対象トークで再生。未確認回答・登録記録はpackage別に保存。独自packageの仮想化アプリや要素取得不可の複製は対応外。
-- リッチメニュー: 要素で「開始」を取得できる場合のみ自動タップ。提供UI-treeの画像だけのメニューは本人が開始を1回押す。推測座標で押さない。
-- アイコン: 既存の指定デザインを使用し、Adaptive Iconの安全領域に収めた。アプリ内ロゴ、サイトの名称・説明・キャッシュ更新にも対応。
-
-## 使い方
-
-APKをインストール → アプリ内の権限設定をON → スタート → LINEの超良問ドリルを開く → 現在画面でフロートの▶再生（初回登録・再挑戦・問題表示・次問にも対応）。停止は■。第5問で答えを表示して停止し、本人が数字を入力・送信します。フロート上部はドラッグで移動できます。
-
-## データとプライバシー
-
-`app/src/main/assets/answers.json` に問題識別キーワードと登録済みの正答文字A〜Dを保存。第1〜4問は問題文だけを照合し、画像・意味解析・選択肢本文の判定は行いません。
-
-INTERNET権限なし。中央サーバー、端末同期、AI API、広告なし。カメラ用の日本語OCRモデルはAPKに同梱し、INTERNET／ACCESS_NETWORK_STATEは依存ライブラリからも追加させません。画面取得はLINE package系列とネイティブの画面構造に限定し、超良問ドリルのトークタイトルを追加照合します。保存する履歴は認識した問題・回答・操作結果・エラーだけで、通常会話・アカウント情報・認証情報を保存/外部送信しません。Androidバックアップは無効。
+利用者の2026-10-10指示「カメラ機能が良くないので、1つ前のに戻してください」に対応。code10 commit a09edf0bf8506338213c4f42ccd65c1dea302922 のアプリソース・資産・ビルド手順を復元し、版情報だけ変更。旧code01〜11 APK・Release・分割アーカイブは保持。復帰版の実機上書き更新・LINE受入は未確認。
 
 ## ビルド
 
-Android SDKのplatform 35、build-tools 35.0.0、JDK 17、Python 3を用意します。カメラ／日本語OCRの依存・リソース・manifestを正しく組み込むためGradle 8.10.2／Android Gradle Plugin 8.7.3へ移行。CameraX 1.4.2、ML Kit日本語16.0.1を固定し、assembleReleaseとlintReleaseを実行した後、従来の固定鍵でapksigner署名します。署名・applicationId・既存prefs名は変更しません。
+code10と同じJDK17、Android SDK35のaapt／javac／D8／zipalignを使います。カメラ用Gradle依存は不要です。
 
 ```bash
-export ANDROID_HOME=/path/to/android-sdk
-export ANDROID_JAR="$ANDROID_HOME/platforms/android-35/android.jar"
+export ANDROID_JAR=/path/to/android-sdk/platforms/android-35/android.jar
 export ANDROID_BUILD_TOOLS=/path/to/android-sdk/build-tools/35.0.0
-export SIGNING_STORE=/private/kossacktouch.p12
-export SIGNING_STORE_PASSWORD='private-password'
-export SIGNING_ALIAS=kossacktouch
-bash scripts/build.sh
+bash scripts/compile.sh
 ```
 
-`bash scripts/test.sh` だけならAndroid SDKと署名鍵は不要です（JDK 17、Python 3が必要）。
+固定所有者鍵を安全な場所でSIGNING_STORE／SIGNING_STORE_PASSWORD／SIGNING_ALIASに指定した場合のみ `bash scripts/build.sh` で署名できます。鍵・パスワードはリポジトリや公開ページに含めません。CIの署名Secretsは未設定。通常pushのCIは回帰テストと未署名コンパイル、公開CIは署名済みAPKのチェックサム検証と配布を行います。
 
-## 最新の検証資料
-
-- `docs/verification-test11.md`: 最新の動画確認・実装・未検証を分離した改修報告。
-
-## 成果物・追加資料
-
-- `app/`: ソース・正答データ・専用アイコン
-- `site/`: Cloudflare Pages用のスマートフォン向け配布ページ/PWA
-- `docs/verification.md`: 検証結果と実機確認手順
-- `docs/update.md`: 署名維持・更新・GitHub/Cloudflare公開手順
-- `tests/fixtures/`: 会話/個人情報を除去したクイズ部分だけのUIテスト資料
-
-**署名鍵とパスワードはGitHub・配布ページ・友人向けソースZIPに含めません。** 更新には同じ鍵を使用し、versionCodeを増やします。
-
-## code 7追加改修
-
-1秒間隔・2回一致で操作、要素未検出2回で上半画面/速い下2倍の探索を最大3往復。登録画面は探索対象外。第5問の実際の文言と整数・小数案内、a,bのない各1チーム両端問題に対応。数値は入力欄をタップせず一括設定し、数値を確認後に1回だけ送信。フロートは既存サイズ維持。
-
-2,367チェック・Android API35コンパイル・v2/v3署名・旧版証明書一致合格。固定署名鍵は所有者用バックアップから復元。CI署名Secretsは未設定ですがローカルで同じ鍵を使用。実機インストール・起動・登録・送信・全問完了は未検証。詳細はdocs/verification-test07.md。
-
-## code8 第5問入力停止修正
-
-追加動画に対応し、LINE入力領域内の編集要素も認識。入力欄/送信要素を取得できない場合はトークをスワイプせず停止。探索で過去の問題へ戻った場合は回答せず、最新位置へ1回だけ復帰します。2,411チェック・固定署名APK生成合格。修正版の実機入力/送信/完了は再確認待ち。詳細はdocs/verification-test08.md。
-
-## code9 キーボード表示時のLINE誤判定修正
-
-15712.mp4の全区間を確認。イベントのpackageだけで別アプリと判定する処理を削除し、前面アプリのウィンドウ種別・レイヤー・フォーカスを確認。入力方式にかかわらずIMEは入力補助として区別し、対象LINEトークを再確認して操作します。別アプリ・ダイアログでは操作しません。既存の末尾問題選択を維持し、可視性もその問題行の中だけで確認。2,441チェック・固定署名APK生成合格。実機は再確認待ち。詳細はdocs/verification-test09.md。
-
-## code10 第5問を本人操作へ変更
-
-最新の利用者指示（2026-10-09 18:57 JST）に従い、第5問はキーボードを開きフロートに答えを表示するところで終了。入力・送信・結果確認の自動処理はこの実行では行わない。15713.mp4全区間を確認し、編集要素取得待ちを終了条件から外しました。2,494回帰チェック・Android API35・固定署名生成合格。旧APKと設定を保持。詳細はdocs/verification-test10.md。
-
-## code 11: ライブカメラモード
-
-フロートの📷を押すとLINE自動操作を停止し、カメラプレビューへ切り替えます。初回はカメラ権限を許可。別の端末の第○問・問題全文・第1〜4問のA〜Dを1問だけ映すと、A〜Dまたは数値を大きく表示。第5問は計算条件・検算も表示し、回答操作は本人が行います。戻るとフロートへ復帰するが停止状態のままです。2,660自動チェック合格（カメラ文字処理154件、配布復元12件を含む）。光学OCR精度・カメラ起動・上書きインストールは実機未検証。
-
-大容量署名APKは`release-assets/test11`の検証付き分割ファイルで保持し、`python3 scripts/assemble-release-apk.py`で元の完全APKに復元できます。GitHub Release/PagesのCIが復元・全APKチェックサム確認を行い、利用者へは完全なAPKを配布します。
+`bash scripts/test.sh` はSDK・署名鍵不要で、2,494チェックを実施します。

@@ -19,7 +19,7 @@ public final class MainActivity extends Activity {
  @Override public void onPause(){handler.removeCallbacks(refresh);super.onPause();}
  private void build(){ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(20),dp(28),dp(20),dp(36));body.setBackgroundColor(Color.rgb(247,248,244));scroll.addView(body);setContentView(scroll);scroll.setOnApplyWindowInsetsListener((v,insets)->{body.setPadding(dp(20),dp(28)+insets.getSystemWindowInsetTop(),dp(20),dp(36)+insets.getSystemWindowInsetBottom());return insets;});
   ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.quiz_knockout);logo.setContentDescription("回答ザンギのロゴ");body.addView(logo,new LinearLayout.LayoutParams(dp(92),dp(92)));
-  title("回答ザンギ",28);label("超良問ドリル · テスト版 "+Store.VERSION+" / code 11",13);label("この端末だけで問題を確認・計算します。\n第1〜4問は自動回答。第5問は答え表示後、本人が入力・送信します。",15);
+  title("回答ザンギ",28);label("超良問ドリル · テスト版 "+Store.VERSION+" / code 12（カメラ追加前へ復帰）",13);label("この端末だけで問題を確認・計算します。\n第1〜4問は自動回答。第5問は答え表示後、本人が入力・送信します。",15);
   state=label("待機",20);question=label("認識した問題がここに表示されます",16);answer=label("答え: —",22);
   button("スタート · フロートを表示",()->{if(QuizService.instance==null){guide();return;}if(!Store.prefs(this).getBoolean("disclosure",false)){new AlertDialog.Builder(this).setTitle("操作の許可について").setMessage("回答ザンギはアクセシビリティで、自動認識したLINEの超良問ドリル画面の問題文と回答ボタンを読み取り、利用者が再生した時に操作します。初回参加登録では既存情報を変更せず、都道府県・高校は表示中の候補からランダムに選びます。生年・性別は本人が選び、規約は本人がLINEで確認・同意してください。第1〜4問は専用ボタンを押し、第5問は答えを表示してキーボードを開いたところで停止します。数字の入力・送信は本人操作です。問題・回答・エラー履歴はこの端末に保存します。認証情報や会話を外部へ送信しません。停止ボタンでいつでも止められます。").setNegativeButton("取消",null).setPositiveButton("確認して表示",(d,w)->{Store.prefs(this).edit().putBoolean("disclosure",true).apply();QuizService.instance.showFloat();}).show();}else QuizService.instance.showFloat();});
   button("停止",()->{if(QuizService.instance!=null)QuizService.instance.stop("停止","アプリから停止しました");});
@@ -28,7 +28,6 @@ public final class MainActivity extends Activity {
   label("標準LINE・複製LINEは自動認識します。アカウント切替後は対象トークで▶再生。package名の入力は不要です。",14);
   button("回答・エラー履歴",this::history);
   button("計算エンジンで問題文を確認",this::calculator);
-  label("フロートの📷でカメラモード。問題を1問だけ映すと答えを表示します。写真は保存しません。戻った後は▶で再開してください。",14);
   button("前回の未確認記録を解除",()->new AlertDialog.Builder(this).setTitle("LINEの回答結果を確認しましたか？").setMessage("未確認のまま解除すると同じ問題を再操作できる場合があります。現在のLINE画面で結果を確認し、次の未回答問題を表示した後に解除してください。解除しても自動で再生しません。").setNegativeButton("取消",null).setPositiveButton("確認したので解除",(d,w)->{if(QuizService.instance!=null)QuizService.instance.stop("停止","未確認記録解除のため停止");String pkg=Store.prefs(this).getString("active_line_package","");if(!pkg.isEmpty())Store.session(this,pkg).edit().clear().commit();Store.prefs(this).edit().remove("pending").remove("registration_pending").remove("registration_prior_question").apply();Store.log(this,"手動確認","","","利用者が未確認記録を解除");}).show());
   title("安全停止",19);label("知らない問題、条件不明、権限解除、画面OFF、LINE以外の画面では停止します。第5問は計算結果をフロートに表示し、キーボード画面を開いて停止します。数字の入力・送信は本人が行います。キーボードを確認できない場合も答えを表示して停止し、入力欄は本人が開いてください。要確認時は問題と計算結果を確認してください。画面要素が取れない場合のOCRは、このテスト版では未搭載です。",14);
  }
