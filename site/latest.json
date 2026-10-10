@@ -9,7 +9,7 @@
   "sha256": "d5e4acaa301c4233d2327f0b79d15ecfd47b5890e0fff67ac4f9352c7c6d7cfd",
   "sizeBytes": 24303036,
   "physicalDeviceVerified": false,
-  "automatedChecks": 2535,
+  "automatedChecks": 2660,
   "videoQuestionChecks": 6,
   "keywordEntries": 50,
   "textEntries": 50,
@@ -18,5 +18,6 @@
   "finalQuestionMode": "answer-display-manual-submit",
   "cameraMode": "live-japanese-ocr-answer-display",
   "cameraPhysicalVerified": false,
-  "cameraTextChecks": 41
+  "cameraTextChecks": 154,
+  "releaseAssemblyChecks": 12
 }

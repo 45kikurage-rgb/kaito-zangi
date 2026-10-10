@@ -1,4 +1,5 @@
 import jp.kossacktouch.core.*;
+import java.util.*;
 public class CameraTests {
  static int checks;static void check(boolean b){checks++;if(!b)throw new AssertionError("camera "+checks);}
  static void empty(CameraAnswer.Reading r){check(r.answer.isEmpty());}
@@ -21,6 +22,25 @@ public class CameraTests {
   camera.reset();empty(camera.observe("第5問",0));empty(camera.observe("第5問",1000));
   camera.reset();String clipped=fifth.substring(0,fifth.indexOf("、第何項"));empty(camera.observe(clipped,0));empty(camera.observe(clipped,1000));
   camera.reset();empty(camera.observe(fifth+"\n第6問\n別の問題",0));empty(camera.observe(fifth+"\n第6問\n別の問題",1000));
+  // Exercise the complete bundled bank through the camera text route, not only LINE matching.
+  int entries=0;
+  for(AnswerBank.Entry e:AnswerFixture.entries()){
+   String body=e.stem;
+   for(List<String> group:e.keywords)if(!AnswerBank.containsGroups(body,Arrays.asList(group)))body+="\n"+group.get(0);
+   for(List<String> group:e.context)if(!AnswerBank.containsGroups(body,Arrays.asList(group)))body+="\n"+group.get(0);
+   String full="第"+(entries%4+1)+"問\n"+body+"\n【A】任意1\n【B】任意2\n【C】任意3\n【D】任意4";
+   camera.reset();empty(camera.observe(full,0));check(camera.observe(full,1000).answer.equals(e.sourceLetter));entries++;
+  }
+  check(entries==50);
+  // An unknown question after a valid answer must remain blank on repeated observations.
+  camera.reset();empty(camera.observe(q,0));check(camera.observe(q,1000).answer.equals(answers[0]));
+  String unsupported="第2問\n未登録の問題ですか？\n【A】1\n【B】2\n【C】3\n【D】4";
+  empty(camera.observe(unsupported,2000));empty(camera.observe(unsupported,3000));
+  camera.reset();empty(camera.observe(q,0));check(camera.observe(q,2500).answer.equals(answers[0]));
+  empty(camera.observe(q,5001));check(camera.observe(q,6001).answer.equals(answers[0]));
+  // Lifecycle reset invalidates confirmation even if the same problem returns immediately.
+  camera.reset();empty(camera.observe(q,0));check(camera.observe(q,1000).answer.equals(answers[0]));
+  camera.reset();empty(camera.observe(q,2000));check(camera.observe(q,3000).answer.equals(answers[0]));
   System.out.println("PASS "+checks+" camera text checks: stable readings, gaps, new/unreadable/multiple questions, missing choices, changed conditions and local arithmetic. Android optical OCR is not exercised here.");
  }
 }
