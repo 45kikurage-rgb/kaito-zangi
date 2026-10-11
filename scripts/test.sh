@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p build/tests
+python3 scripts/check-calculation-master.py
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -d build/tests app/src/main/java/jp/kossacktouch/core/*.java tests/CoreTests.java
 java -cp build/tests CoreTests | tee build/test-results.txt
 python3 scripts/generate-ui-tests.py
@@ -19,6 +20,8 @@ java -cp build/tests InteractionTests | tee -a build/test-results.txt
 
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/FinalInputTests.java
 java -cp build/tests FinalInputTests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/CalculationMasterTests.java
+java -cp build/tests CalculationMasterTests | tee -a build/test-results.txt
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/ForegroundTests.java
 java -cp build/tests ForegroundTests | tee -a build/test-results.txt
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/ManualFinalTests.java
