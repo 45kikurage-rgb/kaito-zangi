@@ -1,7 +1,7 @@
 name: Verify Android and build signed APK
 on:
   push:
-    branches: [main, fix/test06-line-registration]
+    branches: [main, fix/test06-line-registration, release/code15]
     paths: ["app/**", "scripts/**", "tests/**", "*.gradle", "gradle.properties", "gradle/**", "gradlew*", ".github/workflows/build.yml"]
   workflow_dispatch:
 permissions:
@@ -68,7 +68,7 @@ jobs:
         with:
           name: kaito-zangi-test-apk
           path: |
-            build/out/kaito-zangi-0.1.13-name14.apk
+            build/out/kaito-zangi-0.1.14-calc15.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt
