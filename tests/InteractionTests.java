@@ -13,10 +13,16 @@ public class InteractionTests {
   check(r.missing(now)==RevealSearch.Step.WAIT);check(r.missing(now+1000)==RevealSearch.Step.EXHAUSTED);
   r.reset();check(r.missing(20000)==RevealSearch.Step.WAIT);check(r.missing(22000)==RevealSearch.Step.WAIT);r.found();check(r.missing(23000)==RevealSearch.Step.WAIT);check(r.missing(24000)==RevealSearch.Step.UP);r.moved();r.found();check(r.missing(25000)==RevealSearch.Step.WAIT);check(r.missing(26000)==RevealSearch.Step.DOWN);
   for(float height:new float[]{400,900,1600}){
-   float[] up=RevealSearch.path(100,100+height,RevealSearch.Step.UP),down=RevealSearch.path(100,100+height,RevealSearch.Step.DOWN);
-   check(up[0]>up[1]);check(down[0]<down[1]);check(Math.abs((down[1]-down[0])-2*(up[0]-up[1]))<.01f);check(down[0]>100&&down[1]<100+height);
+   float[] up=RevealSearch.path(100,100+height,1400,RevealSearch.Step.UP),down=RevealSearch.path(100,100+height,1400,RevealSearch.Step.DOWN);
+   check(up[0]>up[1]);check(Math.abs((up[0]-up[1])-140f)<.01f);
+   check(down[0]==101f);check(down[1]==99f+height);check(down[0]<down[1]);
   }
+  float[] narrow=RevealSearch.path(100,200,1400,RevealSearch.Step.UP);
+  check(narrow[1]>=101f);check(narrow[0]>narrow[1]);
+  float[] legacyDown=RevealSearch.path(100,1000,RevealSearch.Step.DOWN);
+  check(legacyDown[0]==101f&&legacyDown[1]==999f);
+
   check(RevealSearch.duration(RevealSearch.Step.DOWN)<RevealSearch.duration(RevealSearch.Step.UP));
-  System.out.println("PASS "+c+" interaction checks: 1-second two-observation confirmation, interrupted observations, missing-target threshold, three pairs, and 1:2 swipe distance.");
+  System.out.println("PASS "+c+" interaction checks: 1-second two-observation confirmation, interrupted observations, missing-target threshold, three pairs, 10%-screen upward swipes, unchanged downward return.");
  }
 }
