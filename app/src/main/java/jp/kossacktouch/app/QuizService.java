@@ -240,7 +240,7 @@ public final class QuizService extends AccessibilityService {
   if(gesturePending||SystemClock.elapsedRealtime()-lastAction<ElementMonitor.INTERVAL_MS)return;
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime());
   if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、1秒後に再確認します");return;}
-  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上半画面・下2倍の探索を3回行いましたが要素を確認できません");return;}
+  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上約10%・下は従来どおりの探索を3回行いましたが要素を確認できません");return;}
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
    if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()){
@@ -254,7 +254,7 @@ public final class QuizService extends AccessibilityService {
    if(overlay!=null){int[] xy=new int[2];overlay.getLocationOnScreen(xy);Rect cover=new Rect(xy[0],xy[1],xy[0]+overlay.getWidth(),xy[1]+overlay.getHeight());
     if(cover.left<=x&&cover.right>=x){float right=r.right-dp(20),left=r.left+dp(20);if(right>cover.right)x=right;else if(left<cover.left)x=left;else {stop("要確認","フロートがスライド領域を覆っています。移動してください");return;}}
    }
-   float[] y=RevealSearch.path(r.top,r.bottom,step);Path path=new Path();path.moveTo(x,y[0]);path.lineTo(x,y[1]);
+   float[] y=RevealSearch.path(r.top,r.bottom,metrics.heightPixels,step);Path path=new Path();path.moveTo(x,y[0]);path.lineTo(x,y[1]);
    final int pair=revealSearch.pair();gesturePending=true;lastAction=SystemClock.elapsedRealtime();elementMonitor.reset();
    boolean accepted=dispatchGesture(new GestureDescription.Builder().addStroke(new GestureDescription.StrokeDescription(path,0,RevealSearch.duration(step))).build(),new GestureResultCallback(){
     @Override public void onCompleted(GestureDescription g){gesturePending=false;elementMonitor.reset();if(running)status("表示確認",pair+"/3 · スライド後の要素を確認しています");}
