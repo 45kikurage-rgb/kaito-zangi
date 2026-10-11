@@ -16,5 +16,15 @@
 - APK内のanswers.jsonとCSVはソースとバイト一致。旧正答データ・画像・過去配布資産保持。
 - 上書き更新の互換条件（同一package/署名、増加versionCode）、設定保存処理の不変を静的確認。実機/エミュレーターへのインストール、設定保持、LINE動作は未確認。
 
-mainへの直接pushは自動承認審査で影響範囲を理由に拒否された。release/code15で配布し、PR #7を作成。main反映とGitHub Pagesの更新はユーザー承認待ち。
+mainへの直接pushは当初自動承認審査で拒否されたが、2026-10-11 22:14 JSTのユーザー指示「本番までお願いします」を受け、PR #7をmainへマージ済み。
+
+## main・GitHub Pages 本番反映完了（2026-10-11）
+
+- Merge commit: 1bb900d294161e65db698f0690cb182533a3cd0a
+- main CI: https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38142441149 — success
+- Pages deploy: https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38142441146 — success
+- Release workflow: https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38142441154 — success、既存code15配布資産を保持
+- https://45kikurage-rgb.github.io/kaito-zangi/ のHTMLとlatest.jsonを直接取得し、code15表示・リンク一致を確認。
+- Pages公開APKをHTTP 200で再取得。455622 bytes、SHA-256 327ceb997d425e048e5452483f4fa443ec967ffedc78ca631a63372093f3ba31。生成APK・Sites・GitHub Releaseと一致。
+- 公開完了と実機受入は別。実機上書き更新・設定保持・LINE動作は引き続き未確認。
 https://github.com/45kikurage-rgb/kaito-zangi/pull/7
