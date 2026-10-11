@@ -1,0 +1,34 @@
+record_type,group,code,label,numeric_value,unit,input_a_source,input_b_source,additional_inputs,condition,calculation_logic,answer_format,rounding_rule,default_values,notes
+problem_pattern,三角形,triangle_max_x,面積が最大になる第3辺 x,,,SPORTS_MASTER,SPORTS_MASTER,なし,"3辺がa,b,x。a,bを固定して面積最大",x = sqrt(a^2 + b^2),数値,小数第2位を四捨五入し、小数第1位まで,a=バレーボール(6); b=カバディ(7),"a,bの間の角が90°のとき面積最大"
+problem_pattern,等差数列,arithmetic_range_sum,第m項から第n項までの和,,,SPORTS_MASTER,SPORTS_MASTER,開始項m; 終了項n,初項=a; 公差=b,T_m=a+(m-1)b; T_n=a+(n-1)b; sum=(n-m+1)(T_m+T_n)/2,整数,なし,m=100; n=200,第100項〜第200項の出題に対応
+problem_pattern,等差数列,arithmetic_first_sum_over,第1項からの和が初めて指定値を超える項,,,SPORTS_MASTER,SPORTS_MASTER,基準値target,初項=a; 公差=b; S_n > target となる最小n,S_n = n(2a+(n-1)b)/2,第n項（整数）,なし,target=10000,直前S_(n-1)<=targetも確認
+problem_pattern,並び順,ends_same,両端が同じスポーツ,,,SPORTS_MASTER,SPORTS_MASTER,なし,a人とb人をランダムに1列に並べる,[a(a-1)+b(b-1)] / [(a+b)(a+b-1)] * 100,%,小数点以下を四捨五入し整数%,,A→AまたはB→B
+problem_pattern,並び順,ends_different,両端が別のスポーツ,,,SPORTS_MASTER,SPORTS_MASTER,なし,a人とb人をランダムに1列に並べる,2ab / [(a+b)(a+b-1)] * 100,%,小数点以下を四捨五入し整数%,,A→BまたはB→A
+problem_pattern,倍数,multiples_neither,aの倍数でもbの倍数でもない,,,SPORTS_MASTER,SPORTS_MASTER,上限N,1〜Nからランダムに1つ選ぶ,"count=N-floor(N/a)-floor(N/b)+floor(N/lcm(a,b)); pct=count/N*100",%,問題文指定に従う。現行ツールは整数なら整数、非整数なら小数表示,N=100,包除原理
+problem_pattern,倍数,multiples_a_not_b,aの倍数で、bの倍数ではない,,,SPORTS_MASTER,SPORTS_MASTER,上限N,1〜Nからランダムに1つ選ぶ,"count=floor(N/a)-floor(N/lcm(a,b)); pct=count/N*100",%,問題文指定に従う。現行ツールは整数なら整数、非整数なら小数表示,N=100,
+problem_pattern,倍数,multiples_b_not_a,bの倍数で、aの倍数ではない,,,SPORTS_MASTER,SPORTS_MASTER,上限N,1〜Nからランダムに1つ選ぶ,"count=floor(N/b)-floor(N/lcm(a,b)); pct=count/N*100",%,問題文指定に従う。現行ツールは整数なら整数、非整数なら小数表示,N=100,
+problem_pattern,倍数,multiples_both,aとb両方の倍数,,,SPORTS_MASTER,SPORTS_MASTER,上限N,1〜Nからランダムに1つ選ぶ,"count=floor(N/lcm(a,b)); pct=count/N*100",%,問題文指定に従う,N=100,将来の派生問題用に実装済み
+problem_pattern,倍数,multiples_either,aかbの少なくとも一方の倍数,,,SPORTS_MASTER,SPORTS_MASTER,上限N,1〜Nからランダムに1つ選ぶ,"count=floor(N/a)+floor(N/b)-floor(N/lcm(a,b)); pct=count/N*100",%,問題文指定に従う,N=100,将来の派生問題用に実装済み
+problem_pattern,ボクシング,boxing_diff_divisor,異なる2数の差がbの正の約数となる,,,BOXING_MASTER,BOXING_MASTER,なし,1〜aから異なる2数を選ぶ,"total=C(a,2); favorable=sum(a-d) for d|b and d<a; pct=favorable/total*100",%,小数点以下を四捨五入し整数%,,差dとなる組はa-d組
+problem_pattern,ボクシング,boxing_diff_not_divisor,異なる2数の差がbの正の約数ではない,,,BOXING_MASTER,BOXING_MASTER,なし,1〜aから異なる2数を選ぶ,"total=C(a,2); favorable_divisor=sum(a-d) for d|b,d<a; desired=total-favorable_divisor",%,小数点以下を四捨五入し整数%,,
+problem_pattern,ボクシング,boxing_coprime,1つ選んだ数がbと互いに素,,,BOXING_MASTER,BOXING_MASTER,なし,1〜aからランダムに1つ選ぶ,"count=# {n in 1..a : gcd(n,b)=1}; pct=count/a*100",%,小数点以下を四捨五入し整数%,,
+problem_pattern,ボクシング,boxing_not_coprime,1つ選んだ数がbと互いに素ではない,,,BOXING_MASTER,BOXING_MASTER,なし,1〜aからランダムに1つ選ぶ,"coprime=# {n in 1..a : gcd(n,b)=1}; desired=a-coprime; pct=desired/a*100",%,小数点以下を四捨五入し整数%,,将来の派生問題用に実装済み
+sports_master,スポーツ人数マスタ,curling,カーリング,4,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,basketball,バスケットボール,5,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,beach_soccer,ビーチサッカー,5,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,volleyball,バレーボール,6,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,ice_hockey,アイスホッケー,6,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,kabaddi,カバディ,7,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,handball,ハンドボール,7,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,water_polo,水球,7,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,soccer,サッカー,11,人,,,,1チームのスターティングメンバー数,,,,,
+sports_master,スポーツ人数マスタ,field_hockey,ホッケー,11,人,,,,1チームのスターティングメンバー数,,,,,
+boxing_master,女子エリートWB新階級マスタ,light_fly,ライトフライ級,48,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,fly,フライ級,51,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,bantam,バンタム級,54,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,feather,フェザー級,57,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,light,ライト級,60,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,welter,ウェルター級,65,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,light_middle,ライトミドル級,70,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,middle,ミドル級,75,kg,,,,最大体重,,,,,
+boxing_master,女子エリートWB新階級マスタ,light_heavy,ライトヘビー級,80,kg,,,,最大体重,,,,,
