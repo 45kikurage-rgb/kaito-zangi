@@ -1,3 +1,5 @@
+> 最新状況: code16の署名・公開は完了し、code17を別枠テスト版として公開済みです。以下は当時の記録です。次回は [signing-handoff.md](signing-handoff.md) と [verification-diag17.md](verification-diag17.md) を参照してください。
+
 # 怪盗ザンギ code16 改修・署名公開ゲート（2026-10-12）
 
 > 後続作業でAndroid標準apksignerによる正式鍵署名・検証を完了。最新の署名結果は [verification-auto16.md](verification-auto16.md)、公開結果は後続の配布検証記録を参照。以下は公開前の時点別記録。

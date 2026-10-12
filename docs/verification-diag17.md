@@ -37,4 +37,14 @@
 
 ## 公開
 
-公開後のURL・再取得ハッシュ・CI結果を追記する。実機未検証のためcode17は別枠テスト版とし、現行code15は維持。
+- PR #11 merge: 2fb7ec36cde0345e16478657f3a921fbb839fb36。main CI run 38250269491成功。
+- 配布PR #12 merge: cd9ab16905fd69b43000590b2b174949f038cbdb。
+- GitHub Release: https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.16-diag17 （別プリリリース、latest=false）。公開run 38250473244成功。
+- GitHub Pages: https://45kikurage-rgb.github.io/kaito-zangi/#test-apk 。公開run 38250473267成功。
+- Sites: https://kaito-zangi-test06.regal-elk-8007.chatgpt.site/#test-apk 。既存publicを維持。version13 / source 9b71fb9ece96f912dcdddbb8fd7795eb8cfb66d7 / deployment appgdep_6accd59793688191b985fc2b0af92fa9、succeeded。
+- 2026-10-12 21:43 JST以降、上記3配布先からAPKを独立再取得し、467,910 bytesと上記SHA-256の完全一致、標準apksignerで正式証明書の一致を確認。
+- Pages/SitesのHTMLでcode17テスト枠とcode15リンクを確認。latest-test.json=17 / latest.json=15。
+- 両ページのcode15 APKも再取得し、旧SHA-256 `327ceb997d425e048e5452483f4fa443ec967ffedc78ca631a63372093f3ba31` に一致。
+- 過去code16 Releaseは変更せず、固定メタデータへ切り替えた公開run 38250473239も成功。
+
+実機未検証のためcode17は別枠テスト版。公開成功・静的更新互換・実機受入は別扱い。Webのリンク/メタデータ/公開APKを検証し、ブラウザ画面の目視QAは未実施。
