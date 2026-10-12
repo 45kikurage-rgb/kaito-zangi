@@ -156,7 +156,7 @@ public final class QuizService extends AccessibilityService {
      status("確定確認待ち","同じ問題への再タップを防止しています");return;
     }
    }
-   if(s.registrationChoicesVisible()){stop("要確認","登録の選択画面を特定できません。スクロールせず停止します");return;}
+   if(s.registrationChoicesVisible()){stop("要確認","登録画面の選択肢が未確認です。画面を確認してください");return;}
    if(q==null&&s.richStart()!=null){
     if(!elementsStable){status("照合中","開始ボタンを2回確認しています");return;}
     if(!session.getBoolean("rich_start_pending",false)){
@@ -204,6 +204,11 @@ public final class QuizService extends AccessibilityService {
   if(registrationSince==0){registrationSince=now;registrationPriorQuestion=s.question==null?"":s.question.key;session.edit().putString("registration_prior_question",registrationPriorQuestion).commit();}
   if(now-registrationSince>300000||registrationSteps>=30){stop("要確認","登録の時間・操作上限に達しました");return true;}
   java.util.Map<String,AccessibilityNodeInfo> controls=s.registrationControls(stage);
+  if(controls.isEmpty()){
+   if(Registration.stage(s.latest)==Registration.Stage.UNKNOWN){stop("要確認","登録画面の選択肢を確認できません。誤った画面ではスライドしません");return true;}
+   scroll(s,true);return true;
+  }
+  revealSearch.found();
   java.util.List<String> labels=new java.util.ArrayList<>(controls.keySet());java.util.Collections.sort(labels);
   String key=stage.name()+":"+jp.kossacktouch.core.Text.norm(labels.toString()).hashCode();
   if(registrationPending.equals(key)){
@@ -292,7 +297,7 @@ public final class QuizService extends AccessibilityService {
    if(now-couponSince>35000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
    status("クーポン表示待ち","クーポンページへ移動するのを待っています");return true;
   }
-  String target=s.couponButton("クーポンを表示する")!=null?"クーポンを表示する":s.couponButton("クーポンをゲットする")!=null?"クーポンをゲットする":"";
+  String target=s.couponButton("クーポンを表示する")!=null?"クーポンを表示する":(!"get_clicked".equals(couponStage)&&s.couponButton("クーポンをゲットする")!=null)?"クーポンをゲットする":"";
   if(target.isEmpty()){
    if(complete||!couponStage.isEmpty()){
     if(couponSince==0)couponSince=now;
@@ -322,16 +327,19 @@ public final class QuizService extends AccessibilityService {
    return target!=null&&performChecked(target,resetSearch);
   }
  }
- private void scroll(Screen s){
-  // Registration and untrusted screens never authorize coordinate gestures.
-  if(!running||!s.trusted()||s.registrationStage()!=Registration.Stage.UNKNOWN||s.registrationChoicesVisible()){stop("要確認","登録画面または対象外の画面では探索しません");return;}
+ private void scroll(Screen s){scroll(s,false);}
+ private void scroll(Screen s,boolean registration){
+  Registration.Stage expected=s.registrationStage();
+  if(!running||!s.trusted()||(registration?(expected==Registration.Stage.UNKNOWN||Registration.stage(s.latest)==Registration.Stage.UNKNOWN):(expected!=Registration.Stage.UNKNOWN||s.registrationChoicesVisible()))){
+   stop("要確認","安全に探索できない画面を検出しました");return;
+  }
   if(gesturePending||SystemClock.elapsedRealtime()-lastAction<ElementMonitor.INTERVAL_MS)return;
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime());
   if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、1秒後に再確認します");return;}
   if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上約10%・下は従来どおりの探索を3回行いましたが要素を確認できません");return;}
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
-   if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()){
+   if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||(registration?(fresh.registrationStage()!=expected||Registration.stage(fresh.latest)==Registration.Stage.UNKNOWN):(fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()))){
     elementMonitor.reset();revealSearch.found();status("照合中","スライド前に画面が変わったため再確認します");return;
    }
    if(((KeyguardManager)getSystemService(KEYGUARD_SERVICE)).isKeyguardLocked()||!((PowerManager)getSystemService(POWER_SERVICE)).isInteractive()){stop("要確認","画面ロック・画面OFFを検知しました");return;}
