@@ -297,7 +297,7 @@ public final class QuizService extends AccessibilityService {
    if(now-couponSince>35000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
    status("クーポン表示待ち","クーポンページへ移動するのを待っています");return true;
   }
-  String target=s.couponButton("クーポンを表示する")!=null?"クーポンを表示する":(!"get_clicked".equals(couponStage)&&s.couponButton("クーポンをゲットする")!=null)?"クーポンをゲットする":"";
+  String target=CouponFlow.next(couponStage,s.couponButton("クーポンをゲットする")!=null,s.couponButton("クーポンを表示する")!=null);
   if(target.isEmpty()){
    if(complete||!couponStage.isEmpty()){
     if(couponSince==0)couponSince=now;
