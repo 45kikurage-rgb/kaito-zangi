@@ -12,4 +12,16 @@ Storeの設定・履歴保存先は不変。これは静的確認であり実機
 実機受入: Nothing Phone 2a/CMF Phone 1で更新・設定保持、第5問入力と送信、登録事前承認、クーポン表示、フロート移動と上端配置を確認する。
 code15 APK/latest.jsonはバイト単位で維持。code16はlatest-test.jsonに分離。
 
-公開APKの再取得結果は公開後に記録する。
+## 本番公開後の検証（2026-10-12 UTC）
+
+- PR #9をmainへ統合: 1da180be67a66a837c6611fec85934e39873bd10。
+- main Android CI [38227767900](https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38227767900)、[Pages配信](https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38228283649)、[テスト版Release作成](https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38228283676)すべてsuccess。
+- [GitHub Releases](https://github.com/45kikurage-rgb/kaito-zangi/releases/tag/v0.1.15-auto16)はprereleaseとして公開。既存リリースの資産は変更なし。
+- [GitHub Pagesの別枠](https://45kikurage-rgb.github.io/kaito-zangi/#test-apk)と[既存サイトの別枠](https://kaito-zangi-test06.regal-elk-8007.chatgpt.site/#test-apk)でcode16リンクを確認。
+- 既存サイトはversion12、本番デプロイsucceeded。ソースcommit: 21807fcb94d81cbd65b68ba58b195bbd6b272ec4。
+- GitHub Releases、GitHub Pages、既存サイトの3公開URLからcode16 APKを再取得。すべて459718 bytes、SHA-256 **2479267eb26d8ef7f2c9cd70c725fa438d5567241e461efc4e9b2b5f179e8a4b**でローカル正式署名APKと完全一致。
+- 再取得APKを標準apksignerで検証しv2/v3署名有効、既存証明書SHA-256一致を再確認。
+- 両ダウンロードサイトのcode15 APKを再取得。455622 bytes、SHA-256 **327ceb997d425e048e5452483f4fa443ec967ffedc78ca631a63372093f3ba31**で従来配布物と一致。
+- 両サイトのlatest.jsonはcode15、latest-test.jsonはcode16。現行版とテスト版は分離済み。
+
+実機による上書き更新・設定保持・LINE操作は未実施。上書き更新の署名/package/versionCode条件は満たすが、実機動作を確認済みとは扱わない。同一packageなので併存インストールはできず、code16からcode15へ通常の上書きダウングレードはできない。
