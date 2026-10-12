@@ -1,4 +1,6 @@
 # 怪盗ザンギ code16 改修・署名公開ゲート（2026-10-12）
+
+> 後続作業でAndroid標準apksignerによる正式鍵署名・検証を完了。最新の署名結果は [verification-auto16.md](verification-auto16.md)、公開結果は後続の配布検証記録を参照。以下は公開前の時点別記録。
  
 ## 現状
 - 開発: PR #8 / feature/registration-preapproval-20261012

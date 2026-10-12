@@ -4,6 +4,8 @@
   Cache-Control: public, max-age=3600
 /latest.json
   Cache-Control: no-store
+/latest-test.json
+  Cache-Control: no-store
 /sw.js
   Cache-Control: no-cache
 /*

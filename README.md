@@ -13,6 +13,13 @@
 
 利用者の2026-10-10指示「カメラ機能が良くないので、1つ前のに戻してください」に対応。code10 commit a09edf0bf8506338213c4f42ccd65c1dea302922 のアプリソース・資産・ビルド手順を復元し、版情報だけ変更。旧code01〜11 APK・Release・分割アーカイブは保持。復帰版の実機上書き更新・LINE受入は未確認。
 
+## code16 テスト版
+
+現行の配布APK・latest.jsonはcode15を維持します。PR #8のcode16はダウンロードページの別枠とlatest-test.jsonで配布します。既存正式鍵による署名、2,531チェック、Android標準apksigner検証を実施。実機の上書き更新・設定保持・LINE動作は未確認です。
+
+- [code16の署名・検証](docs/verification-auto16.md)
+- [code16変更内容](docs/release-notes-auto16.md)
+
 ## ビルド
 
 code10と同じJDK17、Android SDK35のaapt／javac／D8／zipalignを使います。カメラ用Gradle依存は不要です。
