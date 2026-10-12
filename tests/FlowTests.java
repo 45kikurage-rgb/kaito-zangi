@@ -25,6 +25,12 @@ public class FlowTests {
   Question question=Question.parse(q);RunGuard guard=new RunGuard();guard.restore(question.key,5000);check(!guard.canAnswer(question));check(guard.lastConfirmed==3);check(!guard.confirmNext(new Question(3,"old",question.choices)));check(guard.confirmNext(new Question(5,"final",new LinkedHashMap<>())));
   RunGuard finalGuard=new RunGuard();Question finalQ=new Question(5,"final",new LinkedHashMap<>());finalGuard.restore(finalQ.key,5000);check(finalGuard.finalPending&&!finalGuard.canAnswer(finalQ));
   RunGuard newRun=new RunGuard();newRun.lastConfirmed=question.number-1;check(newRun.canAnswer(question));
+  check(CouponFlow.next("",true,false).equals("クーポンをゲットする"));
+  check(CouponFlow.next("get_clicked",true,false).isEmpty());
+  check(CouponFlow.next("get_clicked",true,true).equals("クーポンを表示する"));
+  check(CouponFlow.next("",true,true).equals("クーポンを表示する"));
+  check(CouponFlow.next("display_clicked",true,true).isEmpty());
+  check(CouponFlow.pending("get_clicked")&&CouponFlow.pending("display_clicked")&&!CouponFlow.pending(""));
   System.out.println("PASS "+c+" flow checks: retry/open/correct/final/completion, duplicate and conflicting controls, resumed pending and current question numbering.");
  }
 }
