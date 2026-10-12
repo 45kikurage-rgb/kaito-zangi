@@ -26,3 +26,5 @@ java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests
 java -cp build/tests ForegroundTests | tee -a build/test-results.txt
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/ManualFinalTests.java
 java -cp build/tests ManualFinalTests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Diagnostic17Tests.java
+java -cp build/tests Diagnostic17Tests | tee -a build/test-results.txt

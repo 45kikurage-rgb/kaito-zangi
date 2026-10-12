@@ -43,6 +43,17 @@ public final class Screen implements AutoCloseable {
  public AccessibilityNodeInfo uniqueId(String... suffixes){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes){if(!n.isVisibleToUser()||!n.isEnabled())continue;for(String suffix:suffixes)if(id(n).endsWith(":id/"+suffix)){if(found!=null&&found!=n)return null;found=n;break;}}return found;}
  private NativeComposer nativeComposer(){if(composerModel!=null)return composerModel;List<NativeComposer.Node> ns=new ArrayList<>();for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);ns.add(new NativeComposer.Node(model.parentOf(i),id(n),n.isClickable()&&text(n).isEmpty()&&n.getChildCount()>0?content(n).trim():text(n),n.isVisibleToUser(),n.isEnabled(),n.isEditable(),n.isPassword(),n.isClickable(),String.valueOf(n.getClassName()).equals("android.webkit.WebView")));}composerModel=new NativeComposer(ns,pkg);return composerModel;}
  public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(int i:nativeComposer().inputs())found.add(nodes.get(i));return found;}
+ /** Diagnostic-only fallback: a unique native editable LINE node. Never used for automatic sending. */
+ public List<AccessibilityNodeInfo> testComposers(){
+  List<AccessibilityNodeInfo> strict=composers();if(!strict.isEmpty())return strict;
+  List<AccessibilityNodeInfo> result=new ArrayList<>();int questionBottom=-1;
+  for(int i=0;i<nodes.size();i++)if(model.rowOf(i)==qRow&&nodes.get(i).isVisibleToUser()&&question!=null&&text(nodes.get(i)).contains(question.body)){Rect b=new Rect();nodes.get(i).getBoundsInScreen(b);questionBottom=Math.max(questionBottom,b.bottom);}
+  if(questionBottom<0)return result;
+  for(AccessibilityNodeInfo n:nodes){Rect bounds=new Rect();n.getBoundsInScreen(bounds);if(bounds.centerY()<questionBottom)continue;if(!n.isVisibleToUser()||!n.isEnabled()||!n.isEditable()||n.isPassword()||!pkg.equals(String.valueOf(n.getPackageName())))continue;
+   boolean web=false;AccessibilityNodeInfo p=n.getParent();for(int d=0;p!=null&&d<46;d++){if("android.webkit.WebView".equals(String.valueOf(p.getClassName())))web=true;AccessibilityNodeInfo next=p.getParent();p.recycle();p=next;}if(p!=null)p.recycle();
+   if(!web)result.add(n);
+  }return result;
+ }
  public AccessibilityNodeInfo composerSend(){int i=nativeComposer().send();return i<0?null:nodes.get(i);}
  /** Distinguish coupon action controls from regular message send or unrelated controls. */
  public AccessibilityNodeInfo couponButton(String label){
@@ -75,6 +86,7 @@ public final class Screen implements AutoCloseable {
   AccessibilityNodeInfo p=n.getParent();boolean rich=false;for(int d=0;p!=null&&d<12;d++){if(id(p).endsWith(":id/chat_ui_oa_richmenu"))rich=true;AccessibilityNodeInfo next=p.getParent();p.recycle();p=next;}if(p!=null)p.recycle();if(rich){if(found!=null)return null;found=n;}
  }return found;}
  public Registration.Stage registrationStage(){
+  if(quick("わかった！")!=null&&allVisibleText().contains("高校がある都道府県を選んで"))return Registration.Stage.SCHOOL_GUIDE;
   // Live quick replies identify intro/confirmation even when the prompt is an ordinary chat message.
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.SUMMARY,Registration.Stage.INTRO}){
    for(AccessibilityNodeInfo n:nodes)if(id(n).endsWith(":id/chat_ui_quick_reply_item_root")&&n.isVisibleToUser()&&n.isEnabled()&&Registration.eligible(st,content(n).trim()))return st;
