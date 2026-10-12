@@ -11,7 +11,7 @@ import jp.kossacktouch.core.*;
 
 public final class QuizService extends AccessibilityService {
  public static QuizService instance;
- private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private Button play;private WindowManager.LayoutParams layout;
+ private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play;private WindowManager.LayoutParams layout;private int compactX,compactY;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String current="",answer="",transition="";private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
  private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";
@@ -19,23 +19,59 @@ public final class QuizService extends AccessibilityService {
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
- public void showFloat(){if(overlay!=null)return;overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(12),dp(8),dp(12),dp(8));overlay.setBackgroundColor(Color.rgb(17,40,51));
-  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(12);info.setText("怪盗ザンギ\n待機");overlay.addView(info);
-  LinearLayout row=new LinearLayout(this);play=new Button(this);play.setText("▶ 再生");play.setOnClickListener(v->{if(running)stop("停止","利用者が停止しました");else startRun();});row.addView(play);
-  Button close=new Button(this);close.setText("×");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});row.addView(close);overlay.addView(row);
-  layout=new WindowManager.LayoutParams(dp(200),WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT);layout.gravity=Gravity.TOP|Gravity.LEFT;layout.x=dp(12);layout.y=dp(95);
-  info.setOnTouchListener(new View.OnTouchListener(){float x,y;int ox,oy;public boolean onTouch(View v,MotionEvent e){if(e.getAction()==0){x=e.getRawX();y=e.getRawY();ox=layout.x;oy=layout.y;return true;}if(e.getAction()==2){layout.x=Math.max(0,ox+(int)(e.getRawX()-x));layout.y=Math.max(0,oy+(int)(e.getRawY()-y));wm.updateViewLayout(overlay,layout);return true;}return true;}});
+ public void showFloat(){if(overlay!=null)return;
+  overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setBackgroundColor(Color.rgb(17,40,51));
+  LinearLayout header=new LinearLayout(this);header.setOrientation(LinearLayout.HORIZONTAL);header.setGravity(Gravity.CENTER_VERTICAL);header.setPadding(dp(8),0,dp(4),0);overlay.addView(header,new LinearLayout.LayoutParams(-1,dp(56)));
+  titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(15);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("怪盗ザンギ");titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
+  header.addView(titleView,new LinearLayout.LayoutParams(0,dp(56),1));
+  play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(20);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生・停止");play.setOnClickListener(v->{if(running)stop("停止","利用者が停止しました");else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(56),dp(52)));
+  Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(22);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(56),dp(52)));
+  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(14);info.setPadding(dp(12),dp(6),dp(12),dp(12));info.setGravity(Gravity.TOP);info.setVisibility(View.GONE);overlay.addView(info,new LinearLayout.LayoutParams(-1,dp(112)));
+  android.content.SharedPreferences prefs=Store.prefs(this);compactX=prefs.getInt("float_x",dp(12));compactY=prefs.getInt("float_y",0);
+  layout=new WindowManager.LayoutParams(dp(258),dp(56),WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,PixelFormat.TRANSLUCENT);
+  layout.gravity=Gravity.TOP|Gravity.LEFT;
+  if(android.os.Build.VERSION.SDK_INT>=28)layout.layoutInDisplayCutoutMode=WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+  layout.x=compactX;layout.y=compactY;clampFloat(false);layout.x=compactX;layout.y=compactY;
+  titleView.setOnTouchListener(new View.OnTouchListener(){float sx,sy;int ox,oy;boolean dragging;
+   public boolean onTouch(View v,MotionEvent e){switch(e.getActionMasked()){
+    case MotionEvent.ACTION_DOWN:sx=e.getRawX();sy=e.getRawY();ox=layout.x;oy=layout.y;dragging=false;return true;
+    case MotionEvent.ACTION_MOVE:
+     if(Math.abs(e.getRawX()-sx)+Math.abs(e.getRawY()-sy)>dp(5))dragging=true;
+     layout.x=ox+(int)(e.getRawX()-sx);layout.y=oy+(int)(e.getRawY()-sy);
+     clampFloat(running);if(overlay!=null)wm.updateViewLayout(overlay,layout);return true;
+    case MotionEvent.ACTION_UP:
+     if(dragging){compactY=layout.y;compactX=running?Store.prefs(QuizService.this).getInt("float_x",dp(12)):layout.x;
+      Store.prefs(QuizService.this).edit().putInt("float_x",compactX).putInt("float_y",compactY).apply();}
+     return true;
+    default:return true;
+   }}
+  });
   try{wm.addView(overlay,layout);}catch(Exception e){overlay=null;stop("要確認","フロートを表示できません");}
  }
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
- private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;play=null;}}
+ private void clampFloat(boolean expanded){
+  android.util.DisplayMetrics dm=getResources().getDisplayMetrics();
+  int w=expanded?dm.widthPixels:dp(258),h=expanded?dp(168):dp(56);
+  int maxX=Math.max(0,dm.widthPixels-w),maxY=Math.max(0,dm.heightPixels-h);
+  layout.x=Math.max(0,Math.min(layout.x,maxX));layout.y=Math.max(0,Math.min(layout.y,maxY));
+  if(!expanded){compactX=Math.max(0,Math.min(compactX,maxX));compactY=Math.max(0,Math.min(compactY,maxY));}
+ }
+ private void floatSize(boolean expanded){
+  if(overlay==null||layout==null)return;
+  info.setVisibility(expanded?View.VISIBLE:View.GONE);
+  layout.width=expanded?WindowManager.LayoutParams.MATCH_PARENT:dp(258);
+  layout.height=expanded?dp(168):dp(56);
+  if(expanded){compactX=layout.x;compactY=layout.y;layout.x=0;}else{layout.x=compactX;layout.y=compactY;}
+  clampFloat(expanded);wm.updateViewLayout(overlay,layout);
+ }
+ private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
   session=null;runPackage="";finalPrepared="";savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
-  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■ 停止");status("認識中","現在のLINE画面から開始します");check();
+  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■");floatSize(true);status("認識中","現在のLINE画面から開始します");check();
  }
- public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶ 再生");status(state,detail);Store.log(this,state,current,answer,detail);}
- private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText("怪盗ザンギ · "+state+"\n"+detail);}
+ public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶");floatSize(false);status(state,detail);Store.log(this,state,current,answer,detail);}
+ private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText(state+"\n"+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(!running)return;int type=e.getEventType();
   // Event package identifies its source, not the foreground application (e.g. an IME).
   if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||type==AccessibilityEvent.TYPE_WINDOWS_CHANGED||type==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)handler.post(this::check);
