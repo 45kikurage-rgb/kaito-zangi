@@ -80,7 +80,7 @@ public final class Screen implements AutoCloseable {
    for(AccessibilityNodeInfo n:nodes)if(id(n).endsWith(":id/chat_ui_quick_reply_item_root")&&n.isVisibleToUser()&&n.isEnabled()&&Registration.eligible(st,content(n).trim()))return st;
   }
   String last=model.latest;Registration.Stage hinted=Registration.stage(last);
-  if(hinted!=Registration.Stage.UNKNOWN&&!registrationControls(hinted).isEmpty())return hinted;
+  if(hinted!=Registration.Stage.UNKNOWN)return hinted; // Wait for candidate controls if off-screen
   Registration.Stage found=Registration.Stage.UNKNOWN;
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.PREFECTURE,Registration.Stage.SCHOOL_INITIAL,Registration.Stage.SCHOOL})if(!registrationControls(st).isEmpty()){if(found!=Registration.Stage.UNKNOWN)return Registration.Stage.UNKNOWN;found=st;}
   return found;
