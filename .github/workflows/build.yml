@@ -35,7 +35,7 @@ jobs:
             build/test-results.txt
             build/out/aligned.apk
   build:
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     needs: verify
     runs-on: ubuntu-latest
     steps:
