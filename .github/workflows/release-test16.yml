@@ -1,0 +1,37 @@
+name: Publish code16 test APK
+on:
+  push:
+    branches: [main]
+    paths: ["site/downloads/kaito-zangi-0.1.15-auto16.apk", "site/latest-test.json", ".github/workflows/release-test16.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify test APK metadata and checksum
+        run: |
+          cd site/downloads
+          sha256sum -c SHA256SUMS-code16.txt
+          cd ../..
+          python3 - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          m=json.loads(Path('site/latest-test.json').read_text())
+          p=Path('site')/m['apk']
+          assert m['versionCode']==16 and m['channel']=='test'
+          assert len(p.read_bytes())==m['sizeBytes']
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==m['sha256']
+          assert json.loads(Path('site/latest.json').read_text())['versionCode']==15
+          PY
+      - name: Publish separate prerelease and preserve existing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v0.1.15-auto16 >/dev/null 2>&1; then
+            echo 'Release already exists; preserving all existing assets.'
+            exit 0
+          fi
+          gh release create v0.1.15-auto16 site/downloads/kaito-zangi-0.1.15-auto16.apk site/downloads/SHA256SUMS-code16.txt --target "$GITHUB_SHA" --prerelease --latest=false --title '怪盗ザンギ code16 テスト版' --notes-file docs/release-notes-auto16.md
