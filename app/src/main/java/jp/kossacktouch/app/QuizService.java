@@ -68,9 +68,9 @@ public final class QuizService extends AccessibilityService {
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
   session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
-  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■");floatSize(true);status("認識中","現在のLINE画面から開始します");check();
+  registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setContentDescription("実行中・タップで停止");floatSize(true);status("認識中","現在のLINE画面から開始します");check();
  }
- public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶");floatSize(false);status(state,detail);Store.log(this,state,current,answer,detail);}
+ public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setContentDescription("再生");floatSize(false);status(state,detail);Store.log(this,state,current,answer,detail);}
  private void status(String state,String detail){Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText(state+"\n"+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(!running)return;int type=e.getEventType();
   // Event package identifies its source, not the foreground application (e.g. an IME).
@@ -357,7 +357,7 @@ public final class QuizService extends AccessibilityService {
     @Override public void onCancelled(GestureDescription g){gesturePending=false;if(running)stop("要確認","スライドが中断されました");}
    },handler);
    if(!accepted){gesturePending=false;stop("要確認","スライドを実行できません");return;}
-   revealSearch.moved();status("要素探索",pair+"/3 · "+(step==RevealSearch.Step.UP?"半画面を上へ":"2倍の距離を速く下へ"));
+   revealSearch.moved();status("要素探索",pair+"/3 · "+(step==RevealSearch.Step.UP?"画面の約10%を上へ":"従来の距離で下へ"));
   }
  }
  @Override public void onInterrupt(){stop("要確認","アクセシビリティ処理が中断されました");}
