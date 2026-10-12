@@ -16,5 +16,5 @@ if ! grep -q "^Signer #1 certificate SHA-256 digest: $EXPECTED_CERT$" build/sign
   exit 1
 fi
 mv build/out/signed-candidate.apk build/out/kaito-zangi-0.1.15-auto16.apk
-sha256sum build/out/kaito-zangi-0.1.14-calc15.apk > build/SHA256SUMS
+sha256sum build/out/kaito-zangi-0.1.15-auto16.apk > build/SHA256SUMS
 printf 'APK built and signature verified.\n'
