@@ -1,5 +1,8 @@
 name: Verify Android and build signed APK
 on:
+  pull_request:
+    branches: [main]
+    paths: ["app/**", "scripts/**", "tests/**", "*.gradle", "gradle.properties", "gradle/**", "gradlew*", ".github/workflows/build.yml"]
   push:
     branches: [main, fix/test06-line-registration, release/code15]
     paths: ["app/**", "scripts/**", "tests/**", "*.gradle", "gradle.properties", "gradle/**", "gradlew*", ".github/workflows/build.yml"]
