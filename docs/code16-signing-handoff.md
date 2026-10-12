@@ -27,3 +27,11 @@
 - クーポンWebViewが画面テキストを公開しない場合、リンクはクリックされても自動完了の確証がない。確認停止となる。
 - ステータスバーへの重なりはAndroid/ランチャー実機によって異なるため、端末2機種で要確認。
 - ご本人以外へ配布した場合、事前承認設定は自動引継ぎせず端末ごとの選択が必要。
+
+## 2026-10-12 継続確認（公開前）
+- Library `kossack-touch-owner-signing-backup.zip` を取得し、秘密キーストアと設定を安全なローカル作業領域へ復元。Java keytoolで証明書SHA256 `20f8f43972be30b9b3ac94f83e3bcb8d5bf98d3c81b0b47bb7a24b19aa57d302` が現行版と一致することを確認。鍵の内容・パスワードは公開していない。
+- PR #8 head `11d884ba17bbd7d59294def5f6e4b4769d658b13` で `scripts/build.sh` の誤った旧code15 SHA256SUMS出力名をcode16へ修正。CI: https://github.com/45kikurage-rgb/kaito-zangi/actions/runs/38224305683 検証成功（署名buildは実行していない）。
+- 既存CIのunsigned aligned APKから同じ証明書の秘密鍵でローカル検証用APKを署名作成。SHA-256 `3c06fad9b80f6cd5f67e366f104509f5ad7d0348c971189ae5bb42b43c7b8507` / 452863 bytes。署名方式v2をローカル実装で作成し、独立したv2パーサでRSA署名・ファイルダイジェスト・公開鍵と証明書・ZIP整合性を照合。
+- ただし **Android SDK標準 apksigner による検証・実機インストールは未実施**。本番採用には標準 apksigner での署名・検証が必要。ローカル候補を「正式公開済み」と扱わない。
+- 接続されたGitHubツールはローカルAPKバイナリのGitHub Releaseへの直接アップロードやActions Secretsへの登録をサポートしていないため、**GitHub ReleaseおよびGitHub Pagesの公開版は引き続きcode15**。PR #8は未統合、既存利用者の配布資産・設定は保全。
+- 次のWorkでは、同じLibrary所有者鍵を使い Android SDK35 の `scripts/build.sh` で **標準apksignerによる正式署名** → 旧版証明書一致確認 → 配布資材作成 → GitHub Release/Pages/Sites更新 → 公開APKの再取得照合を実施。端末の上書き・設定保持は実機未確認として報告する。
