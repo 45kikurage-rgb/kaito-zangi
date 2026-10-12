@@ -12,6 +12,11 @@ public class Test06Tests {
   ns.add(node(-1,"header_title","別のトーク",true,false));check(!LineIdentity.target("jp.naver.line.android",ns));
   ns=base("超良問ドリル");ns.remove(1);check(!LineIdentity.target("jp.naver.line.android",ns));
   check(Registration.personal(Registration.Stage.YEAR));check(Registration.personal(Registration.Stage.SEX));check(Registration.personal(Registration.Stage.TERMS));check(!Registration.personal(Registration.Stage.PREFECTURE));check(!Registration.personal(Registration.Stage.SCHOOL));
+  for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.TERMS}){check(!Registration.canProceed(st,false));check(Registration.canProceed(st,true));}
+  check(Registration.canProceed(Registration.Stage.INTRO,false));check(Registration.canProceed(Registration.Stage.PREFECTURE,false));
+  check(Registration.choose(Registration.Stage.YEAR,Arrays.asList("生まれた年を選んでください","2000年","2001年"),new Random(1)).matches("200[01]年"));
+  check(Arrays.asList("男性","女性").contains(Registration.choose(Registration.Stage.SEX,Arrays.asList("男性","女性"),new Random(1))));
+  check("参加規約に同意して進む".equals(Registration.choose(Registration.Stage.TERMS,Arrays.asList("参加規約に同意して進む","変更する","キャンセル"),new Random(1))));
   check(Registration.eligible(Registration.Stage.SCHOOL,"青山学院横浜英和高等学校（私\n立）"));check(!Registration.eligible(Registration.Stage.SCHOOL,"高校を変更する"));
   for(String s:Arrays.asList("ちゃんと聞きます！","わかりました！","初めてだけど頑張る！","が、がんばる..","全国TOP10入りは厳しいかも..","地域別なら頑張ればいけるかも？！","昨年同様のバージョンアップだすけ！","ランキング上位目指すぞ！"))check(Registration.eligible(Registration.Stage.INTRO,s));
   for(String s:Arrays.asList("友だちを追加","変更する","規約に同意","広告を見る","送信","A","B"))check(!Registration.eligible(Registration.Stage.INTRO,s));
