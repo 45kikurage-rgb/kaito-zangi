@@ -2,7 +2,7 @@ name: Publish code16 test APK
 on:
   push:
     branches: [main]
-    paths: ["site/downloads/kaito-zangi-0.1.15-auto16.apk", "site/latest-test.json", ".github/workflows/release-test16.yml"]
+    paths: ["site/downloads/kaito-zangi-0.1.15-auto16.apk", ".github/workflows/release-test16.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,7 +19,7 @@ jobs:
           python3 - <<'PY'
           import json, hashlib
           from pathlib import Path
-          m=json.loads(Path('site/latest-test.json').read_text())
+          m=json.loads(Path('site/releases/code16.json').read_text())
           p=Path('site')/m['apk']
           assert m['versionCode']==16 and m['channel']=='test'
           assert len(p.read_bytes())==m['sizeBytes']
