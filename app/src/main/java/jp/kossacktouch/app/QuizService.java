@@ -14,7 +14,7 @@ public final class QuizService extends AccessibilityService {
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play;private WindowManager.LayoutParams layout;private int compactX,compactY;
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String current="",answer="",transition="";private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
- private android.content.SharedPreferences session;private String runPackage="",finalPrepared="";
+ private android.content.SharedPreferences session;private String runPackage="",finalPrepared="",couponStage="";private long couponSince=0,finalSince=0;
  private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
@@ -67,7 +67,7 @@ public final class QuizService extends AccessibilityService {
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;}}
  private void startRun(){if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
-  session=null;runPackage="";finalPrepared="";savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
+  session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setText("■");floatSize(true);status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){running=false;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setText("▶");floatSize(false);status(state,detail);Store.log(this,state,current,answer,detail);}
@@ -93,11 +93,14 @@ public final class QuizService extends AccessibilityService {
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","前面のLINE画面を確認できません（別アプリ・ダイアログ・権限）");return;}
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();stop("要確認","対応するLINEの画面ではありません");return;}
   try(Screen s=new Screen(root)){
-   if(!s.trusted()){stop("要確認","対象LINE画面を確認できません（権限・トーク・要素数を確認）");return;}
+   if(!s.trusted()){
+    if("display_clicked".equals(couponStage)&&s.verifiedCouponPage()){clearPending();session.edit().remove("coupon_stage").commit();stop("完了","クーポンページを確認しました");return;}
+    stop("要確認","対象LINE画面を確認できません。クーポンを開いている場合は表示を目視確認してください");return;
+   }
    if(runPackage.isEmpty()){
     runPackage=s.pkg;Store.migrateSession(this,s.pkg);session=Store.session(this,s.pkg);
     savedPending=session.getString("pending","");savedPackage=s.pkg;registrationPending=session.getString("registration_pending","");registrationPriorQuestion=session.getString("registration_prior_question","");
-    finalPrepared=session.getString("final_prepared","");Store.prefs(this).edit().putString("active_line_package",s.pkg).apply();
+    finalPrepared=session.getString("final_prepared","");couponStage=session.getString("coupon_stage","");Store.prefs(this).edit().putString("active_line_package",s.pkg).apply();
    }else if(!runPackage.equals(s.pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}
    previousPackage=s.pkg;elementsStable=elementMonitor.observe(s.confirmationKey(),now);
    if(finalAnchor.mismatch(s.question)){
@@ -109,9 +112,11 @@ public final class QuizService extends AccessibilityService {
     status("現在位置復帰","過去の問題を操作せず、最新メッセージへ戻しています");return;
    }
    if(elementsStable&&s.currentFinal()&&s.visibleQuestion())finalAnchor.bind(s.question);
-   if(manualFinal.started()&&!s.currentFinal()){showFinalAnswer("入力・送信は本人操作");return;}
+   if(!finalPrepared.isEmpty()&&!s.currentFinal()&&s.question!=null&&s.question.number==5&&!QuizFlow.complete(s.model)){stop("要確認","第5問の入力途中に画面が変わったため停止しました");return;}
    boolean complete=QuizFlow.complete(s.model);
-   if(complete){if(!elementsStable){status("照合中","完了表示を2回確認しています");return;}clearPending();guard.pending="";stop("完了","クイズの完了表示を確認しました");return;}
+   if(complete||!couponStage.isEmpty()||s.couponButton("クーポンをゲットする")!=null||s.couponButton("クーポンを表示する")!=null){
+    if(handleCoupon(s,now,complete))return;
+   }
    String next=QuizFlow.transition(s.model);
    if(next.isEmpty()&&QuizFlow.finalGuide(s.model)){
     scroll(s);
@@ -166,7 +171,7 @@ public final class QuizService extends AccessibilityService {
    current="第"+q.number+"問\n"+q.body;
    if(QuizFlow.correct(s.model)){if(now-questionSince>60000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
    if(!guard.canAnswer(q)){stop("要確認","問題番号が想定した順序と異なります");return;}
-   if(!s.visibleQuestion()&&!(q.number==5&&manualFinal.started())){scroll(s);return;}
+   if(!s.visibleQuestion()&&!(q.number==5&&finalPrepared.equals(q.key))){scroll(s);return;}
    try{
     if(q.number<5){answer=bank.match(q);status("回答待機",q.number+"/5 · 答え "+answer);AccessibilityNodeInfo b=s.quick(answer);
      if(b==null){if(now-questionSince>60000){stop("要確認","回答ボタンが表示されません");return;}scroll(s);return;}
@@ -234,28 +239,75 @@ public final class QuizService extends AccessibilityService {
   try{for(AccessibilityWindowInfo w:windows)if(w.getType()==AccessibilityWindowInfo.TYPE_INPUT_METHOD){Rect bounds=new Rect();w.getBoundsInScreen(bounds);if(!bounds.isEmpty())return true;}return false;}
   finally{for(AccessibilityWindowInfo w:windows)w.recycle();}
  }
- private void showFinalAnswer(String detail){stop("回答表示","第5問 · 答え: "+answer+"\n"+detail);}
  private void handleFinal(Screen original,Question q,long now){
   if(!FinalSubmission.numeric(answer)){stop("要確認","計算結果が数値だけではありません");return;}
-  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","第5問 · 答え: "+answer+"\n前面のLINE画面を確認できません");return;}
-  try(Screen s=new Screen(root)){
-   if(!running||!s.trusted()||!s.pkg.equals(runPackage)||!s.currentFinal()||(!s.visibleQuestion()&&!manualFinal.started())||!s.question.key.equals(q.key)||!s.confirmationKey().equals(original.confirmationKey())){elementMonitor.reset();status("照合中","第5問の画面が変わったため再確認します");return;}
-   // A visible IME completes the handoff even if LINE does not expose an editable node.
-   boolean shown=keyboardVisible();AccessibilityNodeInfo opener=s.keyboardButton();
-   java.util.List<AccessibilityNodeInfo> inputs=shown?java.util.Collections.emptyList():s.composers();
-   ManualFinal.Step step=manualFinal.observe(q.key,elementsStable,shown,opener!=null,inputs.size(),inputs.size()==1&&inputs.get(0).isClickable(),now);
-   switch(step){
-    case DISPLAY:showFinalAnswer("入力・送信は本人操作");return;
-    case MANUAL_OPEN:showFinalAnswer("入力欄を開いて本人が入力・送信してください");return;
-    case TIMEOUT:showFinalAnswer("キーボード未確認。本人が入力・送信してください");return;
-    case OPEN_KEYBOARD:
-    case FOCUS_INPUT:
-     AccessibilityNodeInfo target=step==ManualFinal.Step.OPEN_KEYBOARD?opener:inputs.get(0);
-     if(!click(s,target)){showFinalAnswer("入力欄を開いて本人が入力・送信してください");return;}
-     status("キーボード表示待ち","第5問 · 答え: "+answer+"\n入力・送信は本人操作");return;
-    default:status("回答表示準備","第5問 · 答え: "+answer+"\nキーボード表示を確認しています");return;
-   }
+  if(!FinalSubmission.messageFormat(original.model)){
+   stop("要確認","第5問の数字回答手順を確認できません。誤送信防止のため手動確認してください");return;
   }
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","第5問のLINE入力画面を確認できません");return;}
+  try(Screen s=new Screen(root)){
+   if(!running||!s.trusted()||!s.pkg.equals(runPackage)||!s.currentFinal()||s.question==null||!s.question.key.equals(q.key)||!s.confirmationKey().equals(original.confirmationKey())){
+    elementMonitor.reset();status("照合中","第5問の画面を再確認します");return;
+   }
+   java.util.List<AccessibilityNodeInfo> inputs=s.composers();
+   if(inputs.size()!=1){
+    AccessibilityNodeInfo opener=s.keyboardButton();
+    if(opener!=null&&finalSince==0&&elementsStable){finalSince=now;if(!click(s,opener))stop("要確認","数字入力欄を開けません");else status("入力欄待機","LINEの数字入力欄を開いています");return;}
+    if(finalSince==0)finalSince=now;
+    if(now-finalSince>12000){stop("要確認","LINEの入力欄を一意に確認できません");return;}
+    status("入力欄待機","入力欄の表示を確認しています");return;
+   }
+   AccessibilityNodeInfo input=inputs.get(0);
+   if(!input.isEditable()||input.isPassword()){stop("要確認","LINEの数字入力欄を安全に確認できません");return;}
+   String draft=Screen.inputValue(input);
+   boolean prepared=q.key.equals(finalPrepared);
+   if(!FinalSubmission.draftSafe(draft,answer,prepared)){
+    stop("要確認","入力欄に別の文字があります。上書き・送信しません");return;
+   }
+   if(!prepared){
+    if(!elementsStable){status("照合中","入力欄と第5問を再確認しています");return;}
+    android.os.Bundle args=new android.os.Bundle();args.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,answer);
+    boolean entered=input.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,args);
+    if(!entered){if(input.isClickable()&&finalSince==0&&click(s,input)){finalSince=now;status("入力準備","入力欄を選択しています");return;}
+     stop("要確認","入力欄への数字設定に失敗しました");return;}
+    if(!session.edit().putString("final_prepared",q.key).commit()){stop("要確認","入力操作の記録を保存できません");return;}
+    finalPrepared=q.key;finalSince=now;lastAction=now;elementMonitor.reset();status("入力確認待ち","第5問 · 答え: "+answer+" を設定。送信前に照合中");return;
+   }
+   if(!answer.equals(draft)){if(now-finalSince>15000){stop("要確認","入力した数字を読み戻せないため送信しません");return;}status("入力確認待ち","数字の入力結果を確認しています");return;}
+   if(!elementsStable){status("送信確認","第5問の数字と送信ボタンを再確認しています");return;}
+   AccessibilityNodeInfo send=s.composerSend();
+   if(send==null){if(now-finalSince>18000){stop("要確認","青い送信ボタンを特定できません");return;}status("送信待機","青い送信ボタンを確認しています");return;}
+   if(!session.edit().putString("pending",q.key).putString("final_submit_key",q.key).commit()){
+    stop("要確認","送信の二重操作防止記録を保存できません");return;
+   }
+   guard.mark(q,now);lastAction=now;
+   if(!performChecked(send)){stop("要確認","送信ボタンの操作結果が不明です。二重送信防止のため再試行しません");return;}
+   questionSince=now;status("送信済確認待ち","第5問の数字を送信しました。正解画面を待っています");
+  }
+ }
+ private boolean handleCoupon(Screen s,long now,boolean complete){
+  if("display_clicked".equals(couponStage)){
+   if(s.verifiedCouponPage()){clearPending();session.edit().remove("coupon_stage").commit();stop("完了","クーポン表示を確認しました");return true;}
+   if(couponSince==0)couponSince=now;
+   if(now-couponSince>35000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
+   status("クーポン表示待ち","クーポンページへ移動するのを待っています");return true;
+  }
+  String target=s.couponButton("クーポンを表示する")!=null?"クーポンを表示する":s.couponButton("クーポンをゲットする")!=null?"クーポンをゲットする":"";
+  if(target.isEmpty()){
+   if(complete||!couponStage.isEmpty()){
+    if(couponSince==0)couponSince=now;
+    if(now-couponSince>45000){stop("要確認","クーポンの操作ボタンが現れません");return true;}
+    status("クーポン待機","クーポン専用ボタンの表示を確認しています");return true;
+   }
+   return false;
+  }
+  if(!elementsStable){status("照合中",target+" を確認しています");return true;}
+  if(now-lastAction<ElementMonitor.INTERVAL_MS)return true;
+  String nextStage=target.equals("クーポンを表示する")?"display_clicked":"get_clicked";
+  if(!session.edit().putString("coupon_stage",nextStage).commit()){stop("要確認","クーポンの二重操作防止記録を保存できません");return true;}
+  couponStage=nextStage;couponSince=now;
+  if(!click(s,s.couponButton(target))){stop("要確認",target+" の操作が未確認です。重複操作しません");return true;}
+  questionSince=now;status("クーポン進行",target+" をタップしました");return true;
  }
  private boolean click(Screen original,AccessibilityNodeInfo old){return click(original,old,true);}
  private boolean click(Screen original,AccessibilityNodeInfo old,boolean resetSearch){
