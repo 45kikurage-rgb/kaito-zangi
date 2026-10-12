@@ -156,9 +156,9 @@ public final class QuizService extends AccessibilityService {
    return false;
   }
   if(!guard.pending.isEmpty()){stop("要確認","回答の確定待ちに登録画面を検知しました");return true;}
-  if(Registration.personal(stage)){
+  if(!Registration.canProceed(stage,Store.prefs(this).getBoolean("registration_preapproved_v1",false))){
    current="本人確認 · "+stage.name();answer="";
-   stop("本人確認",stage==Registration.Stage.TERMS?"LINEで参加規約を読み、本人が同意してから▶再生してください":"生年・性別は本人がLINEで選択してください。選択後に▶再生で続行します");return true;
+   stop("本人確認",stage==Registration.Stage.TERMS?"事前承認はOFFです。LINEで参加規約を確認して同意するか、アプリで事前承認を設定してください":"事前承認はOFFです。LINEで本人情報を選択するか、アプリで初回登録の事前承認を設定してください");return true;
   }
   if(registrationSince==0){registrationSince=now;registrationPriorQuestion=s.question==null?"":s.question.key;session.edit().putString("registration_prior_question",registrationPriorQuestion).commit();}
   if(now-registrationSince>300000||registrationSteps>=30){stop("要確認","登録の時間・操作上限に達しました");return true;}
