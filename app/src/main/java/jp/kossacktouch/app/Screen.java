@@ -44,6 +44,27 @@ public final class Screen implements AutoCloseable {
  private NativeComposer nativeComposer(){if(composerModel!=null)return composerModel;List<NativeComposer.Node> ns=new ArrayList<>();for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);ns.add(new NativeComposer.Node(model.parentOf(i),id(n),n.isClickable()&&text(n).isEmpty()&&n.getChildCount()>0?content(n).trim():text(n),n.isVisibleToUser(),n.isEnabled(),n.isEditable(),n.isPassword(),n.isClickable(),String.valueOf(n.getClassName()).equals("android.webkit.WebView")));}composerModel=new NativeComposer(ns,pkg);return composerModel;}
  public List<AccessibilityNodeInfo> composers(){List<AccessibilityNodeInfo> found=new ArrayList<>();for(int i:nativeComposer().inputs())found.add(nodes.get(i));return found;}
  public AccessibilityNodeInfo composerSend(){int i=nativeComposer().send();return i<0?null:nodes.get(i);}
+ /** Distinguish coupon action controls from regular message send or unrelated controls. */
+ public AccessibilityNodeInfo couponButton(String label){
+  if(!label.equals("クーポンをゲットする")&&!label.equals("クーポンを表示する"))return null;
+  AccessibilityNodeInfo quick=quick(label);if(quick!=null)return quick;
+  AccessibilityNodeInfo found=null;
+  for(int i=0;i<nodes.size();i++){
+   AccessibilityNodeInfo n=nodes.get(i);
+   if(!n.isVisibleToUser()||!n.isEnabled()||!n.isClickable()||!id(n).contains(":id/chat_ui_"))continue;
+   String candidate=content(n).trim();
+   if(!label.equals(candidate))continue;
+   if(found!=null&&found!=n)return null;
+   found=n;
+  }
+  return found;
+ }
+ public boolean verifiedCouponPage(){
+  String t=allVisibleText();
+  return (t.contains("セブン‐イレブン")||t.contains("セブン-イレブン")||t.contains("セブンイレブン"))
+      &&(t.contains("バーコード")||t.contains("クーポン"))
+      &&(t.contains("ポカリ")||t.contains("交換")||t.contains("無料"));
+ }
  public boolean composerSurface(){AccessibilityNodeInfo n=uniqueId("chat_ui_custom_expandable_input_container");return n!=null&&n.isVisibleToUser();}
  public boolean formEvidence(){if(!numericInputs().isEmpty()||submit()!=null)return true;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&String.valueOf(n.getClassName()).equals("android.webkit.WebView"))return true;return false;}
  public boolean numericForm(){String t=Text.clean(allVisibleText());return t.contains("第5問")&&t.contains("回答");}
