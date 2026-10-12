@@ -35,7 +35,7 @@ jobs:
             build/test-results.txt
             build/out/aligned.apk
   build:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     needs: verify
     runs-on: ubuntu-latest
     steps:
@@ -71,7 +71,7 @@ jobs:
         with:
           name: kaito-zangi-test-apk
           path: |
-            build/out/kaito-zangi-0.1.14-calc15.apk
+            build/out/kaito-zangi-0.1.15-auto16.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt
