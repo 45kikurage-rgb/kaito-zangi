@@ -24,7 +24,7 @@ jobs:
           assert m['versionCode']==20 and m['channel']=='test'
           assert len(p.read_bytes())==m['sizeBytes']
           assert hashlib.sha256(p.read_bytes()).hexdigest()==m['sha256']
-          assert json.loads(Path('site/latest.json').read_text())['versionCode']==15
+          assert json.loads(Path('site/releases/code15.json').read_text())['versionCode']==15
           PY
       - name: Publish separate prerelease and preserve existing assets
         env:
