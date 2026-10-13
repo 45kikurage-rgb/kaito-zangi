@@ -1,7 +1,7 @@
 package jp.kossacktouch.core;
-/** Two consecutive one-second observations; input changes and action completion restart confirmation. */
+/** Two consecutive half-second observations; input changes and action completion restart confirmation. */
 public final class ElementMonitor {
- public static final long INTERVAL_MS=1000;
+ public static final long INTERVAL_MS=500;
  private String key="";private int count;private long observed=-1;
  public boolean observe(String next,long now){
   if(observed>=0&&now-observed<INTERVAL_MS)return false;

@@ -4,6 +4,8 @@ public final class FinalAnchor {
  private String key="";private boolean recovery;
  public void bind(Question q){if(key.isEmpty()&&q!=null&&q.number==5)key=q.key;}
  public boolean mismatch(Question q){return !key.isEmpty()&&(q==null||!key.equals(q.key));}
+ /** A recorded submission can advance to its result when the Q5 row leaves the viewport. */
+ public boolean result(Question q,boolean submitted,boolean complete){return submitted&&complete&&!key.isEmpty()&&(q==null||key.equals(q.key));}
  public boolean recoverOnce(){if(recovery)return false;recovery=true;return true;}
  public void reset(){key="";recovery=false;}
 }

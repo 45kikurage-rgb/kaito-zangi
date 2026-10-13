@@ -27,5 +27,8 @@ public final class InputDiagnostics {
   AccessibilityNodeInfo focus=s.nodes.isEmpty()?null:s.nodes.get(0).findFocus(AccessibilityNodeInfo.FOCUS_INPUT);
   if(focus!=null){try{add(c,"FOCUS_INPUT",attrs(focus));}finally{focus.recycle();}}
   int count=0;for(AccessibilityNodeInfo n:s.nodes){if(!(n.isEditable()||action(n,AccessibilityNodeInfo.ACTION_SET_TEXT)||String.valueOf(n.getClassName()).contains("EditText")))continue;if(++count>30){add(c,"CANDIDATES","truncated");break;}add(c,"CANDIDATE",attrs(n));AccessibilityNodeInfo p=n.getParent();for(int d=0;p!=null&&d<3;d++){AccessibilityNodeInfo next=p.getParent();add(c,"PARENT",d+" id="+Screen.id(p)+" class="+p.getClassName());p.recycle();p=next;}if(p!=null)p.recycle();}
+  AccessibilityNodeInfo send=s.composerSend();add(c,"SEND_SELECTED",send==null?"count=0_or_ambiguous":attrs(send));
+  int sendCount=0;for(AccessibilityNodeInfo n:s.nodes){if(!n.isClickable()||!n.isVisibleToUser())continue;String label=Screen.text(n).trim();if(!Screen.id(n).contains("send")&&!label.equals("送信")&&!label.equals("Send"))continue;if(++sendCount>20)break;add(c,"SEND_CANDIDATE",attrs(n));AccessibilityNodeInfo parent=n.getParent();for(int d=0;parent!=null&&d<3;d++){AccessibilityNodeInfo next=parent.getParent();add(c,"SEND_PARENT",d+" id="+Screen.id(parent)+" class="+parent.getClassName());parent.recycle();parent=next;}if(parent!=null)parent.recycle();}
+
  }
 }
