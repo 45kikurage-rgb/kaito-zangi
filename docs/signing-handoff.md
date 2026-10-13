@@ -1,3 +1,5 @@
+> 2026-10-13 更新候補: code20 / 0.1.20-test20。code19の修正を継承し、クーポン表示後の共有ボタン押下を追加。配布検証は verification-test20.md を参照。以下のcode18記録は履歴として保持。
+
 # 怪盗ザンギ：署名・公開の引き継ぎ
 
 更新日: 2026-10-13。対象: 45kikurage-rgb/kaito-zangi / jp.kossacktouch.app。

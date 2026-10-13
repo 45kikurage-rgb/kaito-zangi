@@ -73,6 +73,13 @@ public final class Screen implements AutoCloseable {
   }
   return found;
  }
+ public AccessibilityNodeInfo couponShare(int width,int height){
+  if(overflow||trusted())return null;
+  List<CouponShare.Node> items=new ArrayList<>();
+  for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);Rect b=new Rect();n.getBoundsInScreen(b);
+   items.add(new CouponShare.Node(model.parentOf(i),id(n),text(n),"android.webkit.WebView".equals(String.valueOf(n.getClassName())),n.isVisibleToUser(),n.isEnabled(),n.isClickable(),b.left,b.top,b.right,b.bottom));}
+  int selected=CouponShare.select(items,width,height);return selected<0?null:nodes.get(selected);
+ }
  public boolean verifiedCouponPage(){
   if(trusted())return false; // The chat invitation also contains coupon/barcode/store text.
   boolean web=false;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&"android.webkit.WebView".equals(String.valueOf(n.getClassName())))web=true;if(!web)return false;
