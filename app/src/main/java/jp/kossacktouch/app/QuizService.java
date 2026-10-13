@@ -12,7 +12,7 @@ import jp.kossacktouch.core.*;
 public final class QuizService extends AccessibilityService {
  public static QuizService instance;
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play,pause;private android.graphics.drawable.Drawable collapseIcon;private WindowManager.LayoutParams layout;private int compactX,compactY;
- private ScrollView infoScroll;private LinearLayout testButtons;private boolean expandedFloat=false,finalAnswerKnown=false,submitAttempted=false,inputVerified=false;
+ private LinearLayout testButtons;private boolean expandedFloat=false,finalAnswerKnown=false,submitAttempted=false,inputVerified=false;
  private Runnable clipboardCleanup;
  private void cleanupClipboard(){if(clipboardCleanup!=null){Runnable task=clipboardCleanup;clipboardCleanup=null;handler.removeCallbacks(task);task.run();}}
  private int testGeneration=0;private boolean testBusy=false;private String testQuestion="",testPackage="";private int testWindow=-1;private long testCaptured=0;
@@ -33,7 +33,7 @@ public final class QuizService extends AccessibilityService {
   play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(30);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())prepareInputTest();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(68)));
   collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。縮小ボタンで横長表示、▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
   Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(33);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(6),dp(12),dp(12));info.setGravity(Gravity.TOP);infoScroll=new ScrollView(this);infoScroll.setFillViewport(true);infoScroll.addView(info,new ScrollView.LayoutParams(-1,-2));infoScroll.setVisibility(View.GONE);overlay.addView(infoScroll,new LinearLayout.LayoutParams(-1,dp(216)));
+  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(3),dp(12),dp(3));info.setGravity(Gravity.TOP);info.setIncludeFontPadding(false);info.setHorizontallyScrolling(false);info.setAutoSizeTextTypeUniformWithConfiguration(1,21,1,android.util.TypedValue.COMPLEX_UNIT_SP);info.setVisibility(View.GONE);overlay.addView(info,new LinearLayout.LayoutParams(-1,dp(testMode()?216:72)));
   testButtons=new LinearLayout(this);testButtons.setOrientation(LinearLayout.HORIZONTAL);
   for(int i=1;i<=3;i++){final int mode=i;Button b=new Button(this);b.setText("再生"+i);b.setTextSize(19.5f);b.setPadding(0,0,0,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setOnClickListener(v->runInputTest(mode));testButtons.addView(b,new LinearLayout.LayoutParams(0,dp(72),1));}
   Button copy=new Button(this);copy.setText("診断コピー");copy.setTextSize(16.5f);copy.setPadding(0,0,0,0);copy.setMinWidth(0);copy.setMinimumWidth(0);copy.setOnClickListener(v->copyDiagnostics());testButtons.addView(copy,new LinearLayout.LayoutParams(0,dp(72),1));testButtons.setVisibility(View.GONE);overlay.addView(testButtons);
@@ -60,7 +60,7 @@ public final class QuizService extends AccessibilityService {
  }
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private int compactWidth(){return Math.min(dp(390),getResources().getDisplayMetrics().widthPixels);}
- private int floatHeight(boolean expanded){return expanded?dp(testMode()?360:288):dp(72);}
+ private int floatHeight(boolean expanded){return expanded?dp(testMode()?360:144):dp(72);}
  private void clampFloat(boolean expanded){
   android.util.DisplayMetrics dm=getResources().getDisplayMetrics();
   int w=expanded?dm.widthPixels:compactWidth(),h=floatHeight(expanded);
@@ -71,7 +71,7 @@ public final class QuizService extends AccessibilityService {
  private void floatSize(boolean expanded){
   if(overlay==null||layout==null)return;
   boolean wasExpanded=expandedFloat;expandedFloat=expanded;
-  infoScroll.setVisibility(expanded?View.VISIBLE:View.GONE);
+  info.setVisibility(expanded?View.VISIBLE:View.GONE);
   if(testButtons!=null)testButtons.setVisibility(expanded&&testMode()?View.VISIBLE:View.GONE);
   layout.width=expanded?WindowManager.LayoutParams.MATCH_PARENT:compactWidth();
   layout.height=floatHeight(expanded);
@@ -83,7 +83,7 @@ public final class QuizService extends AccessibilityService {
   if(play!=null)play.setEnabled(!active);
   if(pause!=null){pause.setText(active?"||":"");pause.setForeground(active?null:collapseIcon);pause.setContentDescription(active?"一時停止（フロートを残す）":"横長のフロートに戻る");pause.setEnabled(active||expandedFloat);}
  }
- private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;infoScroll=null;}}
+ private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
   anchorMissingSince=0;keyboardRequested=false;session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";

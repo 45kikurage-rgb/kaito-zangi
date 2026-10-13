@@ -2,7 +2,7 @@ name: Publish code22 production APK
 on:
   push:
     branches: [main]
-    paths: ["site/downloads/kaito-zangi-0.1.22.apk", "site/latest.json", ".github/workflows/release-code22.yml"]
+    paths: ["site/downloads/kaito-zangi-0.1.22.apk", "site/releases/code22.json", ".github/workflows/release-code22.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,7 +19,7 @@ jobs:
           python3 - <<'PY'
           import json, hashlib
           from pathlib import Path
-          m=json.loads(Path('site/latest.json').read_text())
+          m=json.loads(Path('site/releases/code22.json').read_text())
           p=Path('site')/m['apk']
           assert m['versionCode']==22 and m['channel']=='stable'
           assert len(p.read_bytes())==m['sizeBytes']
