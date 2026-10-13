@@ -22,6 +22,10 @@ public final class InputDiagnostics {
   AccessibilityNodeInfo selected=s.couponButton("クーポンを表示する");add(c,"COUPON_SELECTED",selected==null?"none":attrs(selected));
   int count=0;for(AccessibilityNodeInfo n:s.nodes){if(!Screen.text(n).contains("クーポンを表示する"))continue;if(++count>20)break;add(c,"COUPON_NODE",attrs(n));AccessibilityNodeInfo p=n.getParent();for(int d=0;p!=null&&d<3;d++){AccessibilityNodeInfo next=p.getParent();add(c,"COUPON_PARENT",d+" id="+Screen.id(p)+" class="+p.getClassName());p.recycle();p=next;}if(p!=null)p.recycle();}
  }
+ public static void share(AccessibilityService c,Screen s,AccessibilityNodeInfo selected){
+  add(c,"SHARE_SELECTED",selected==null?"none":attrs(selected));
+  int count=0;for(AccessibilityNodeInfo n:s.nodes){if(!n.isVisibleToUser()||!n.isClickable())continue;Rect b=new Rect();n.getBoundsInScreen(b);if(b.top<c.getResources().getDisplayMetrics().heightPixels*.55f)continue;if(++count>20)break;add(c,"SHARE_TOOLBAR",attrs(n));}
+ }
  public static void capture(AccessibilityService c,String phase,Screen s){
   add(c,phase,"app="+Store.VERSION+" Android="+Build.VERSION.RELEASE+" sdk="+Build.VERSION.SDK_INT+" model="+Build.MANUFACTURER+"/"+Build.MODEL+" serviceFlags="+(c.getServiceInfo()==null?0:c.getServiceInfo().flags));
   List<AccessibilityWindowInfo> windows=c.getWindows();try{for(AccessibilityWindowInfo w:windows){AccessibilityNodeInfo r=w.getRoot();try{Rect b=new Rect();w.getBoundsInScreen(b);add(c,"WINDOW","id="+w.getId()+" type="+w.getType()+" layer="+w.getLayer()+" active="+w.isActive()+" focused="+w.isFocused()+" bounds="+b.flattenToString()+" package="+(r==null?"":r.getPackageName()));}finally{if(r!=null)r.recycle();}}}finally{for(AccessibilityWindowInfo w:windows)w.recycle();}

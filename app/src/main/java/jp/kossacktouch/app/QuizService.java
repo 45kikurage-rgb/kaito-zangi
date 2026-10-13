@@ -111,16 +111,21 @@ public final class QuizService extends AccessibilityService {
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","前面のLINE画面を確認できません（別アプリ・ダイアログ・権限）");return;}
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();stop("要確認","対応するLINEの画面ではありません");return;}
   try(Screen s=new Screen(root)){
-   if(!s.trusted()){
-    if("display_clicked".equals(couponStage)&&s.verifiedCouponPage()){clearPending();session.edit().remove("coupon_stage").commit();stop("完了","クーポンページを確認しました");return;}
-    stop("要確認","対象LINE画面を確認できません。クーポンを開いている場合は表示を目視確認してください");return;
-   }
    if(runPackage.isEmpty()){
     runPackage=s.pkg;Store.migrateSession(this,s.pkg);session=Store.session(this,s.pkg);
     savedPending=session.getString("pending","");savedPackage=s.pkg;registrationPending=session.getString("registration_pending","");registrationPriorQuestion=session.getString("registration_prior_question","");
     finalPrepared=session.getString("final_prepared","");couponStage=session.getString("coupon_stage","");Store.prefs(this).edit().putString("active_line_package",s.pkg).apply();
    }else if(!runPackage.equals(s.pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}
    previousPackage=s.pkg;elementsStable=elementMonitor.observe(s.confirmationKey(),now);
+   if("share_clicked".equals(couponStage)){
+    if(s.trusted()&&s.question!=null&&s.question.number<5&&s.visibleQuestion()&&s.couponButton("クーポンを表示する")==null&&s.couponButton("クーポンをゲットする")==null){
+     if(!session.edit().remove("coupon_stage").commit()){stop("要確認","新しいクイズの開始記録を保存できません");return;}couponStage="";couponSince=0;
+    }else{stop("完了","共有ボタンは操作済みです。共有先の一覧を確認してください。自動で押し直しません");return;}
+   }
+   if(!s.trusted()){
+    if("display_clicked".equals(couponStage)){handleCouponShare(s,now);return;}
+    stop("要確認","対象LINE画面を確認できません。超良問ドリルのトークで再生してください");return;
+   }
    boolean submittedFinal=!guard.pending.isEmpty()&&guard.pending.equals(session.getString("final_submit_key",""));
    boolean finalResult=finalAnchor.result(s.question,submittedFinal,QuizFlow.complete(s.model)||CouponFlow.pending(couponStage)||s.couponButton("クーポンをゲットする")!=null||s.couponButton("クーポンを表示する")!=null);
    if(finalAnchor.mismatch(s.question)&&!finalResult){
@@ -324,7 +329,7 @@ public final class QuizService extends AccessibilityService {
  private boolean handleCoupon(Screen s,long now,boolean complete){
   AccessibilityNodeInfo display=s.couponButton("クーポンを表示する");String diag=couponStage+":"+(display==null?"missing":Screen.id(display)+":"+display.isClickable());if(!diag.equals(couponDiagKey)){couponDiagKey=diag;InputDiagnostics.coupon(this,s);}
   if("display_clicked".equals(couponStage)){
-   if(s.verifiedCouponPage()){clearPending();session.edit().remove("coupon_stage").commit();stop("完了","クーポン表示を確認しました");return true;}
+   if(s.verifiedCouponPage()){handleCouponShare(s,now);return true;}
    if(couponSince==0)couponSince=now;
    if(now-couponSince>70000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
    status("クーポン表示待ち","クーポンページへ移動するのを待っています");return true;
@@ -343,11 +348,34 @@ public final class QuizService extends AccessibilityService {
   if(now-lastAction<ElementMonitor.INTERVAL_MS)return true;
   AccessibilityNodeInfo selected=s.couponButton(target);if(selected==null)return true;Rect selectedBounds=new Rect();selected.getBoundsInScreen(selectedBounds);if(moveFloatAway(selectedBounds)){elementMonitor.reset();status("表示調整","フロートを移動し、クーポンのリンクを再確認します");return true;}
   String nextStage=target.equals("クーポンを表示する")?"display_clicked":"get_clicked";
-  if(!session.edit().putString("coupon_stage",nextStage).commit()){stop("要確認","クーポンの二重操作防止記録を保存できません");return true;}
+  if(!session.edit().putString("coupon_stage",nextStage).putLong("coupon_action_at",System.currentTimeMillis()).commit()){stop("要確認","クーポンの二重操作防止記録を保存できません");return true;}
   couponStage=nextStage;couponSince=now;
   boolean clicked=clickCoupon(s,target);InputDiagnostics.add(this,"AUTO_COUPON","stage="+nextStage+" click="+clicked);
   if(!clicked){stop("要確認",target+" の操作が未確認です。重複操作しません");return true;}
   questionSince=now;status("クーポン進行",target+" をタップしました");return true;
+ }
+ private void handleCouponShare(Screen s,long now){
+  long recorded=session.getLong("coupon_action_at",0),age=System.currentTimeMillis()-recorded;
+  if(recorded<=0||age<0||age>120000){stop("要確認","クーポンを開いた直後の画面か確認できません。共有は手動で押してください");return;}
+  if(couponSince==0)couponSince=now;
+  int width=getResources().getDisplayMetrics().widthPixels,height=getResources().getDisplayMetrics().heightPixels;
+  AccessibilityNodeInfo share=s.couponShare(width,height);
+  String diag="share:"+(share==null?"missing":Screen.id(share));
+  if(!diag.equals(couponDiagKey)){couponDiagKey=diag;InputDiagnostics.share(this,s,share);}
+  if(share==null){if(now-couponSince>70000){stop("要確認","クーポン画面の共有ボタンを特定できません。画面下部の共有を手動で押してください");return;}status("共有待機","クーポン画面と下部の共有ボタンを確認しています");return;}
+  if(!elementsStable){status("照合中","クーポン画面の共有ボタンを2回確認しています");return;}
+  Rect bounds=new Rect();share.getBoundsInScreen(bounds);if(moveFloatAway(bounds)){elementMonitor.reset();return;}
+  AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","共有直前のLINE画面を確認できません");return;}
+  try(Screen fresh=new Screen(root)){
+   AccessibilityNodeInfo target=fresh.couponShare(width,height);
+   if(!running||!testUnlocked()||!fresh.pkg.equals(runPackage)||!Store.allowed(this,fresh.pkg)||!fresh.confirmationKey().equals(s.confirmationKey())||target==null)return;
+   if(!target.refresh()||!target.isVisibleToUser()||!target.isEnabled()||!target.isClickable())return;
+   if(!session.edit().putString("coupon_stage","share_clicked").commit()){stop("要確認","共有操作の記録を保存できません");return;}
+   couponStage="share_clicked";
+   boolean clicked=performChecked(target);InputDiagnostics.add(this,"AUTO_SHARE","click="+clicked+" recipientSelected=false");
+   if(clicked){clearPending();stop("完了","共有ボタンを押しました。表示された共有先の一覧から手動で選んでください");}
+   else stop("要確認","共有ボタンの操作結果が不明です。共有先の一覧を確認してください。自動で押し直しません");
+  }
  }
  /** Move only our own overlay; the next snapshot confirms any gesture target again. */
  private boolean moveFloatAway(Rect target){
