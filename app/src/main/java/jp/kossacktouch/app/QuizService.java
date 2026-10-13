@@ -31,7 +31,7 @@ public final class QuizService extends AccessibilityService {
   titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(22.5f);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("怪盗ザンギ");titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
   header.addView(titleView,new LinearLayout.LayoutParams(0,dp(72),1));
   play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(30);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())prepareInputTest();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  pause=new Button(this);pause.setText("||");pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setContentDescription("停止（フロートを残す）");pause.setOnClickListener(v->stop("停止","利用者が停止しました。▶で現在画面から再開できます"));header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));
+  pause=new Button(this);pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。－で横長表示、▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
   Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(33);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(68)));
   info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(6),dp(12),dp(12));info.setGravity(Gravity.TOP);infoScroll=new ScrollView(this);infoScroll.setFillViewport(true);infoScroll.addView(info,new ScrollView.LayoutParams(-1,-2));infoScroll.setVisibility(View.GONE);overlay.addView(infoScroll,new LinearLayout.LayoutParams(-1,dp(216)));
   testButtons=new LinearLayout(this);testButtons.setOrientation(LinearLayout.HORIZONTAL);
@@ -76,7 +76,12 @@ public final class QuizService extends AccessibilityService {
   layout.width=expanded?WindowManager.LayoutParams.MATCH_PARENT:compactWidth();
   layout.height=floatHeight(expanded);
   if(expanded){if(!wasExpanded){compactX=layout.x;compactY=layout.y;}layout.x=0;}else{layout.x=compactX;layout.y=compactY;}
-  clampFloat(expanded);wm.updateViewLayout(overlay,layout);
+  clampFloat(expanded);wm.updateViewLayout(overlay,layout);updateFloatControls();
+ }
+ private void updateFloatControls(){
+  boolean active=running||testBusy;
+  if(play!=null)play.setEnabled(!active);
+  if(pause!=null){pause.setText(active?"||":"－");pause.setContentDescription(active?"一時停止（フロートを残す）":"横長のフロートに戻る");pause.setEnabled(active||expandedFloat);}
  }
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;infoScroll=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
@@ -89,7 +94,7 @@ public final class QuizService extends AccessibilityService {
   else if(finalAnswerKnown&&!state.equals("完了")&&!testMode())detail+="\n"+(submitAttempted?"送信履歴を確認してください。再送しないでください。":inputVerified?"入力欄の答えを確認して、手動で送信してください。":"同じ問題か確認し、上の答えを手動で入力・送信してください。");
   floatSize(true);status(state,detail);Store.log(this,state,current,answer,detail);
  }
- private void status(String state,String detail){if(play!=null)play.setEnabled(!running&&!testBusy);Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText((finalAnswerKnown?"取得した第5問の答え："+answer+"\n":"")+state+"\n"+detail);}
+ private void status(String state,String detail){updateFloatControls();Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(info!=null)info.setText((finalAnswerKnown?"取得した第5問の答え："+answer+"\n":"")+state+"\n"+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(e.getEventType()==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED&&(running||testBusy)){textChanged=true;}if(!running)return;int type=e.getEventType();
   // Event package identifies its source, not the foreground application (e.g. an IME).
   if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||type==AccessibilityEvent.TYPE_WINDOWS_CHANGED||type==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)handler.post(this::check);
@@ -474,7 +479,7 @@ public final class QuizService extends AccessibilityService {
  private void runInputTest(int method){
   if(!testMode()||testBusy)return;
   if(testQuestion.isEmpty()||SystemClock.elapsedRealtime()-testCaptured>120000){prepareInputTest();if(testQuestion.isEmpty())return;}
-  running=false;testBusy=true;textChanged=false;int generation=++testGeneration;InputDiagnostics.add(this,"TEST_START","method="+method);testLocate(method,generation,false);
+  running=false;testBusy=true;textChanged=false;int generation=++testGeneration;updateFloatControls();InputDiagnostics.add(this,"TEST_START","method="+method);testLocate(method,generation,false);
  }
  private void testLocate(int method,int generation,boolean opened){
   if(generation!=testGeneration||!testBusy)return;
