@@ -1,13 +1,15 @@
 # 怪盗ザンギ：署名・公開の引き継ぎ
 
-更新日: 2026-10-12。対象: 45kikurage-rgb/kaito-zangi / jp.kossacktouch.app。
+更新日: 2026-10-13。対象: 45kikurage-rgb/kaito-zangi / jp.kossacktouch.app。
 
-## 最新公開状況（2026-10-12）
+## 最新公開状況（2026-10-13）
 
-- 現行配布はcode15を維持。別枠テスト配布は **0.1.16-diag17 / versionCode17**。
-- code17: PR #11/#12でmain統合、2,549チェック・CI成功。同じ正式証明書で署名、GitHub Releases/Pages/Sitesで公開・再取得照合済み。
-- 証跡: [code17検証記録](verification-diag17.md)、操作: [code17変更・試し方](release-notes-diag17.md)。code16の古い公開前メモは現在の残作業ではない。
-- 次の更新は最新mainと配布番号を確認してから決める。入力の成功は未確認で、ユーザー端末の診断結果が必要。
+- 現行配布はcode15を維持。別枠テスト配布は **0.1.18-test18 / versionCode18**。
+- code18: PR #14/#15でmain統合、2,671チェック・CI成功。同じ正式証明書で署名し、GitHub Releases/Pages/Sitesから公開APKを再取得してSHA-256・v2/v3署名を照合済み。
+- 証跡: [code18検証記録](verification-test18.md)、操作: [code18変更・試し方](release-notes-test18.md)。code17以前のAPKと配布資産は保全。
+- code17の実機診断では直接入力・読み戻し一致が確認された。code18は入力欄ID対応、認識0.5秒、探索6往復・26秒、要素待機2倍、送信後のクーポン遷移を修正。
+- code18の実機自動送信・クーポン押下、上書きと設定保持は未確認。自動送信を試すときは「第5問・入力テスト設定」をOFFにする。
+- 次の更新は最新main・配布番号・診断結果を確認して決める。新APKの実機成功を推測しない。
 
 ## 次のチャットで最初に確認すること
 
@@ -18,7 +20,7 @@
 ChatGPTライブラリの所有者用バックアップ **kossack-touch-owner-signing-backup.zip** を正確な名前で検索し、Libraryの正規手順でアクセス権のある環境へ取得する。
 
 - バックアップには kossacktouch.p12 と署名に必要な設定がある。
-- 2026-10-12にバックアップの取得・既存パスワードでの復号・秘密鍵の存在を確認済み。
+- 2026-10-13にもバックアップを取得し、既存鍵でcode18を署名・公開・再取得検証済み。新鍵は生成していない。
 - 証明書SHA-256: `20f8f43972be30b9b3ac94f83e3bcb8d5bf98d3c81b0b47bb7a24b19aa57d302`
 - 同日、code16とcode17をこの既存鍵と標準apksignerで正式署名・公開し、3配布先の再取得APKを検証済み。実機更新・設定保持は未確認。
 - code15はこのバックアップの同じ鍵で署名・公開済み。
