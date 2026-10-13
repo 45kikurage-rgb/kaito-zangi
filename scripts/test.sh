@@ -31,3 +31,5 @@ java -cp build/tests Diagnostic17Tests | tee -a build/test-results.txt
 
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Progress18Tests.java
 java -cp build/tests Progress18Tests | tee -a build/test-results.txt
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/OverlayCoupon19Tests.java
+java -cp build/tests OverlayCoupon19Tests | tee -a build/test-results.txt
