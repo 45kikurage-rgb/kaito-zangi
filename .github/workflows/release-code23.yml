@@ -1,0 +1,37 @@
+name: Publish code23 production APK
+on:
+  push:
+    branches: [main]
+    paths: ["site/downloads/kaito-zangi-0.1.23.apk", "site/latest.json", ".github/workflows/release-code23.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify test APK metadata and checksum
+        run: |
+          cd site/downloads
+          sha256sum -c SHA256SUMS-code23.txt
+          cd ../..
+          python3 - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          m=json.loads(Path('site/latest.json').read_text())
+          p=Path('site')/m['apk']
+          assert m['versionCode']==23 and m['channel']=='stable'
+          assert len(p.read_bytes())==m['sizeBytes']
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==m['sha256']
+          assert json.loads(Path('site/releases/code15.json').read_text())['versionCode']==15
+          PY
+      - name: Publish separate prerelease and preserve existing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v0.1.23 >/dev/null 2>&1; then
+            echo 'Release already exists; preserving all existing assets.'
+            exit 0
+          fi
+          gh release create v0.1.23 site/downloads/kaito-zangi-0.1.23.apk site/downloads/SHA256SUMS-code23.txt --target "$GITHUB_SHA" --latest --title '怪盗ザンギ code23 実運用版' --notes-file docs/release-notes-code23.md
