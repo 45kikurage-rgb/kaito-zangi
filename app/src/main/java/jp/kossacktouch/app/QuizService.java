@@ -11,7 +11,7 @@ import jp.kossacktouch.core.*;
 
 public final class QuizService extends AccessibilityService {
  public static QuizService instance;
- private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play,pause;private WindowManager.LayoutParams layout;private int compactX,compactY;
+ private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play,pause;private android.graphics.drawable.Drawable collapseIcon;private WindowManager.LayoutParams layout;private int compactX,compactY;
  private ScrollView infoScroll;private LinearLayout testButtons;private boolean expandedFloat=false,finalAnswerKnown=false,submitAttempted=false,inputVerified=false;
  private Runnable clipboardCleanup;
  private void cleanupClipboard(){if(clipboardCleanup!=null){Runnable task=clipboardCleanup;clipboardCleanup=null;handler.removeCallbacks(task);task.run();}}
@@ -31,7 +31,7 @@ public final class QuizService extends AccessibilityService {
   titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(22.5f);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("怪盗ザンギ");titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
   header.addView(titleView,new LinearLayout.LayoutParams(0,dp(72),1));
   play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(30);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())prepareInputTest();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  pause=new Button(this);pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。－で横長表示、▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
+  collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。縮小ボタンで横長表示、▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
   Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(33);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(68)));
   info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(6),dp(12),dp(12));info.setGravity(Gravity.TOP);infoScroll=new ScrollView(this);infoScroll.setFillViewport(true);infoScroll.addView(info,new ScrollView.LayoutParams(-1,-2));infoScroll.setVisibility(View.GONE);overlay.addView(infoScroll,new LinearLayout.LayoutParams(-1,dp(216)));
   testButtons=new LinearLayout(this);testButtons.setOrientation(LinearLayout.HORIZONTAL);
@@ -81,7 +81,7 @@ public final class QuizService extends AccessibilityService {
  private void updateFloatControls(){
   boolean active=running||testBusy;
   if(play!=null)play.setEnabled(!active);
-  if(pause!=null){pause.setText(active?"||":"－");pause.setContentDescription(active?"一時停止（フロートを残す）":"横長のフロートに戻る");pause.setEnabled(active||expandedFloat);}
+  if(pause!=null){pause.setText(active?"||":"");pause.setForeground(active?null:collapseIcon);pause.setContentDescription(active?"一時停止（フロートを残す）":"横長のフロートに戻る");pause.setEnabled(active||expandedFloat);}
  }
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;infoScroll=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
