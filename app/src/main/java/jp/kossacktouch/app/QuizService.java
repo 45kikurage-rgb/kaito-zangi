@@ -21,7 +21,7 @@ public final class QuizService extends AccessibilityService {
  private AnswerBank bank;private boolean running=false;private RunGuard guard=new RunGuard();private String current="",answer="",transition="";private long lastTick=0,lastAction=0,questionSince=0;private String previousPackage="";
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
  private android.content.SharedPreferences session;private String runPackage="",finalPrepared="",couponStage="";private long couponSince=0,finalSince=0;
- private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
+ private long anchorMissingSince=0;private boolean keyboardRequested=false;private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
@@ -78,7 +78,7 @@ public final class QuizService extends AccessibilityService {
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
-  session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
+  anchorMissingSince=0;keyboardRequested=false;session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setContentDescription("実行中・タップで停止");floatSize(true);status("認識中","現在のLINE画面から開始します");check();
  }
  public void stop(String state,String detail){cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setContentDescription("再生");
@@ -117,14 +117,19 @@ public final class QuizService extends AccessibilityService {
     finalPrepared=session.getString("final_prepared","");couponStage=session.getString("coupon_stage","");Store.prefs(this).edit().putString("active_line_package",s.pkg).apply();
    }else if(!runPackage.equals(s.pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}
    previousPackage=s.pkg;elementsStable=elementMonitor.observe(s.confirmationKey(),now);
-   if(finalAnchor.mismatch(s.question)){
+   boolean submittedFinal=!guard.pending.isEmpty()&&guard.pending.equals(session.getString("final_submit_key",""));
+   boolean finalResult=finalAnchor.result(s.question,submittedFinal,QuizFlow.complete(s.model)||CouponFlow.pending(couponStage)||s.couponButton("クーポンをゲットする")!=null||s.couponButton("クーポンを表示する")!=null);
+   if(finalAnchor.mismatch(s.question)&&!finalResult){
+    if(submittedFinal){if(s.question!=null){stop("要確認","送信後に別の問題を検知しました。再送しません");return;}if(now-guard.sentAt>180000){stop("要確認","送信後の結果を確認できません。再送しません");return;}status("結果待機","送信済みの第5問の結果を待っています");return;}
     if(manualFinal.started()){stop("要確認","第5問 · 答え: "+answer+"\n現在の問題を確認できないため停止。入力・送信は行いません");return;}
     if(!elementsStable){status("照合中","探索で別の問題へ移ったため2回確認しています");return;}
+    if(anchorMissingSince==0)anchorMissingSince=now;
     AccessibilityNodeInfo bottom=s.uniqueId("chat_ui_scroll_to_bottom_button");
-    if(bottom==null||!finalAnchor.recoverOnce()){stop("要確認","探索で第5問の現在位置を失いました。過去の問題は操作しません。最新メッセージへ戻して▶再生してください");return;}
+    if(bottom==null||!finalAnchor.recoverOnce()){if(now-anchorMissingSince>24000){stop("要確認","第5問の現在位置を24秒間確認できませんでした。最新メッセージへ戻して▶再生してください");return;}status("現在位置待機","第5問の再表示を待っています。過去の問題は操作しません");return;}
     if(!click(s,bottom,false)){stop("要確認","最新メッセージへ戻れません。過去の問題は操作しません");return;}
     status("現在位置復帰","過去の問題を操作せず、最新メッセージへ戻しています");return;
    }
+   anchorMissingSince=0;
    if(elementsStable&&s.currentFinal()&&s.visibleQuestion())finalAnchor.bind(s.question);
    if(!finalPrepared.isEmpty()&&!s.currentFinal()&&s.question!=null&&s.question.number==5&&!QuizFlow.complete(s.model)){stop("要確認","第5問の入力途中に画面が変わったため停止しました");return;}
    boolean complete=QuizFlow.complete(s.model);
@@ -157,7 +162,7 @@ public final class QuizService extends AccessibilityService {
      else if(guard.pending.isEmpty()&&s.question!=null){guard.mark(s.question,now);guard.lastConfirmed=s.question.number-1;}
      status("自動進行",next);return;
     }
-    if(now-questionSince>60000){stop("要確認","進行ボタンの反映を確認できません");return;}
+    if(now-questionSince>120000){stop("要確認","進行ボタンの反映を確認できません");return;}
     status("画面待機",next+" の反映を待っています");return;
    }
    if(handleRegistration(s,now))return;
@@ -166,7 +171,7 @@ public final class QuizService extends AccessibilityService {
    if(!guard.pending.isEmpty()){
     if(q!=null&&!q.key.equals(guard.pending)&&guard.confirmNext(q)){clearPending();Store.log(this,"回答確認",current,answer,"次の問題の表示を確認");questionSince=now;transition="";}
     else {
-     if(now-guard.sentAt>90000){stop("要確認","回答の反映を確認できません。再回答せず停止");return;}
+     if(now-guard.sentAt>180000){stop("要確認","回答の反映を確認できません。再回答せず停止");return;}
      status("確定確認待ち","同じ問題への再タップを防止しています");return;
     }
    }
@@ -180,16 +185,16 @@ public final class QuizService extends AccessibilityService {
     stop("要確認","前回の開始操作が未確認です。LINEの画面を確認してください");return;
    }
    if(q==null&&s.uniqueId("oa_richmenu_imageview")!=null){stop("本人操作","開始が画像内だけのため要素を確認できません。LINEの開始を1回押してから▶再生してください");return;}
-   if(q==null){if(now-questionSince>60000){stop("要確認","最新問題を取得できません");return;}scroll(s);return;}
+   if(q==null){if(now-questionSince>120000){stop("要確認","最新問題を取得できません");return;}scroll(s);return;}
    if(current.isEmpty())guard.lastConfirmed=q.number-1;
    if(q.number<5)finalAnswerKnown=false;
    current="第"+q.number+"問\n"+q.body;
-   if(QuizFlow.correct(s.model)){if(now-questionSince>60000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
+   if(QuizFlow.correct(s.model)){if(now-questionSince>120000){stop("要確認","次の問題ボタンが表示されません");return;}status("次問待機","正解済みのため次の専用ボタンを待っています");scroll(s);return;}
    if(!guard.canAnswer(q)){stop("要確認","問題番号が想定した順序と異なります");return;}
    if(!s.visibleQuestion()&&!(q.number==5&&finalPrepared.equals(q.key))){scroll(s);return;}
    try{
     if(q.number<5){answer=bank.match(q);status("回答待機",q.number+"/5 · 答え "+answer);AccessibilityNodeInfo b=s.quick(answer);
-     if(b==null){if(now-questionSince>60000){stop("要確認","回答ボタンが表示されません");return;}scroll(s);return;}
+     if(b==null){if(now-questionSince>120000){stop("要確認","回答ボタンが表示されません");return;}scroll(s);return;}
      if(!elementsStable){status("照合中",q.number+"/5 · 問題文と回答ボタンを2回確認しています");return;}
      mark(q,now);if(!click(s,b)){stop("要確認","回答タップ失敗（未確認記録を保持）");return;}status("確定確認待ち",q.number+"/5 · "+answer+" を操作しました");
     }else{
@@ -272,11 +277,12 @@ public final class QuizService extends AccessibilityService {
    }
    java.util.List<AccessibilityNodeInfo> inputs=s.composers();
    String diagnosticKey=q.key+":"+keyboardVisible()+":"+inputs.size();if(!diagnosticKey.equals(autoDiagKey)){autoDiagKey=diagnosticKey;InputDiagnostics.capture(this,"AUTO_S4",s);}
-   if(inputs.size()!=1){
+   if(inputs.size()>1){stop("手動操作へ","S4_AMBIGUOUS: 入力欄を一意に確認できません");return;}
+   if(inputs.isEmpty()){
     AccessibilityNodeInfo opener=s.keyboardButton();
-    if(opener!=null&&finalSince==0&&elementsStable){finalSince=now;if(!click(s,opener))stop("要確認","数字入力欄を開けません");else status("入力欄待機","LINEの数字入力欄を開いています");return;}
+    if(opener!=null&&!keyboardRequested&&elementsStable){keyboardRequested=true;if(finalSince==0)finalSince=now;if(!click(s,opener))stop("要確認","数字入力欄を開けません");else status("入力欄待機","LINEの数字入力欄を開いています");return;}
     if(finalSince==0)finalSince=now;
-    if(now-finalSince>12000){stop("手動操作へ","S4_INPUT_COUNT: 入力欄候補="+inputs.size()+"。診断を保存しました");return;}
+    if(now-finalSince>24000){stop("手動操作へ","S4_INPUT_COUNT: 入力欄候補="+inputs.size()+"。診断を保存しました");return;}
     status("入力欄待機","入力欄の表示を確認しています");return;
    }
    AccessibilityNodeInfo input=inputs.get(0);
@@ -296,16 +302,18 @@ public final class QuizService extends AccessibilityService {
     if(!session.edit().putString("final_prepared",q.key).commit()){stop("要確認","入力操作の記録を保存できません");return;}
     finalPrepared=q.key;finalSince=now;lastAction=now;elementMonitor.reset();status("入力確認待ち","第5問 · 答え: "+answer+" を設定。送信前に照合中");return;
    }
-   if(!answer.equals(draft)){if(now-finalSince>15000){stop("要確認","入力した数字を読み戻せないため送信しません");return;}status("入力確認待ち","数字の入力結果を確認しています");return;}
+   if(!answer.equals(draft)){if(now-finalSince>30000){stop("要確認","入力した数字を読み戻せないため送信しません");return;}status("入力確認待ち","数字の入力結果を確認しています");return;}
+   if(!inputVerified){InputDiagnostics.capture(this,"AUTO_S6_MATCH",s);InputDiagnostics.add(this,"AUTO_S6","matches=true length="+draft.length());}
    inputVerified=true;
    if(!elementsStable){status("送信確認","第5問の数字と送信ボタンを再確認しています");return;}
    AccessibilityNodeInfo send=s.composerSend();
-   if(send==null){if(now-finalSince>18000){stop("要確認","青い送信ボタンを特定できません");return;}status("送信待機","青い送信ボタンを確認しています");return;}
+   if(send==null){if(now-finalSince>36000){stop("要確認","青い送信ボタンを特定できません");return;}status("送信待機","青い送信ボタンを確認しています");return;}
    if(!session.edit().putString("pending",q.key).putString("final_submit_key",q.key).commit()){
     stop("要確認","送信の二重操作防止記録を保存できません");return;
    }
    guard.mark(q,now);lastAction=now;submitAttempted=true;
-   if(!performChecked(send)){stop("要確認","送信ボタンの操作結果が不明です。二重送信防止のため再試行しません");return;}
+   boolean sent=performChecked(send);InputDiagnostics.add(this,"AUTO_S7","click="+sent);
+   if(!sent){stop("要確認","送信ボタンの操作結果が不明です。二重送信防止のため再試行しません");return;}
    questionSince=now;status("送信済確認待ち","第5問の数字を送信しました。正解画面を待っています");
   }
  }
@@ -313,14 +321,15 @@ public final class QuizService extends AccessibilityService {
   if("display_clicked".equals(couponStage)){
    if(s.verifiedCouponPage()){clearPending();session.edit().remove("coupon_stage").commit();stop("完了","クーポン表示を確認しました");return true;}
    if(couponSince==0)couponSince=now;
-   if(now-couponSince>35000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
+   if(now-couponSince>70000){stop("要確認","クーポン表示を確認できません。ページを目視確認してください");return true;}
    status("クーポン表示待ち","クーポンページへ移動するのを待っています");return true;
   }
   String target=CouponFlow.next(couponStage,s.couponButton("クーポンをゲットする")!=null,s.couponButton("クーポンを表示する")!=null);
   if(target.isEmpty()){
    if(complete||!couponStage.isEmpty()){
     if(couponSince==0)couponSince=now;
-    if(now-couponSince>45000){stop("要確認","クーポンの操作ボタンが現れません");return true;}
+    if(now-couponSince>90000){stop("要確認","クーポンの操作ボタンが現れません");return true;}
+    if(couponStage.isEmpty()){scroll(s);return true;}
     status("クーポン待機","クーポン専用ボタンの表示を確認しています");return true;
    }
    return false;
@@ -330,7 +339,8 @@ public final class QuizService extends AccessibilityService {
   String nextStage=target.equals("クーポンを表示する")?"display_clicked":"get_clicked";
   if(!session.edit().putString("coupon_stage",nextStage).commit()){stop("要確認","クーポンの二重操作防止記録を保存できません");return true;}
   couponStage=nextStage;couponSince=now;
-  if(!click(s,s.couponButton(target))){stop("要確認",target+" の操作が未確認です。重複操作しません");return true;}
+  boolean clicked=click(s,s.couponButton(target));InputDiagnostics.add(this,"AUTO_COUPON","stage="+nextStage+" click="+clicked);
+  if(!clicked){stop("要確認",target+" の操作が未確認です。重複操作しません");return true;}
   questionSince=now;status("クーポン進行",target+" をタップしました");return true;
  }
  private boolean click(Screen original,AccessibilityNodeInfo old){return click(original,old,true);}
@@ -341,7 +351,8 @@ public final class QuizService extends AccessibilityService {
    if(!running||!fresh.trusted()||!fresh.pkg.equals(original.pkg)||!fresh.confirmationKey().equals(original.confirmationKey()))return false;
    if(original.question!=null&&(fresh.question==null||!fresh.question.key.equals(original.question.key)))return false;
    AccessibilityNodeInfo target=null;String resource=Screen.id(old),label=original.content(old).trim();
-   if(resource.endsWith(":id/chat_ui_quick_reply_item_root"))target=fresh.quick(label);
+   if(label.equals("クーポンをゲットする")||label.equals("クーポンを表示する"))target=fresh.couponButton(label);
+   else if(resource.endsWith(":id/chat_ui_quick_reply_item_root"))target=fresh.quick(label);
    else {for(AccessibilityNodeInfo n:fresh.nodes)if(n.isClickable()&&n.isVisibleToUser()&&n.isEnabled()&&Screen.id(n).equals(resource)&&Screen.text(n).equals(Screen.text(old))){if(target!=null)return false;target=n;}}
    return target!=null&&performChecked(target,resetSearch);
   }
@@ -354,8 +365,8 @@ public final class QuizService extends AccessibilityService {
   }
   if(gesturePending||SystemClock.elapsedRealtime()-lastAction<ElementMonitor.INTERVAL_MS)return;
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime());
-  if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、1秒後に再確認します");return;}
-  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上約10%・下は従来どおりの探索を3回行いましたが要素を確認できません");return;}
+  if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、0.5秒後に再確認します");return;}
+  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上約10%・下は従来どおりの探索を最大6往復・26秒行いましたが要素を確認できません");return;}
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
    if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||(registration?(fresh.registrationStage()!=expected||Registration.stage(fresh.latest)==Registration.Stage.UNKNOWN):(fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()))){
@@ -363,7 +374,7 @@ public final class QuizService extends AccessibilityService {
    }
    if(((KeyguardManager)getSystemService(KEYGUARD_SERVICE)).isKeyguardLocked()||!((PowerManager)getSystemService(POWER_SERVICE)).isInteractive()){stop("要確認","画面ロック・画面OFFを検知しました");return;}
    Rect r=new Rect();AccessibilityNodeInfo area=fresh.uniqueId("chat_ui_main_content_area");
-   if(area==null){stop("要確認","LINEのスライド領域を一意に確認できません");return;}area.getBoundsInScreen(r);
+   if(area==null){status("表示待機","スライド領域が未確認のため、画面を再取得しています");return;}area.getBoundsInScreen(r);
    android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();if(!r.intersect(0,0,metrics.widthPixels,metrics.heightPixels)||r.height()<dp(200)||r.width()<dp(100)){stop("要確認","安全なスライド領域を確認できません");return;}
    float x=r.centerX();
    if(overlay!=null){int[] xy=new int[2];overlay.getLocationOnScreen(xy);Rect cover=new Rect(xy[0],xy[1],xy[0]+overlay.getWidth(),xy[1]+overlay.getHeight());
@@ -372,11 +383,11 @@ public final class QuizService extends AccessibilityService {
    float[] y=RevealSearch.path(r.top,r.bottom,metrics.heightPixels,step);Path path=new Path();path.moveTo(x,y[0]);path.lineTo(x,y[1]);
    final int pair=revealSearch.pair();gesturePending=true;lastAction=SystemClock.elapsedRealtime();elementMonitor.reset();
    boolean accepted=dispatchGesture(new GestureDescription.Builder().addStroke(new GestureDescription.StrokeDescription(path,0,RevealSearch.duration(step))).build(),new GestureResultCallback(){
-    @Override public void onCompleted(GestureDescription g){gesturePending=false;elementMonitor.reset();if(running)status("表示確認",pair+"/3 · スライド後の要素を確認しています");}
+    @Override public void onCompleted(GestureDescription g){gesturePending=false;elementMonitor.reset();if(running)status("表示確認",pair+"/6 · スライド後の要素を確認しています");}
     @Override public void onCancelled(GestureDescription g){gesturePending=false;if(running)stop("要確認","スライドが中断されました");}
    },handler);
    if(!accepted){gesturePending=false;stop("要確認","スライドを実行できません");return;}
-   revealSearch.moved();status("要素探索",pair+"/3 · "+(step==RevealSearch.Step.UP?"画面の約10%を上へ":"従来の距離で下へ"));
+   revealSearch.moved();status("要素探索",pair+"/6 · "+(step==RevealSearch.Step.UP?"画面の約10%を上へ":"従来の距離で下へ"));
   }
  }
  public void refreshTestMode(){stop("停止","入力テスト設定を変更しました");testQuestion="";hideFloat();showFloat();}
