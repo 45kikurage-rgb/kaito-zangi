@@ -23,6 +23,19 @@ public final class UiModel {
  // The selected last question row is authoritative; an older duplicate elsewhere cannot make it visible.
  public boolean visibleQuestion(){if(question==null)return false;for(int i=0;i<nodes.size();i++)if(rowOf(i)==qRow&&nodes.get(i).visible&&nodes.get(i).text.contains(question.body))return true;return false;}
  public boolean leaf(int index){return children.get(index).isEmpty();}
+ /** Latest coupon card: exact link text, including labels whose click handler is on a parent. */
+ public int couponLink(String label){
+  if(!label.equals("クーポンを表示する"))return -1;
+  if(!latest.contains("クーポン")||!latest.contains("バーコード")||!(latest.contains("セブン")||latest.contains("難問をクリア")))return -1;
+  int found=-1;
+  for(int i=0;i<nodes.size();i++){
+   Node n=nodes.get(i);int row=rowOf(i);
+   if(!leaf(i)||!n.visible||!n.enabled||!n.text.trim().equals(label)||row<0||row!=flex.size()-1||row<=qRow)continue;
+   int target=i,index=i;
+   for(int d=0;index>=0&&d<6;d++,index=parentOf(index)){if(rowOf(index)!=row)break;Node p=nodes.get(index);if(p.visible&&p.enabled&&p.clickable&&content(index).trim().equals(label)){target=index;break;}}
+   if(found>=0)return -1;found=target;
+  }return found;
+ }
  public Map<String,Integer> registrationControls(Registration.Stage stage){
   Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();
   for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);String label=n.text.trim();if(!n.visible||!n.enabled||!leaf(i)||!Registration.eligible(stage,label))continue;

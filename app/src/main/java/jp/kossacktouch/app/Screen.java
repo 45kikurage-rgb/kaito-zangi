@@ -59,6 +59,9 @@ public final class Screen implements AutoCloseable {
  public AccessibilityNodeInfo couponButton(String label){
   if(!label.equals("クーポンをゲットする")&&!label.equals("クーポンを表示する"))return null;
   AccessibilityNodeInfo quick=quick(label);if(quick!=null)return quick;
+  int link=model.couponLink(label);
+  if(link>=0){int i=link;boolean web=false;for(int depth=0;i>=0&&depth<46;depth++,i=model.parentOf(i))if("android.webkit.WebView".equals(String.valueOf(nodes.get(i).getClassName())))web=true;if(!web)return nodes.get(link);}
+  if(label.equals("クーポンを表示する")&&model.latest.contains(label))return null;
   AccessibilityNodeInfo found=null;
   for(int i=0;i<nodes.size();i++){
    AccessibilityNodeInfo n=nodes.get(i);
@@ -71,6 +74,8 @@ public final class Screen implements AutoCloseable {
   return found;
  }
  public boolean verifiedCouponPage(){
+  if(trusted())return false; // The chat invitation also contains coupon/barcode/store text.
+  boolean web=false;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&"android.webkit.WebView".equals(String.valueOf(n.getClassName())))web=true;if(!web)return false;
   String t=allVisibleText();
   return (t.contains("セブン‐イレブン")||t.contains("セブン-イレブン")||t.contains("セブンイレブン"))
       &&(t.contains("バーコード")||t.contains("クーポン"))
