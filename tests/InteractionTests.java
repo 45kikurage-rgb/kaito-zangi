@@ -13,23 +13,25 @@ public class InteractionTests {
   check(r.missing(now)==RevealSearch.Step.WAIT);check(r.missing(now+1000)==RevealSearch.Step.WAIT);check(r.missing(27000)==RevealSearch.Step.EXHAUSTED);
   r.reset();check(r.missing(20000)==RevealSearch.Step.WAIT);check(r.missing(22000)==RevealSearch.Step.WAIT);r.found();check(r.missing(23000)==RevealSearch.Step.WAIT);check(r.missing(24000)==RevealSearch.Step.DOWN);r.moved();r.found();check(r.missing(25000)==RevealSearch.Step.WAIT);check(r.missing(26000)==RevealSearch.Step.UP);
   for(float height:new float[]{400,900,1600}){
-   float[] up=RevealSearch.path(100,100+height,72,RevealSearch.Step.UP),down=RevealSearch.path(100,100+height,72,RevealSearch.Step.DOWN);
-   check(up[0]>up[1]);check(Math.abs((up[0]-up[1])-72f)<.01f);
+   float[] up=RevealSearch.path(100,100+height,48,RevealSearch.Step.UP),down=RevealSearch.path(100,100+height,48,RevealSearch.Step.DOWN);
+   check(up[0]>up[1]);check(Math.abs((up[0]-up[1])-48f)<.01f);
    check(down[0]==101f);check(down[1]==99f+height);check(down[0]<down[1]);
   }
-  // 72dp converted by Android at different densities must produce the exact pixel distance.
+  // 48dp converted by Android at different densities must produce the exact pixel distance.
   for(float density:new float[]{1,1.5f,2,3,4}){
-   float pixels=Math.round(72*density);
+   float pixels=Math.round(48*density);
    float[] up=RevealSearch.path(0,2400,pixels,RevealSearch.Step.UP);
    check(Math.abs(up[0]-up[1]-pixels)<.01f);check(up[1]>=1&&up[0]<=2399);
   }
   // Overlay/IME lane may be shorter than one float height: both points stay inside it.
-  float[] narrow=RevealSearch.path(100,200,216,RevealSearch.Step.UP);
-  check(narrow[1]==101f);check(narrow[0]>narrow[1]);check(narrow[0]-narrow[1]<216);
-  float[] narrowDown=RevealSearch.path(100,200,216,RevealSearch.Step.DOWN);
+  float[] narrow=RevealSearch.path(100,200,144,RevealSearch.Step.UP);
+  check(narrow[1]==101f);check(narrow[0]>narrow[1]);check(narrow[0]-narrow[1]<144);
+  float[] narrowDown=RevealSearch.path(100,200,144,RevealSearch.Step.DOWN);
   check(narrowDown[0]==101f&&narrowDown[1]==199f);
   float[] legacyDown=RevealSearch.path(100,1000,RevealSearch.Step.DOWN);
   check(legacyDown[0]==101f&&legacyDown[1]==999f);
+  float[] defaultUp=RevealSearch.path(100,1000,RevealSearch.Step.UP);
+  check(Math.abs(defaultUp[0]-defaultUp[1]-48f)<.01f);
 
   check(RevealSearch.duration(RevealSearch.Step.DOWN)==150);check(RevealSearch.duration(RevealSearch.Step.UP)==350);
   // A rejected dispatch consumes no step; reset starts a new DOWN-first search after fresh observations.
