@@ -1,0 +1,135 @@
+name: Build and publish code24 if owner's fixed signer is available
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/release-code24.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  signed-production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
+      - name: Install Android SDK 35
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Verify owner signer available without disclosing it
+        env:
+          KEY_BASE64: ${{ secrets.SIGNING_STORE_BASE64 }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        shell: bash
+        run: |
+          if [[ -z "$KEY_BASE64" || -z "$SIGNING_STORE_PASSWORD" ]]; then
+            echo "::error::The existing owner signing key/password is not configured as GitHub Actions secrets. Production remains on code23. Never generate a new key or publish an unsigned APK."
+            exit 1
+          fi
+          test ! -f site/downloads/kaito-zangi-0.1.24.apk || { echo "::error::code24 APK already exists. Preserve published assets."; exit 1; }
+      - name: Build signed code24 with existing fixed owner certificate
+        shell: bash
+        env:
+          KEY_BASE64: ${{ secrets.SIGNING_STORE_BASE64 }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/kossacktouch.p12"
+          export SIGNING_STORE="$RUNNER_TEMP/kossacktouch.p12"
+          export ANDROID_JAR="$ANDROID_HOME/platforms/android-35/android.jar"
+          export ANDROID_BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          trap 'rm -f "$SIGNING_STORE"' EXIT
+          bash scripts/build.sh
+          test -s build/out/kaito-zangi-0.1.24.apk
+          grep -q '^Signer #1 certificate SHA-256 digest: 20f8f43972be30b9b3ac94f83e3bcb8d5bf98d3c81b0b47bb7a24b19aa57d302$' build/signature-verification.txt
+      - name: Publish new version only after successful signed verification
+        shell: bash
+        env:
+          RELEASE_SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          cp build/out/kaito-zangi-0.1.24.apk site/downloads/kaito-zangi-0.1.24.apk
+          python3 - <<'PY'
+          import hashlib, json, os, re
+          from pathlib import Path
+          root=Path('site')
+          filename='kaito-zangi-0.1.24.apk'
+          apk=root/'downloads'/filename
+          digest=hashlib.sha256(apk.read_bytes()).hexdigest()
+          old=json.loads((root/'latest.json').read_text())
+          assert old['versionCode']==23 and old['channel']=='stable'
+          assert old['signingCertificateSha256']=='20f8f43972be30b9b3ac94f83e3bcb8d5bf98d3c81b0b47bb7a24b19aa57d302'
+          assert hashlib.sha256((root/'downloads'/'kaito-zangi-0.1.23.apk').read_bytes()).hexdigest()==old['sha256']
+          all_sums=root/'downloads'/'SHA256SUMS'
+          sums=all_sums.read_text().rstrip('\n')+'\n'
+          assert filename not in sums
+          line=f'{digest}  {filename}\n'
+          all_sums.write_text(sums+line)
+          (root/'downloads'/'SHA256SUMS-code24.txt').write_text(line)
+          next=dict(old)
+          next.update(version='0.1.24',versionCode=24,date='2026-10-14',channel='stable',status='production',
+             apk='downloads/'+filename,sha256=digest,sizeBytes=apk.stat().st_size,
+             sourceCommit=os.environ['RELEASE_SOURCE_COMMIT'],physicalDeviceVerified=False,
+             upgradeInstallVerified=False,settingsRetentionRuntimeVerified=False,
+             productionAccepted=False,physicalDeviceVerification='code24 pending: Android checks only; verify LINE tap and upgrade on actual device',
+             floatExpandedHeightDp=144,floatCompactHeightDp=72,fixedHeightOnPlay=True,floatTitleRemoved=True,
+             notes='第2問の登録画面誤判定を修正。A-D実画面位置への一度だけのタップで操作。タップとLINE正解確定を区別。フロートは初期表示と再生後とも144dpで固定し、タイトルを行動表示に置換。')
+          results=Path('build/test-results.txt').read_text()
+          checks=[int(v) for v in re.findall(r'PASS (\d+) ',results)]
+          assert sum(checks)>=2700
+          next['automatedChecks']=sum(checks)
+          body=json.dumps(next,ensure_ascii=False,indent=2)+'\n'
+          (root/'latest.json').write_text(body)
+          (root/'releases'/'code24.json').write_text(body)
+          # Keep old code23 release history; change just the current main download panel.
+          homepage=root/'index.html'
+          html=homepage.read_text()
+          marker='<div><h2>更新履歴</h2>'
+          assert marker in html
+          head,history=html.split(marker,1)
+          assert 'kaito-zangi-0.1.23.apk' in head and 'code23' in head
+          head=head.replace('code23','code24').replace('v0.1.23','v0.1.24').replace('versionCode 23','versionCode 24').replace('kaito-zangi-0.1.23.apk','kaito-zangi-0.1.24.apk')
+          head=head.replace('code21動作確認済み · 正式署名','自動テスト合格・実機確認待ち · 正式署名')
+          head=head.replace('通常フロートは再生前72dp、再生後144dp（2倍）。説明文の文字サイズを自動調整し、表示枠に収めます。停止後も144dpを維持し、内向き矢印で72dpへ戻ります。','通常フロートは表示直後も再生後も144dp固定。フロート内の「怪盗ザンギ」表記を外し、行動状態と説明文を枠内に収めます。停止後は内向き矢印で72dpへ縮小できます。')
+          history=marker+'<p><strong>2026.10.14 · code24 回答停止・フロート改修</strong></p><ul><li>問題文に都道府県などがあっても登録画面と誤判定しないよう修正。</li><li>A〜Dのボタンを画面位置で一度だけタップし、結果を確認。未確定時は二重タップしない。</li><li>フロート144dp固定、見出し「怪盗ザンギ」を除去し動作表示を枠内に収める。実機確認待ち。</li></ul>'+history
+          homepage.write_text(head+history)
+          sw=root/'sw.js';sw.write_text(sw.read_text().replace('kaito-zangi-code23','kaito-zangi-code24'))
+          PY
+          python3 scripts/assemble-release-apk.py
+          (cd site/downloads && sha256sum -c SHA256SUMS)
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          m=json.loads(Path('site/latest.json').read_text())
+          b=Path('site')/m['apk']
+          assert m['versionCode']==24 and m['channel']=='stable'
+          assert hashlib.sha256(b.read_bytes()).hexdigest()==m['sha256'] and b.stat().st_size==m['sizeBytes']
+          PY
+      - name: Commit new signed APK and update GitHub Pages source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- site/latest.json site/releases/code24.json site/downloads/kaito-zangi-0.1.24.apk site/downloads/SHA256SUMS site/downloads/SHA256SUMS-code24.txt site/index.html site/sw.js
+          git commit -m "Release code24 fixed-certificate signed production APK"
+          git push origin HEAD:main
+      - name: Publish GitHub Release and request Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! gh release view v0.1.24 >/dev/null 2>&1; then
+            gh release create v0.1.24 site/downloads/kaito-zangi-0.1.24.apk site/downloads/SHA256SUMS-code24.txt --target "$(git rev-parse HEAD)" --latest --title "怪盗ザンギ code24 実運用版" --notes-file docs/release-notes-code24.md
+          fi
+          gh workflow run pages.yml --ref main
