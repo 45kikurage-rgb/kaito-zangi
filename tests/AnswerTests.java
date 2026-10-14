@@ -28,6 +28,10 @@ public class AnswerTests {
    Map<String,String> c=new LinkedHashMap<>();c.put("A","任意1");c.put("B","任意2");c.put("C","任意3");c.put("D","任意4");eq(e.sourceLetter,bank.match(new Question(1,"問題："+body,c)));checked++;
   }
   eq("50",Integer.toString(checked));
+  Question opening=Question.parse("第2問（インターハイ）\n2026年のインターハイで総合開会式が行われた都道府県よりも面積が広い都道府県はどこ？\n【A】佐賀県\n【B】京都府\n【C】神奈川県\n【D】鳥取県");
+  check(opening!=null);eq("B",bank.match(opening));
+  Question women=Question.parse("第2問（インターハイ）\nインターハイの陸上競技で、女子のみが行う種目は次のうちどれ？\n【A】競技A\n【B】競技B\n【C】競技C\n【D】競技D");
+  check(women!=null);eq("B",bank.match(women));
   Question walk=Question.parse("第1問 (スポーツ全般)\n陸上競技の競歩で、この印は何を意味する？\n【A】スピードが速すぎるため一時停止しなければならない\n【B】他選手にわざと接触したため注意喚起をしている\n【C】膝が曲がっているため即失格となる\n【D】両足が地面から離れているため注意喚起をしている");eq("D",bank.match(walk));
   System.out.println("PASS "+n+" keyword-to-letter checks: question text only, 6 observed screens, wording variants, missing button, ambiguous/unknown/changed conditions, and all 50 registered mappings.");
  }

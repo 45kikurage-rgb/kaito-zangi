@@ -46,6 +46,9 @@ public class Test06Tests {
   check(FinalSubmission.draftSafe("","67",false));check(!FinalSubmission.draftSafe("67","67",false));check(FinalSubmission.draftSafe("67","67",true));check(!FinalSubmission.draftSafe("こんにちは","67",true));
   RunGuard g=new RunGuard();g.lastConfirmed=4;g.mark(m.question,5000);check(!g.canAnswer(m.question));RunGuard resumed=new RunGuard();resumed.restore(m.question.key,6000);check(!resumed.canAnswer(m.question));
   List<UiModel.Node> done=base("超良問ドリル");done.add(node(2,"chat_ui_row_flex_message_frame","第5問\n"+q,true,false));done.add(node(2,"chat_ui_row_flex_message_frame","正解！\n5問連続正解！",true,false));check(QuizFlow.complete(new UiModel(done)));check(!FinalSubmission.messageFormat(new UiModel(done)));
+  check(Registration.stage("2026年のインターハイで総合開会式が行われた都道府県") == Registration.Stage.PREFECTURE);
+  check(Registration.quizPriority(true,true,false));check(Registration.quizPriority(true,false,true));
+  check(!Registration.quizPriority(false,true,true));check(!Registration.quizPriority(true,false,false));
   System.out.println("PASS "+c+" test06 checks: cloned LINE guards, visible-only registration, personal confirmation, numeric message/form routing, observed 67, completion and no duplicate submission.");
  }
 }
