@@ -104,6 +104,7 @@ jobs:
           homepage.write_text(head+history)
           sw=root/'sw.js';sw.write_text(sw.read_text().replace('kaito-zangi-code23','kaito-zangi-code24'))
           PY
+          python3 scripts/assemble-release-apk.py
           (cd site/downloads && sha256sum -c SHA256SUMS)
           python3 - <<'PY'
           import hashlib,json
