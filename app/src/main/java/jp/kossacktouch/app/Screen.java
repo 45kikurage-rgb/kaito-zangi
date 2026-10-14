@@ -97,7 +97,9 @@ public final class Screen implements AutoCloseable {
  public AccessibilityNodeInfo richStart(){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isClickable()&&text(n).equals("開始")){
   AccessibilityNodeInfo p=n.getParent();boolean rich=false;for(int d=0;p!=null&&d<12;d++){if(id(p).endsWith(":id/chat_ui_oa_richmenu"))rich=true;AccessibilityNodeInfo next=p.getParent();p.recycle();p=next;}if(p!=null)p.recycle();if(rich){if(found!=null)return null;found=n;}
  }return found;}
+ public boolean quizQuestionActive(){if(question==null)return false;boolean allFour=false;if(question.number<5){allFour=quick("A")!=null&&quick("B")!=null&&quick("C")!=null&&quick("D")!=null;}return Registration.quizPriority(visibleQuestion(),qRow==flex.size()-1,allFour);}
  public Registration.Stage registrationStage(){
+  if(quizQuestionActive())return Registration.Stage.UNKNOWN;
   if(quick("わかった！")!=null&&allVisibleText().contains("高校がある都道府県を選んで"))return Registration.Stage.SCHOOL_GUIDE;
   // Live quick replies identify intro/confirmation even when the prompt is an ordinary chat message.
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.SUMMARY,Registration.Stage.INTRO}){
