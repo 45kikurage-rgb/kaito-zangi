@@ -5,9 +5,7 @@ on:
     paths:
       - site/downloads/kaito-zangi-0.1.24.apk
       - site/downloads/SHA256SUMS-code24.txt
-      - site/latest.json
       - site/releases/code24.json
-      - .github/workflows/publish-signed-code24.yml
   workflow_dispatch:
 permissions:
   contents: write

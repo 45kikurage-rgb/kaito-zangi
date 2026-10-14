@@ -2,7 +2,7 @@ name: Publish code23 production APK
 on:
   push:
     branches: [main]
-    paths: ["site/downloads/kaito-zangi-0.1.23.apk", "site/latest.json", ".github/workflows/release-code23.yml"]
+    paths: ["site/downloads/kaito-zangi-0.1.23.apk"]
   workflow_dispatch:
 permissions:
   contents: write

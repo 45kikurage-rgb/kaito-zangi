@@ -25,18 +25,19 @@ public final class QuizService extends AccessibilityService {
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
- public void showFloat(){if(overlay!=null)return;expandedFloat=false;
+ public void showFloat(){if(overlay!=null)return;expandedFloat=false;final boolean inputTest=testMode();final int headerHeight=inputTest?36:72;
   overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setBackgroundColor(Color.rgb(17,40,51));
-  LinearLayout header=new LinearLayout(this);header.setOrientation(LinearLayout.HORIZONTAL);header.setGravity(Gravity.CENTER_VERTICAL);header.setPadding(dp(8),0,dp(4),0);overlay.addView(header,new LinearLayout.LayoutParams(-1,dp(72)));
-  titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(22.5f);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("待機中");titleView.setMaxLines(1);titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);titleView.setAutoSizeTextTypeUniformWithConfiguration(12,22,1,android.util.TypedValue.COMPLEX_UNIT_SP);titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
-  header.addView(titleView,new LinearLayout.LayoutParams(0,dp(72),1));
+  LinearLayout header=new LinearLayout(this);header.setOrientation(LinearLayout.HORIZONTAL);header.setGravity(Gravity.CENTER_VERTICAL);header.setPadding(dp(8),0,dp(4),0);overlay.addView(header,new LinearLayout.LayoutParams(-1,dp(headerHeight)));
+  titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(22.5f);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("待機中");titleView.setMaxLines(inputTest?1:2);titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);titleView.setAutoSizeTextTypeUniformWithConfiguration(9,22,1,android.util.TypedValue.COMPLEX_UNIT_SP);titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
+  header.addView(titleView,new LinearLayout.LayoutParams(0,dp(headerHeight),1));
   play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(30);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())prepareInputTest();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。縮小ボタンで横長表示、▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
+  collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
   Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(33);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(3),dp(12),dp(3));info.setGravity(Gravity.TOP);info.setIncludeFontPadding(false);info.setHorizontallyScrolling(false);info.setMaxLines(4);info.setEllipsize(android.text.TextUtils.TruncateAt.END);info.setAutoSizeTextTypeUniformWithConfiguration(9,21,1,android.util.TypedValue.COMPLEX_UNIT_SP);info.setVisibility(View.GONE);overlay.addView(info,new LinearLayout.LayoutParams(-1,dp(testMode()?216:72)));
+  info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(3),dp(12),dp(3));info.setGravity(Gravity.TOP);info.setIncludeFontPadding(false);info.setHorizontallyScrolling(false);info.setMaxLines(4);info.setEllipsize(android.text.TextUtils.TruncateAt.END);info.setAutoSizeTextTypeUniformWithConfiguration(9,21,1,android.util.TypedValue.COMPLEX_UNIT_SP);info.setVisibility(View.GONE);overlay.addView(info,new LinearLayout.LayoutParams(-1,0));
   testButtons=new LinearLayout(this);testButtons.setOrientation(LinearLayout.HORIZONTAL);
-  for(int i=1;i<=3;i++){final int mode=i;Button b=new Button(this);b.setText("再生"+i);b.setTextSize(19.5f);b.setPadding(0,0,0,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setOnClickListener(v->runInputTest(mode));testButtons.addView(b,new LinearLayout.LayoutParams(0,dp(72),1));}
-  Button copy=new Button(this);copy.setText("診断コピー");copy.setTextSize(16.5f);copy.setPadding(0,0,0,0);copy.setMinWidth(0);copy.setMinimumWidth(0);copy.setOnClickListener(v->copyDiagnostics());testButtons.addView(copy,new LinearLayout.LayoutParams(0,dp(72),1));testButtons.setVisibility(View.GONE);overlay.addView(testButtons);
+  for(int i=1;i<=3;i++){final int mode=i;Button b=new Button(this);b.setText("再生"+i);b.setTextSize(14);b.setPadding(0,0,0,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setMinHeight(0);b.setMinimumHeight(0);b.setOnClickListener(v->runInputTest(mode));testButtons.addView(b,new LinearLayout.LayoutParams(0,dp(36),1));}
+  Button copy=new Button(this);copy.setText("診断コピー");copy.setTextSize(12);copy.setPadding(0,0,0,0);copy.setMinWidth(0);copy.setMinimumWidth(0);copy.setMinHeight(0);copy.setMinimumHeight(0);copy.setOnClickListener(v->copyDiagnostics());testButtons.addView(copy,new LinearLayout.LayoutParams(0,dp(36),1));testButtons.setVisibility(inputTest?View.VISIBLE:View.GONE);overlay.addView(testButtons,new LinearLayout.LayoutParams(-1,dp(36)));
+  if(inputTest){for(Button b:new Button[]{play,pause,close}){b.getLayoutParams().height=dp(34);b.setTextSize(22);}}
   android.content.SharedPreferences prefs=Store.prefs(this);compactX=prefs.getInt("float_x",dp(12));compactY=prefs.getInt("float_y",0);
   layout=new WindowManager.LayoutParams(compactWidth(),dp(72),WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,PixelFormat.TRANSLUCENT);
   layout.gravity=Gravity.TOP|Gravity.LEFT;
@@ -60,28 +61,26 @@ public final class QuizService extends AccessibilityService {
  }
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private int compactWidth(){return Math.min(dp(390),getResources().getDisplayMetrics().widthPixels);}
- private int floatHeight(boolean expanded){return expanded?dp(testMode()?360:144):dp(72);}
+ private int floatHeight(boolean expanded){return dp(72);}
  private void clampFloat(boolean expanded){
   android.util.DisplayMetrics dm=getResources().getDisplayMetrics();
-  int w=expanded?dm.widthPixels:compactWidth(),h=floatHeight(expanded);
+  int w=compactWidth(),h=floatHeight(expanded);
   int maxX=Math.max(0,dm.widthPixels-w),maxY=Math.max(0,dm.heightPixels-h);
   layout.x=Math.max(0,Math.min(layout.x,maxX));layout.y=Math.max(0,Math.min(layout.y,maxY));
   if(!expanded){compactX=Math.max(0,Math.min(compactX,maxX));compactY=Math.max(0,Math.min(compactY,maxY));}
  }
  private void floatSize(boolean expanded){
   if(overlay==null||layout==null)return;
-  boolean wasExpanded=expandedFloat;expandedFloat=expanded;
-  info.setVisibility(expanded?View.VISIBLE:View.GONE);
-  if(testButtons!=null)testButtons.setVisibility(expanded&&testMode()?View.VISIBLE:View.GONE);
-  layout.width=expanded?WindowManager.LayoutParams.MATCH_PARENT:compactWidth();
+  expandedFloat=false;
+  info.setVisibility(View.GONE);
+  layout.width=compactWidth();
   layout.height=floatHeight(expanded);
-  if(expanded){if(!wasExpanded){compactX=layout.x;compactY=layout.y;}layout.x=0;}else{layout.x=compactX;layout.y=compactY;}
-  clampFloat(expanded);wm.updateViewLayout(overlay,layout);updateFloatControls();
+  clampFloat(false);wm.updateViewLayout(overlay,layout);updateFloatControls();
  }
  private void updateFloatControls(){
   boolean active=running||testBusy;
   if(play!=null)play.setEnabled(!active);
-  if(pause!=null){pause.setText(active?"||":"");pause.setForeground(active?null:collapseIcon);pause.setContentDescription(active?"一時停止（フロートを残す）":"横長のフロートに戻る");pause.setEnabled(active||expandedFloat);}
+  if(pause!=null){pause.setText(active?"||":"");pause.setForeground(active?null:collapseIcon);pause.setContentDescription(active?"一時停止（フロートを残す）":"横長フロート（固定表示）");pause.setEnabled(true);}
  }
  private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
@@ -94,7 +93,7 @@ public final class QuizService extends AccessibilityService {
   else if(finalAnswerKnown&&!state.equals("完了")&&!testMode())detail+="\n"+(submitAttempted?"送信履歴を確認してください。再送しないでください。":inputVerified?"入力欄の答えを確認して、手動で送信してください。":"同じ問題か確認し、上の答えを手動で入力・送信してください。");
   if(testMode())floatSize(true);status(state,detail);Store.log(this,state,current,answer,detail);
  }
- private void status(String state,String detail){updateFloatControls();Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(titleView!=null)titleView.setText(state);if(info!=null)info.setText((finalAnswerKnown?"第5問の答え："+answer+"\n":"")+detail);}
+ private void status(String state,String detail){updateFloatControls();Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(titleView!=null)titleView.setText((finalAnswerKnown?"答え "+answer+" · ":"")+state);if(info!=null)info.setText((finalAnswerKnown?"第5問の答え："+answer+"\n":"")+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(e.getEventType()==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED&&(running||testBusy)){textChanged=true;}if(!running)return;int type=e.getEventType();
   // Event package identifies its source, not the foreground application (e.g. an IME).
   if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||type==AccessibilityEvent.TYPE_WINDOWS_CHANGED||type==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)handler.post(this::check);
@@ -455,14 +454,15 @@ public final class QuizService extends AccessibilityService {
  }
  private void scroll(Screen s){scroll(s,false);}
  private void scroll(Screen s,boolean registration){
+  if(!running)return;
   Registration.Stage expected=s.registrationStage();
-  if(!running||!s.trusted()||(registration?(expected==Registration.Stage.UNKNOWN||Registration.stage(s.latest)==Registration.Stage.UNKNOWN):(expected!=Registration.Stage.UNKNOWN||s.registrationChoicesVisible()))){
+  if(!s.trusted()||(registration?(expected==Registration.Stage.UNKNOWN||Registration.stage(s.latest)==Registration.Stage.UNKNOWN):(expected!=Registration.Stage.UNKNOWN||s.registrationChoicesVisible()))){
    stop("要確認","安全に探索できない画面を検出しました");return;
   }
   if(gesturePending||SystemClock.elapsedRealtime()-lastAction<ElementMonitor.INTERVAL_MS)return;
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime());
   if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、0.5秒後に再確認します");return;}
-  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","上約10%・下は従来どおりの探索を最大6往復・26秒行いましたが要素を確認できません");return;}
+  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","下へ→フロートの高さ分だけ上への探索を最大6往復・26秒行いましたが要素を確認できません");return;}
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
    if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||(registration?(fresh.registrationStage()!=expected||Registration.stage(fresh.latest)==Registration.Stage.UNKNOWN):(fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()))){
@@ -477,14 +477,16 @@ public final class QuizService extends AccessibilityService {
    java.util.List<AccessibilityWindowInfo> windows=getWindows();try{for(AccessibilityWindowInfo w:windows)if(w.getType()==AccessibilityWindowInfo.TYPE_INPUT_METHOD){Rect b=new Rect();w.getBoundsInScreen(b);if(!b.isEmpty())blocked.add(new float[]{b.left,b.top,b.right,b.bottom});}}finally{for(AccessibilityWindowInfo w:windows)w.recycle();}
    float[] lane=SwipeLane.choose(r.left,r.top,r.right,r.bottom,blocked,dp(160),dp(12));
    if(lane==null){status("表示待機","操作できる範囲が狭いため再確認中です。フロートはドラッグで移動できます");return;}
-   float[] y=RevealSearch.path(lane[1],lane[2],metrics.heightPixels,step);Path path=new Path();path.moveTo(lane[0],y[0]);path.lineTo(lane[0],y[1]);
+   float upwardDistancePx=overlay!=null&&overlay.getHeight()>0?overlay.getHeight():dp(72);
+   float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,step);Path path=new Path();path.moveTo(lane[0],y[0]);path.lineTo(lane[0],y[1]);
+   if(!running)return;
    final int generation=testGeneration;final int pair=revealSearch.pair();gesturePending=true;lastAction=SystemClock.elapsedRealtime();elementMonitor.reset();
    boolean accepted=dispatchGesture(new GestureDescription.Builder().addStroke(new GestureDescription.StrokeDescription(path,0,RevealSearch.duration(step))).build(),new GestureResultCallback(){
     @Override public void onCompleted(GestureDescription g){if(generation!=testGeneration)return;gesturePending=false;elementMonitor.reset();if(running)status("表示確認",pair+"/6 · スライド後の要素を確認しています");}
     @Override public void onCancelled(GestureDescription g){if(generation!=testGeneration)return;gesturePending=false;if(running)stop("要確認","スライドが中断されました");}
    },handler);
    if(!accepted){gesturePending=false;stop("要確認","スライドを実行できません");return;}
-   revealSearch.moved();status("要素探索",pair+"/6 · "+(step==RevealSearch.Step.UP?"画面の約10%を上へ":"従来の距離で下へ"));
+   revealSearch.moved();status("要素探索",pair+"/6 · "+(step==RevealSearch.Step.UP?"フロートの高さ分だけ上へ":"従来の距離で下へ"));
   }
  }
  public void refreshTestMode(){stop("停止","入力テスト設定を変更しました");testQuestion="";hideFloat();showFloat();}
