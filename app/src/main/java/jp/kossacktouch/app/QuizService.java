@@ -12,7 +12,7 @@ import jp.kossacktouch.core.*;
 public final class QuizService extends AccessibilityService {
  public static QuizService instance;
  private final Handler handler=new Handler(Looper.getMainLooper());private WindowManager wm;private LinearLayout overlay;private TextView info;private TextView titleView;private Button play,pause;private android.graphics.drawable.Drawable collapseIcon;private WindowManager.LayoutParams layout;private int compactX,compactY;
- private LinearLayout testButtons;private boolean expandedFloat=false,finalAnswerKnown=false,submitAttempted=false,inputVerified=false;
+ private PopupMenu inputTestMenu;private boolean expandedFloat=false,finalAnswerKnown=false,submitAttempted=false,inputVerified=false;
  private Runnable clipboardCleanup;
  private void cleanupClipboard(){if(clipboardCleanup!=null){Runnable task=clipboardCleanup;clipboardCleanup=null;handler.removeCallbacks(task);task.run();}}
  private int testGeneration=0;private boolean testBusy=false;private String testQuestion="",testPackage="";private int testWindow=-1;private long testCaptured=0;
@@ -25,21 +25,18 @@ public final class QuizService extends AccessibilityService {
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
- public void showFloat(){if(overlay!=null)return;expandedFloat=false;final boolean inputTest=testMode();final int headerHeight=inputTest?36:72;
+ public void showFloat(){if(overlay!=null)return;expandedFloat=false;final boolean inputTest=testMode();final int headerHeight=48;
   overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setBackgroundColor(Color.rgb(17,40,51));
   LinearLayout header=new LinearLayout(this);header.setOrientation(LinearLayout.HORIZONTAL);header.setGravity(Gravity.CENTER_VERTICAL);header.setPadding(dp(8),0,dp(4),0);overlay.addView(header,new LinearLayout.LayoutParams(-1,dp(headerHeight)));
-  titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(22.5f);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("待機中");titleView.setMaxLines(inputTest?1:2);titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);titleView.setAutoSizeTextTypeUniformWithConfiguration(9,22,1,android.util.TypedValue.COMPLEX_UNIT_SP);titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
+  titleView=new TextView(this);titleView.setTextColor(Color.WHITE);titleView.setTextSize(20);titleView.setTypeface(null,android.graphics.Typeface.BOLD);titleView.setText("待機中");titleView.setMaxLines(1);titleView.setEllipsize(android.text.TextUtils.TruncateAt.END);titleView.setAutoSizeTextTypeUniformWithConfiguration(9,20,1,android.util.TypedValue.COMPLEX_UNIT_SP);titleView.setGravity(Gravity.CENTER_VERTICAL);titleView.setPadding(dp(5),0,dp(5),0);
   header.addView(titleView,new LinearLayout.LayoutParams(0,dp(headerHeight),1));
-  play=new Button(this);play.setText("▶");play.setAllCaps(false);play.setTextSize(30);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription("再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())prepareInputTest();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(68)));
-  collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(30);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(68)));updateFloatControls();
-  Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(33);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(68)));
+  play=new Button(this);play.setText(inputTest?"試験":"▶");play.setAllCaps(false);play.setTextSize(inputTest?15:24);play.setMinHeight(0);play.setMinimumHeight(0);play.setMinWidth(0);play.setMinimumWidth(0);play.setPadding(0,0,0,0);play.setContentDescription(inputTest?"入力テスト操作メニュー":"再生");play.setOnClickListener(v->{if(running||testBusy)return;if(testMode())showInputTestMenu();else startRun();});header.addView(play,new LinearLayout.LayoutParams(dp(60),dp(48)));
+  collapseIcon=getDrawable(R.drawable.ic_float_collapse);pause=new Button(this);pause.setForegroundGravity(Gravity.CENTER);pause.setForegroundTintList(pause.getTextColors());pause.setAllCaps(false);pause.setTextSize(24);pause.setMinHeight(0);pause.setMinimumHeight(0);pause.setMinWidth(0);pause.setMinimumWidth(0);pause.setPadding(0,0,0,0);pause.setOnClickListener(v->{if(running||testBusy)stop("一時停止","利用者が停止しました。▶で現在画面から再開できます");else floatSize(false);});header.addView(pause,new LinearLayout.LayoutParams(dp(60),dp(48)));updateFloatControls();
+  Button close=new Button(this);close.setText("×");close.setAllCaps(false);close.setTextSize(26);close.setMinHeight(0);close.setMinimumHeight(0);close.setMinWidth(0);close.setMinimumWidth(0);close.setPadding(0,0,0,0);close.setContentDescription("フロートを閉じる");close.setOnClickListener(v->{stop("停止","フロートを閉じました");hideFloat();});header.addView(close,new LinearLayout.LayoutParams(dp(60),dp(48)));
   info=new TextView(this);info.setTextColor(Color.WHITE);info.setTextSize(21);info.setPadding(dp(12),dp(3),dp(12),dp(3));info.setGravity(Gravity.TOP);info.setIncludeFontPadding(false);info.setHorizontallyScrolling(false);info.setMaxLines(4);info.setEllipsize(android.text.TextUtils.TruncateAt.END);info.setAutoSizeTextTypeUniformWithConfiguration(9,21,1,android.util.TypedValue.COMPLEX_UNIT_SP);info.setVisibility(View.GONE);overlay.addView(info,new LinearLayout.LayoutParams(-1,0));
-  testButtons=new LinearLayout(this);testButtons.setOrientation(LinearLayout.HORIZONTAL);
-  for(int i=1;i<=3;i++){final int mode=i;Button b=new Button(this);b.setText("再生"+i);b.setTextSize(14);b.setPadding(0,0,0,0);b.setMinWidth(0);b.setMinimumWidth(0);b.setMinHeight(0);b.setMinimumHeight(0);b.setOnClickListener(v->runInputTest(mode));testButtons.addView(b,new LinearLayout.LayoutParams(0,dp(36),1));}
-  Button copy=new Button(this);copy.setText("診断コピー");copy.setTextSize(12);copy.setPadding(0,0,0,0);copy.setMinWidth(0);copy.setMinimumWidth(0);copy.setMinHeight(0);copy.setMinimumHeight(0);copy.setOnClickListener(v->copyDiagnostics());testButtons.addView(copy,new LinearLayout.LayoutParams(0,dp(36),1));testButtons.setVisibility(inputTest?View.VISIBLE:View.GONE);overlay.addView(testButtons,new LinearLayout.LayoutParams(-1,dp(36)));
-  if(inputTest){for(Button b:new Button[]{play,pause,close}){b.getLayoutParams().height=dp(34);b.setTextSize(22);}}
+  for(Button b:new Button[]{play,pause,close})b.setIncludeFontPadding(false);
   android.content.SharedPreferences prefs=Store.prefs(this);compactX=prefs.getInt("float_x",dp(12));compactY=prefs.getInt("float_y",0);
-  layout=new WindowManager.LayoutParams(compactWidth(),dp(72),WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,PixelFormat.TRANSLUCENT);
+  layout=new WindowManager.LayoutParams(compactWidth(),dp(48),WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,PixelFormat.TRANSLUCENT);
   layout.gravity=Gravity.TOP|Gravity.LEFT;
   if(android.os.Build.VERSION.SDK_INT>=28)layout.layoutInDisplayCutoutMode=WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
   layout.x=compactX;layout.y=compactY;clampFloat(false);layout.x=compactX;layout.y=compactY;
@@ -57,11 +54,21 @@ public final class QuizService extends AccessibilityService {
     default:return true;
    }}
   });
-  try{wm.addView(overlay,layout);floatSize(true);if(testMode())status("第5問・入力テスト","▶で問題を確認。再生1〜3は入力だけ・送信なし");else status("待機中","▶で現在の問題から開始します");}catch(Exception e){overlay=null;stop("要確認","フロートを表示できません");}
+  try{wm.addView(overlay,layout);floatSize(true);if(testMode())status("第5問・入力テスト","「試験」から問題確認・再生1〜3・診断コピー。入力だけ・送信なし");else status("待機中","▶で現在の問題から開始します");}catch(Exception e){overlay=null;stop("要確認","フロートを表示できません");}
+ }
+ private void showInputTestMenu(){
+  if(!testMode()||testBusy||running||play==null)return;
+  PopupMenu menu=new PopupMenu(this,play);inputTestMenu=menu;final int generation=testGeneration;
+  menu.getMenu().add(0,0,0,"問題・答えを確認");
+  for(int i=1;i<=3;i++)menu.getMenu().add(0,i,i,"再生"+i+"（入力だけ）");
+  menu.getMenu().add(0,4,4,"診断コピー");
+  menu.setOnMenuItemClickListener(item->{final int id=item.getItemId();menu.dismiss();handler.postDelayed(()->{if(generation!=testGeneration||overlay==null||!testMode()||testBusy||running)return;if(id==0)prepareInputTest();else if(id>=1&&id<=3)runInputTest(id);else if(id==4)copyDiagnostics();},150);return true;});
+  menu.setOnDismissListener(dismissed->{if(inputTestMenu==dismissed)inputTestMenu=null;});
+  try{menu.show();}catch(WindowManager.BadTokenException e){inputTestMenu=null;status("要確認","入力テストメニューを開けません。フロートを閉じて再表示してください");}
  }
  private int dp(int n){return (int)(n*getResources().getDisplayMetrics().density+.5f);}
  private int compactWidth(){return Math.min(dp(390),getResources().getDisplayMetrics().widthPixels);}
- private int floatHeight(boolean expanded){return dp(72);}
+ private int floatHeight(boolean expanded){return dp(48);}
  private void clampFloat(boolean expanded){
   android.util.DisplayMetrics dm=getResources().getDisplayMetrics();
   int w=compactWidth(),h=floatHeight(expanded);
@@ -82,13 +89,13 @@ public final class QuizService extends AccessibilityService {
   if(play!=null)play.setEnabled(!active);
   if(pause!=null){pause.setText(active?"||":"");pause.setForeground(active?null:collapseIcon);pause.setContentDescription(active?"一時停止（フロートを残す）":"横長フロート（固定表示）");pause.setEnabled(true);}
  }
- private void hideFloat(){if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
+ private void hideFloat(){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
  private void startRun(){testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
   manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=false;elementsStable=false;
   anchorMissingSince=0;keyboardRequested=false;session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setContentDescription("再生（実行中）");status("認識中","現在のLINE画面から開始します");check();
  }
- public void stop(String state,String detail){cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setContentDescription("再生");
+ public void stop(String state,String detail){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setContentDescription(testMode()?"入力テスト操作メニュー":"再生");
   if(!couponStage.isEmpty()&&!state.equals("完了"))detail+="\n"+(couponStage.equals("get_clicked")?"LINEの「クーポンを表示する」を手動で押してください。":"開いたクーポンページを確認してください。自動で押し直しません。");
   else if(finalAnswerKnown&&!state.equals("完了")&&!testMode())detail+="\n"+(submitAttempted?"送信履歴を確認してください。再送しないでください。":inputVerified?"入力欄の答えを確認して、手動で送信してください。":"同じ問題か確認し、上の答えを手動で入力・送信してください。");
   if(testMode())floatSize(true);status(state,detail);Store.log(this,state,current,answer,detail);
@@ -477,7 +484,7 @@ public final class QuizService extends AccessibilityService {
    java.util.List<AccessibilityWindowInfo> windows=getWindows();try{for(AccessibilityWindowInfo w:windows)if(w.getType()==AccessibilityWindowInfo.TYPE_INPUT_METHOD){Rect b=new Rect();w.getBoundsInScreen(b);if(!b.isEmpty())blocked.add(new float[]{b.left,b.top,b.right,b.bottom});}}finally{for(AccessibilityWindowInfo w:windows)w.recycle();}
    float[] lane=SwipeLane.choose(r.left,r.top,r.right,r.bottom,blocked,dp(160),dp(12));
    if(lane==null){status("表示待機","操作できる範囲が狭いため再確認中です。フロートはドラッグで移動できます");return;}
-   float upwardDistancePx=overlay!=null&&overlay.getHeight()>0?overlay.getHeight():dp(72);
+   float upwardDistancePx=overlay!=null&&overlay.getHeight()>0?overlay.getHeight():dp(48);
    float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,step);Path path=new Path();path.moveTo(lane[0],y[0]);path.lineTo(lane[0],y[1]);
    if(!running)return;
    final int generation=testGeneration;final int pair=revealSearch.pair();gesturePending=true;lastAction=SystemClock.elapsedRealtime();elementMonitor.reset();
@@ -502,7 +509,7 @@ public final class QuizService extends AccessibilityService {
    InputDiagnostics.capture(this,"TEST_BEFORE",s);
    if(!Store.allowed(this,s.pkg)||!s.trusted()||!s.currentFinal()||!s.visibleQuestion()){testEnd("S1_QUESTION_MISSING","超良問ドリルの第5問を表示してください");return;}
    current="第5問\n"+s.question.body;answer=MathEngine.solve(s.question.body).answer;finalAnswerKnown=true;
-   if(!FinalSubmission.messageFormat(s.model)){testEnd("S1_GUIDE_MISSING","回答方法の案内と第5問を表示して、▶を押してください");return;}
+   if(!FinalSubmission.messageFormat(s.model)){testEnd("S1_GUIDE_MISSING","回答方法の案内と第5問を表示して、「試験」から問題・答えを確認してください");return;}
    android.content.SharedPreferences prefs=Store.session(this,s.pkg);
    if(s.question.key.equals(prefs.getString("pending",""))||s.question.key.equals(prefs.getString("final_submit_key",""))){testEnd("S1_ALREADY_PENDING","送信記録があります。先にLINEの結果を確認してください");return;}
    testQuestion=s.question.key;testPackage=s.pkg;testWindow=s.nodes.get(0).getWindowId();testCaptured=SystemClock.elapsedRealtime();
@@ -518,7 +525,7 @@ public final class QuizService extends AccessibilityService {
   if(generation!=testGeneration||!testBusy)return;
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){testEnd("S1_NO_LINE","LINE画面を確認できません");return;}
   try(Screen s=new Screen(root)){
-   if(!sameTest(s)){testEnd("S1_CONTEXT_CHANGED","問題または画面が変わりました。第5問を表示して▶で再確認してください");return;}
+   if(!sameTest(s)){testEnd("S1_CONTEXT_CHANGED","問題または画面が変わりました。第5問を表示して「試験」から問題・答えを再確認してください");return;}
    InputDiagnostics.capture(this,opened?"TEST_AFTER_OPEN":"TEST_BEFORE_INPUT",s);
    java.util.List<AccessibilityNodeInfo> inputs=s.testComposers();
    InputDiagnostics.add(this,"S3_IME","visible="+keyboardVisible());

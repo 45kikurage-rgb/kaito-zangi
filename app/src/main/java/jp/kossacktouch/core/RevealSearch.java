@@ -28,7 +28,7 @@ public final class RevealSearch {
   return new float[]{start,start-distance};
  }
  /** Unit-density fallback; Android callers pass the measured float height explicitly. */
- public static float[] path(float top,float bottom,Step step){return path(top,bottom,72,step);}
+ public static float[] path(float top,float bottom,Step step){return path(top,bottom,48,step);}
 
  public static long duration(Step step){return step==Step.UP?350:150;}
 }

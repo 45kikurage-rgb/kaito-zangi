@@ -19,14 +19,14 @@ public final class MainActivity extends Activity {
  @Override public void onPause(){handler.removeCallbacks(refresh);super.onPause();}
  private void build(){ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(20),dp(28),dp(20),dp(36));body.setBackgroundColor(Color.rgb(247,248,244));scroll.addView(body);setContentView(scroll);scroll.setOnApplyWindowInsetsListener((v,insets)->{body.setPadding(dp(20),dp(28)+insets.getSystemWindowInsetTop(),dp(20),dp(36)+insets.getSystemWindowInsetBottom());return insets;});
   ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.quiz_knockout);logo.setContentDescription("怪盗ザンギのロゴ");body.addView(logo,new LinearLayout.LayoutParams(dp(92),dp(92)));
-  title("怪盗ザンギ",28);label("超良問ドリル · 実運用版 "+Store.VERSION+" / code 25（横長固定・下から探索）",13);label("この端末だけで問題を確認・計算します。\n第1〜4問は自動回答。第5問は回答形式と数字を確認しLINEの送信まで進め、クーポンを表示して下部の共有ボタンを押します。共有先は手動で選択してください。不明な画面では停止します。",15);
+  title("怪盗ザンギ",28);label("超良問ドリル · 実運用版 "+Store.VERSION+" / code 26（高さ48dp・下から探索）",13);label("この端末だけで問題を確認・計算します。\n第1〜4問は自動回答。第5問は回答形式と数字を確認しLINEの送信まで進め、クーポンを表示して下部の共有ボタンを押します。共有先は手動で選択してください。不明な画面では停止します。",15);
   state=label("待機",20);question=label("認識した問題がここに表示されます",16);answer=label("答え: —",22);
   button("スタート · フロートを表示",()->{if(QuizService.instance==null){guide();return;}if(!Store.prefs(this).getBoolean("disclosure_registration_v2",false)){new AlertDialog.Builder(this).setTitle("操作の許可について").setMessage("怪盗ザンギはアクセシビリティで、自動認識したLINEの超良問ドリル画面の問題文と回答ボタンを読み取り、利用者が再生した時に操作します。初回参加登録では既存情報を変更せず、都道府県・高校は表示中の候補からランダムに選びます。生年・性別・規約同意は初期状態で本人操作です。事前承認をこの端末で有効化すると、生年・性別を含む登録候補を無作為に選び、既知の「参加規約に同意して進む」を自動操作します。実際の本人情報と異なる選択が発生し、応募資格に影響する可能性があります。未知の同意画面は操作しません。第1〜4問は専用ボタンを押し、第5問は計算数字を検証してLINEの数字入力・送信ボタンを自動操作します。正解後にクーポンを取得・表示するボタンを操作します。意図しない下書きや不明な画面を確認したら停止します。問題・回答・エラー履歴はこの端末に保存します。認証情報や会話を外部へ送信しません。停止ボタンでいつでも止められます。").setNegativeButton("取消",null).setPositiveButton("確認して表示",(d,w)->{Store.prefs(this).edit().putBoolean("disclosure_registration_v2",true).apply();QuizService.instance.showFloat();}).show();}else QuizService.instance.showFloat();});
   button("初回アンケート・登録の事前承認設定",this::registrationApproval);
   button("第5問・入力テスト設定",this::inputTestSettings);
   button("入力診断を表示・コピー",this::inputDiagnostics);
   button("停止",()->{if(QuizService.instance!=null)QuizService.instance.stop("停止","アプリから停止しました");});
-  title("はじめての設定",19);label("① 下の権限設定を開き、怪盗ザンギをON。\n② スタートを押してフロートを表示。\n③ LINEの超良問ドリルを開く。\n④ 現在の画面でフロートの▶再生を押す。\n⑤ 第1〜4問は自動で回答・進行します。第5問は答えをフロートに表示してから数字を自動入力し、入力内容を確認して送信します。正解後はクーポン関連ボタンを操作します。未確認の画面では停止します。\n\nフロートは横長・高さ72dpで固定され、表示・再生・一時停止・縮小操作で大きさや位置は変わりません。行動表示をドラッグすると移動でき、位置を端末内へ保存します。実行中の||で一時停止し、▶で現在画面から再開できます。行動表示と第5問の答えは枠内に収まるよう調整し、長文の説明はこの画面の状態欄で確認できます。停止・回答の記録は履歴に残ります。第5問入力テストも高さ72dpのまま、再生1〜3と診断コピーを表示します。初回登録画面も自動で進みます。既存情報の「変更する」は選びません。都道府県・高校は見えている選択肢からランダムに選び、スクロールしません。生年・性別・規約同意は初期設定では停止します。事前承認を端末ごとに有効化した場合だけ、表示中の生年・性別候補を無作為に選び、既知の参加規約同意ボタンを操作します。規約や本人情報が変更された場合は設定を見直してください。code25は自動テスト合格・実機確認待ちです。",15);
+  title("はじめての設定",19);label("① 下の権限設定を開き、怪盗ザンギをON。\n② スタートを押してフロートを表示。\n③ LINEの超良問ドリルを開く。\n④ 現在の画面でフロートの▶再生を押す。\n⑤ 第1〜4問は自動で回答・進行します。第5問は答えをフロートに表示してから数字を自動入力し、入力内容を確認して送信します。正解後はクーポン関連ボタンを操作します。未確認の画面では停止します。\n\nフロートは横長・高さ48dpで固定され、表示・再生・一時停止・縮小操作で大きさや位置は変わりません。行動表示をドラッグすると移動でき、位置を端末内へ保存します。実行中の||で一時停止し、▶で現在画面から再開できます。行動表示と第5問の答えは枠内に収まるよう調整し、長文の説明はこの画面の状態欄で確認できます。停止・回答の記録は履歴に残ります。第5問入力テストも高さ48dpのまま、「試験」メニューから問題・答えの確認、再生1〜3、診断コピーを選べます。初回登録画面も自動で進みます。既存情報の「変更する」は選びません。都道府県・高校は見えている選択肢からランダムに選び、スクロールしません。生年・性別・規約同意は初期設定では停止します。事前承認を端末ごとに有効化した場合だけ、表示中の生年・性別候補を無作為に選び、既知の参加規約同意ボタンを操作します。規約や本人情報が変更された場合は設定を見直してください。code26は自動テスト合格・実機確認待ちです。",15);
   button("アクセシビリティ権限の設定",this::guide);
   label("標準LINE・複製LINEは自動認識します。アカウント切替後は対象トークで▶再生。package名の入力は不要です。",14);
   button("回答・エラー履歴",this::history);
@@ -42,7 +42,7 @@ public final class MainActivity extends Activity {
 
  private void inputTestSettings(){
   new AlertDialog.Builder(this).setTitle("第5問・入力テスト")
-   .setMessage("ONにすると通常の自動進行・送信を止め、フロートの再生1〜3で入力だけを比較します。\n\n▶: 問題・答えを確認\n再生1: 直接入力\n再生2: 入力欄を選択して直接入力\n再生3: クリップボードへ答えを一時コピーして貼付。元の内容を取得できる場合だけ退避して実行し、復元を試みます。\n\n入力欄は空にしてください。各テスト後にご自身で数字を消してから次へ。診断は端末内に保存し、下書き・会話・クリップボード本文は記録しません。通常の自動回答に戻すときはOFFにしてください。")
+   .setMessage("ONにすると通常の自動進行・送信を止め、フロートの「試験」メニューから再生1〜3を選び、入力だけを比較します。\n\n問題・答えを確認: 最新の第5問を読み取り\n再生1: 直接入力\n再生2: 入力欄を選択して直接入力\n再生3: クリップボードへ答えを一時コピーして貼付。元の内容を取得できる場合だけ退避して実行し、復元を試みます。\n\n入力欄は空にしてください。各テスト後にご自身で数字を消してから次へ。診断は端末内に保存し、下書き・会話・クリップボード本文は記録しません。通常の自動回答に戻すときはOFFにしてください。")
    .setNegativeButton("閉じる",null).setNeutralButton("OFF・通常再生",(d,w)->setInputTest(false)).setPositiveButton("ON・入力だけ",(d,w)->setInputTest(true)).show();
  }
  private void setInputTest(boolean enabled){Store.prefs(this).edit().putBoolean("final_input_test_mode",enabled).apply();if(QuizService.instance!=null)QuizService.instance.refreshTestMode();}
