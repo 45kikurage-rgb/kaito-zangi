@@ -1,0 +1,34 @@
+import jp.kossacktouch.core.*;
+public class Reveal27Tests {
+ static int count;static void check(boolean ok){count++;if(!ok)throw new AssertionError("reveal27 "+count);}
+ public static void main(String[] args){
+  check(RevealSearch.MAX_SWIPES==10);check(RevealSearch.END_HOLD_MS==300);
+  for(float density:new float[]{1,1.5f,2,3,4}){
+   float distance=48*density,minimum=50*density;
+   long duration=RevealSearch.duration(RevealSearch.Step.UP,distance,minimum);
+   check(duration==1920);check(distance*1000/duration<=minimum*.5f);
+   check(RevealSearch.duration(RevealSearch.Step.DOWN,distance,minimum)==150);
+  }
+  for(float distance:new float[]{1,7.5f,24,48,144})for(float velocity:new float[]{20,50,150,800}){
+   long duration=RevealSearch.duration(RevealSearch.Step.UP,distance,velocity);
+   check(duration>=350);check(distance*1000d/duration<=velocity*.5d);
+  }
+  for(float invalid:new float[]{0,-1,Float.NaN,Float.POSITIVE_INFINITY,Float.NEGATIVE_INFINITY}){
+   check(RevealSearch.duration(RevealSearch.Step.UP,48,invalid)==2000);
+   check(RevealSearch.duration(RevealSearch.Step.UP,invalid,50)==2000);
+   check(RevealSearch.duration(RevealSearch.Step.DOWN,invalid,invalid)==150);
+  }
+  RevealSearch search=new RevealSearch();int moves=0;long now=0;
+  while(now<=26000){RevealSearch.Step step=search.missing(now);if(step==RevealSearch.Step.EXHAUSTED)break;
+   if(step==RevealSearch.Step.DOWN||step==RevealSearch.Step.UP){check(search.movement()==moves+1);check(step==(moves%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));search.moved();moves++;}
+   now+=500;
+  }
+  check(moves==10);check(now<26000);check(search.missing(now)==RevealSearch.Step.EXHAUSTED);
+  boolean bounded=false;try{search.moved();}catch(IllegalStateException expected){bounded=true;}check(bounded);
+  // Slow valid UP strokes can hit the time budget before the count budget; no extra move is authorized.
+  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.UP);search.moved();
+  check(search.missing(26000,true)==RevealSearch.Step.EXHAUSTED);
+  search.reset();check(search.missing(30000)==RevealSearch.Step.WAIT);check(search.missing(31000)==RevealSearch.Step.DOWN);
+  System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, unchanged DOWN, 300ms endpoint hold contract, ten total movements and time/step bounds.");
+ }
+}

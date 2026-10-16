@@ -12,8 +12,8 @@ public class Progress18Tests {
   ns.remove(ns.size()-1);ns.set(3,node(0,"unknown_send","",false,true));check(new NativeComposer(ns,"jp.naver.line.andronj").send()==-1);
   check(!FinalSubmission.draftSafe("既存下書き","14",false));check(FinalSubmission.draftSafe("14","14",true));
   ElementMonitor m=new ElementMonitor();check(!m.observe("ready",0));check(!m.observe("ready",499));check(m.observe("ready",500));check(!m.observe("changed",1000));check(m.observe("changed",1500));
-  RevealSearch r=new RevealSearch();int swipes=0,polls=0;for(long t=0;t<26000;t+=500){RevealSearch.Step step=r.missing(t);polls++;check(step!=RevealSearch.Step.EXHAUSTED);if(step==RevealSearch.Step.DOWN||step==RevealSearch.Step.UP){check(step==(swipes%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));r.moved();swipes++;}}
-  check(polls==52);check(swipes==12);check(r.missing(26000)==RevealSearch.Step.EXHAUSTED);
+  RevealSearch r=new RevealSearch();int swipes=0,polls=0;for(long t=0;t<26000;t+=500){RevealSearch.Step step=r.missing(t);polls++;if(swipes>=10){check(step==RevealSearch.Step.EXHAUSTED);continue;}check(step!=RevealSearch.Step.EXHAUSTED);if(step==RevealSearch.Step.DOWN||step==RevealSearch.Step.UP){check(step==(swipes%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));r.moved();swipes++;}}
+  check(polls==52);check(swipes==10);check(r.missing(26000)==RevealSearch.Step.EXHAUSTED);
   r.reset();check(r.missing(30000)==RevealSearch.Step.WAIT);check(r.missing(30500)==RevealSearch.Step.WAIT);check(r.missing(31000)==RevealSearch.Step.DOWN);
   Question q=Question.parse("第5問\nハンドボールとホッケーをa,bとする。倍数の確率は何%か。"),old=Question.parse("第3問\nボクシングで反則となる行為はどれか？\n[A]一\n[B]二\n[C]三\n[D]四");check(q!=null&&old!=null);
   FinalAnchor a=new FinalAnchor();a.bind(q);check(a.mismatch(null));check(!a.result(null,false,true));check(!a.result(null,true,false));check(a.result(null,true,true));check(a.result(q,true,true));check(!a.result(old,true,true));

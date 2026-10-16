@@ -93,11 +93,27 @@ public final class Screen implements AutoCloseable {
  public boolean numericForm(){String t=Text.clean(allVisibleText());return t.contains("第5問")&&t.contains("回答");}
  public AccessibilityNodeInfo keyboardButton(){return uniqueId("chat_ui_oa_bottombar_keyboard_button");}
  public boolean currentFinal(){return question!=null&&question.number==5&&!QuizFlow.correct(model)&&!QuizFlow.failed(model)&&!QuizFlow.complete(model)&&!QuizFlow.answerControls(model);}
- public boolean registrationChoicesVisible(){for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);if(model.rowOf(i)>qRow&&model.rowOf(i)==flex.size()-1&&n.isVisibleToUser()&&(text(n).contains("一つ前に戻る")||text(n).contains("生まれた年を選")||text(n).contains("性別を選")||text(n).contains("高校の頭文字")))return true;}return false;}
+ public boolean registrationChoicesVisible(){if(model.registrationPromptAfterCard())return true;for(int i=0;i<nodes.size();i++){AccessibilityNodeInfo n=nodes.get(i);if(model.rowOf(i)>qRow&&model.rowOf(i)==flex.size()-1&&n.isVisibleToUser()&&(text(n).contains("一つ前に戻る")||text(n).contains("生まれた年を選")||text(n).contains("性別を選")||text(n).contains("高校の頭文字")))return true;}return false;}
  public AccessibilityNodeInfo richStart(){AccessibilityNodeInfo found=null;for(AccessibilityNodeInfo n:nodes)if(n.isVisibleToUser()&&n.isEnabled()&&n.isClickable()&&text(n).equals("開始")){
   AccessibilityNodeInfo p=n.getParent();boolean rich=false;for(int d=0;p!=null&&d<12;d++){if(id(p).endsWith(":id/chat_ui_oa_richmenu"))rich=true;AccessibilityNodeInfo next=p.getParent();p.recycle();p=next;}if(p!=null)p.recycle();if(rich){if(found!=null)return null;found=n;}
  }return found;}
- public boolean quizQuestionActive(){if(question==null)return false;boolean allFour=false;if(question.number<5){allFour=quick("A")!=null&&quick("B")!=null&&quick("C")!=null&&quick("D")!=null;}return Registration.quizPriority(visibleQuestion(),qRow==flex.size()-1,allFour);}
+ /** Open/closed evidence uses LINE's dedicated menu icons, not words from the chat history. */
+ public boolean richMenuOpen(){return uniqueId("chat_ui_oa_bottombar_menu_opened_icon")!=null&&uniqueId("chat_ui_oa_bottombar_menu_closed_icon")==null&&richMenuToggle()!=null;}
+ public boolean richMenuClosed(){return uniqueId("chat_ui_oa_bottombar_menu_closed_icon")!=null&&uniqueId("chat_ui_oa_bottombar_menu_opened_icon")==null&&uniqueId("oa_richmenu_imageview")==null;}
+ public AccessibilityNodeInfo richMenuToggle(){AccessibilityNodeInfo n=uniqueId("chat_ui_oa_bottombar_menu_text");if(n==null)return null;String label=Text.clean(text(n));return label.isEmpty()||label.contains("メニュー")&&(label.contains("開く")||label.contains("閉じる"))?n:null;}
+ public Rect richMenuImageBounds(){
+  if(!trusted()||!richMenuOpen())return null;AccessibilityNodeInfo image=uniqueId("oa_richmenu_imageview"),container=uniqueId("chat_ui_oa_richmenu");if(image==null||container==null)return null;
+  boolean owned=false;AccessibilityNodeInfo parent=image.getParent();for(int d=0;parent!=null&&d<12;d++){if(id(parent).endsWith(":id/chat_ui_oa_richmenu"))owned=true;AccessibilityNodeInfo next=parent.getParent();parent.recycle();parent=next;}if(parent!=null)parent.recycle();if(!owned)return null;
+  Rect bounds=new Rect(),area=new Rect(),toggle=new Rect();image.getBoundsInScreen(bounds);container.getBoundsInScreen(area);richMenuToggle().getBoundsInScreen(toggle);
+  if(!area.contains(bounds)||bounds.isEmpty()||toggle.isEmpty()||bounds.bottom>toggle.top)return null;return bounds;
+ }
+ public boolean richActiveQuiz(){return (question!=null&&!QuizFlow.complete(model)&&couponButton("クーポンを表示する")==null&&couponButton("クーポンをゲットする")==null)||!QuizFlow.transition(model).isEmpty()||QuizFlow.finalGuide(model);}
+ public boolean richActiveRegistration(){
+  if(Registration.promptStage(model.registrationPrompt())!=Registration.Stage.UNKNOWN)return true;
+  for(Registration.Stage stage:Registration.Stage.values())if(stage!=Registration.Stage.UNKNOWN&&!registrationControls(stage).isEmpty())return true;
+  return false;
+ }
+ public boolean quizQuestionActive(){if(question==null||model.registrationPromptAfterCard())return false;boolean allFour=false;if(question.number<5){allFour=quick("A")!=null&&quick("B")!=null&&quick("C")!=null&&quick("D")!=null;}return Registration.quizPriority(visibleQuestion(),qRow==flex.size()-1,allFour);}
  public Registration.Stage registrationStage(){
   if(quizQuestionActive())return Registration.Stage.UNKNOWN;
   if(quick("わかった！")!=null&&allVisibleText().contains("高校がある都道府県を選んで"))return Registration.Stage.SCHOOL_GUIDE;
@@ -105,7 +121,7 @@ public final class Screen implements AutoCloseable {
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.SUMMARY,Registration.Stage.INTRO}){
    for(AccessibilityNodeInfo n:nodes)if(id(n).endsWith(":id/chat_ui_quick_reply_item_root")&&n.isVisibleToUser()&&n.isEnabled()&&Registration.eligible(st,content(n).trim()))return st;
   }
-  String last=model.latest;Registration.Stage hinted=Registration.stage(last);
+  String last=model.registrationPrompt();Registration.Stage hinted=Registration.stage(last);
   if(hinted!=Registration.Stage.UNKNOWN)return hinted; // Wait for candidate controls if off-screen
   Registration.Stage found=Registration.Stage.UNKNOWN;
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.PREFECTURE,Registration.Stage.SCHOOL_INITIAL,Registration.Stage.SCHOOL})if(!registrationControls(st).isEmpty()){if(found!=Registration.Stage.UNKNOWN)return Registration.Stage.UNKNOWN;found=st;}
