@@ -43,3 +43,13 @@ java -cp build/tests Reveal27Tests | tee -a build/test-results.txt
 
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Registration28Tests.java
 java -cp build/tests Registration28Tests | tee -a build/test-results.txt
+
+python3 scripts/generate-rich-menu-tests.py
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests build/RichMenu29Fixtures.java tests/RichStart29Tests.java
+java -cp build/tests RichStart29Tests | tee -a build/test-results.txt
+
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/SchoolChoice29Tests.java
+java -cp build/tests SchoolChoice29Tests | tee -a build/test-results.txt
+
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/LineIdentity29Tests.java
+java -cp build/tests LineIdentity29Tests | tee -a build/test-results.txt

@@ -7,7 +7,7 @@ public final class RevealSearch {
  public static final long END_HOLD_MS=300;
  private int misses,swipes;private long lastMissing=-1,started=-1,missingSince=-1;
  public Step missing(long now){return missing(now,false);}
- /** A known registration prompt waits for its newer choices below; do not return to old answers. */
+ /** Registration and quiz searches both begin downward, then alternate after each completed movement. */
  public Step missing(long now,boolean registration){
   if(started<0)started=now;
   if(now-started>=TIMEOUT_MS||swipes>=MAX_SWIPES)return Step.EXHAUSTED;
@@ -15,18 +15,20 @@ public final class RevealSearch {
   if(lastMissing<0||now-lastMissing>1500){misses=0;missingSince=now;}
   lastMissing=now;if(missingSince<0)missingSince=now;
   if(++misses<2||now-missingSince<1000)return Step.WAIT;
-  return registration?Step.UP:(swipes%2==0?Step.DOWN:Step.UP);
+  return swipes%2==0?Step.DOWN:Step.UP;
  }
  public void moved(){if(swipes>=MAX_SWIPES)throw new IllegalStateException("探索上限");swipes++;misses=0;missingSince=-1;}
  public int pair(){return swipes/2+1;}
  public int movement(){return swipes+1;}
  public void found(){misses=0;lastMissing=-1;missingSince=-1;}
  public void reset(){found();swipes=0;started=-1;}
- /** Upward: one measured float height in pixels, clamped to the safe lane. Downward: unchanged. */
- public static float[] path(float top,float bottom,float upwardDistancePx,Step step){
-  if(bottom-top<4||upwardDistancePx<=0||step!=Step.UP&&step!=Step.DOWN)throw new IllegalArgumentException("探索領域不明");
+ /** Legacy callers retain the full safe downward lane. */
+ public static float[] path(float top,float bottom,float upwardDistancePx,Step step){return path(top,bottom,upwardDistancePx,bottom-top,step);}
+ /** Both distances are measured pixels, clamped to the safe lane; Android supplies half-screen DOWN. */
+ public static float[] path(float top,float bottom,float upwardDistancePx,float downwardDistancePx,Step step){
+  if(!Float.isFinite(top)||!Float.isFinite(bottom)||!Float.isFinite(upwardDistancePx)||!Float.isFinite(downwardDistancePx)||bottom-top<4||upwardDistancePx<=0||downwardDistancePx<=0||step!=Step.UP&&step!=Step.DOWN)throw new IllegalArgumentException("探索領域不明");
   float lo=top+1,hi=bottom-1,h=hi-lo;
-  if(step==Step.DOWN)return new float[]{lo,hi};
+  if(step==Step.DOWN)return new float[]{lo,lo+Math.min(downwardDistancePx,h)};
   float start=lo+h*.75f;
   float distance=Math.min(upwardDistancePx,start-lo);
   return new float[]{start,start-distance};

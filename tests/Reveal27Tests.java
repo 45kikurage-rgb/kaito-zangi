@@ -26,9 +26,39 @@ public class Reveal27Tests {
   check(moves==10);check(now<26000);check(search.missing(now)==RevealSearch.Step.EXHAUSTED);
   boolean bounded=false;try{search.moved();}catch(IllegalStateException expected){bounded=true;}check(bounded);
   // Slow valid UP strokes can hit the time budget before the count budget; no extra move is authorized.
-  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.UP);search.moved();
+  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.DOWN);search.moved();
   check(search.missing(26000,true)==RevealSearch.Step.EXHAUSTED);
   search.reset();check(search.missing(30000)==RevealSearch.Step.WAIT);check(search.missing(31000)==RevealSearch.Step.DOWN);
-  System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, unchanged DOWN, 300ms endpoint hold contract, ten total movements and time/step bounds.");
+  // Start and each completion require new observations; registration follows the same ten-step sequence.
+  search=new RevealSearch();ElementMonitor monitor=new ElementMonitor();now=0;
+  for(int i=0;i<10;i++){
+   monitor.reset();check(!monitor.observe("registration:"+i,now));check(monitor.observe("registration:"+i,now+500));
+   check(search.missing(now,true)==RevealSearch.Step.WAIT);
+   check(search.missing(now+500,true)==RevealSearch.Step.WAIT);
+   check(search.missing(now+1000,true)==(i%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));
+   search.moved();now+=2000;
+  }
+  check(search.missing(now,true)==RevealSearch.Step.EXHAUSTED);
+  // Revealed choices restart freshness checks without losing the total search budget.
+  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.DOWN);search.moved();search.found();
+  check(search.missing(2000,true)==RevealSearch.Step.WAIT);check(search.missing(3000,true)==RevealSearch.Step.UP);
+  for(float screen:new float[]{640,1280,1920,2400,3200}){
+   float top=screen*.1f,bottom=screen*.9f,half=screen*.5f;
+   float[] down=RevealSearch.path(top,bottom,48,half,RevealSearch.Step.DOWN);
+   check(Math.abs(down[1]-down[0]-half)<.001f);check(down[0]>top&&down[1]<bottom);
+   float[] up=RevealSearch.path(top,bottom,48,half,RevealSearch.Step.UP);check(up[0]-up[1]==48);
+   down=RevealSearch.path(top,top+100,48,half,RevealSearch.Step.DOWN);check(down[1]-down[0]==98);check(down[1]<top+100);
+  }
+  for(Registration.Stage stage:Registration.Stage.values())for(boolean prompted:new boolean[]{false,true})for(boolean pending:new boolean[]{false,true}){
+   check(!Registration.canSearch(stage,prompted,pending,true));
+   check(Registration.canSearch(stage,prompted,pending,false)==(pending||stage!=Registration.Stage.UNKNOWN&&prompted));
+  }
+  check(Registration.selectionPending("SCHOOL:old",Registration.Stage.SCHOOL_INITIAL,"SCHOOL_INITIAL:new"));
+  check(Registration.selectionPending("SCHOOL:old",Registration.Stage.PREFECTURE,"PREFECTURE:new"));
+  check(Registration.selectionPending("SCHOOL_INITIAL:old",Registration.Stage.PREFECTURE,"PREFECTURE:new"));
+  check(!Registration.selectionPending("PREFECTURE:old",Registration.Stage.SCHOOL_INITIAL,"SCHOOL_INITIAL:new"));
+  check(!Registration.selectionPending("SCHOOL_INITIAL:old",Registration.Stage.SCHOOL,"SCHOOL:new"));
+  for(Registration.Stage stage:new Registration.Stage[]{Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.TERMS,Registration.Stage.SUMMARY})check(!Registration.selectionPending("SCHOOL:old",stage,stage.name()+":new"));
+  System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, half-screen DOWN, 300ms endpoint hold contract, ten total movements and time/step bounds.");
  }
 }

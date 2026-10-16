@@ -63,7 +63,14 @@ public final class Registration {
  /** A changed viewport is not evidence that a sent registration choice was accepted.
   * INTRO has successive conversational replies within one stage; retain its distinct-set progression. */
  public static boolean selectionPending(String pending,Stage stage,String currentKey){
-  return pending.equals(currentKey)||(stage!=Stage.INTRO&&!pending.isEmpty()&&pending.startsWith(stage.name()+":"));
+  if(pending.equals(currentKey)||(stage!=Stage.INTRO&&!pending.isEmpty()&&pending.startsWith(stage.name()+":")))return true;
+  // Scrolling may reveal already answered county/initial cards. Only this observed sequence is ordered.
+  if(pending.startsWith("SCHOOL:"))return stage==Stage.SCHOOL_INITIAL||stage==Stage.PREFECTURE;
+  return pending.startsWith("SCHOOL_INITIAL:")&&stage==Stage.PREFECTURE;
+ }
+ /** Search can reveal the next prompt while retaining a sent choice, but never overrides an active quiz. */
+ public static boolean canSearch(Stage stage,boolean prompted,boolean hasPending,boolean quizActive){
+  return !quizActive&&(hasPending||stage!=Stage.UNKNOWN&&prompted);
  }
  public static String rightIntro(Map<String,Integer> centres){String chosen=null;int right=Integer.MIN_VALUE;for(Map.Entry<String,Integer> e:centres.entrySet())if(eligible(Stage.INTRO,e.getKey())&&e.getValue()>right){right=e.getValue();chosen=e.getKey();}return chosen;}
  public static String choose(Stage stage,List<String> labels,Random random){List<String> safe=new ArrayList<>();for(String s:labels)if(eligible(stage,s)&&!safe.contains(s))safe.add(s);if(safe.isEmpty())return null;return safe.get(random.nextInt(safe.size()));}

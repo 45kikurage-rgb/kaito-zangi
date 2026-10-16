@@ -71,7 +71,7 @@ jobs:
         with:
           name: kaito-zangi-test-apk
           path: |
-            build/out/kaito-zangi-0.1.28.apk
+            build/out/kaito-zangi-0.1.29.apk
             build/SHA256SUMS
             build/test-results.txt
             build/signature-verification.txt
