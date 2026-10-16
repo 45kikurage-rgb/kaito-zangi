@@ -18,6 +18,17 @@ public final class Registration {
   // Long quick replies are visually truncated; these two distinctive phrases were observed in the videos.
   return n.startsWith("昨年同様のバージョンアップ")||n.startsWith("昨年同様のバジョンアップ")||n.startsWith("地域別なら頑張ればいけるかも");
  }
+ /** Narrow ordinary-message prompts; a sent choice or incidental keyword is not a new stage. */
+ public static Stage promptStage(String text){
+  String t=Text.clean(text);
+  if(t.contains("高校の頭文字")&&(t.contains("何")||t.contains("選")))return Stage.SCHOOL_INITIAL;
+  if(t.contains("高校がある都道府県を選")||t.contains("住んでいる地域を選"))return Stage.PREFECTURE;
+  if(t.contains("生まれた年を選")||t.contains("生年を選"))return Stage.YEAR;
+  if(t.contains("性別を選"))return Stage.SEX;
+  if(t.contains("高校を選")||t.contains("高等学校を選"))return Stage.SCHOOL;
+  if(t.contains("情報")&&(t.contains("正しいですか")||t.contains("正しいでしょうか")))return Stage.SUMMARY;
+  return Stage.UNKNOWN;
+ }
  public static Stage stage(String context){
   if(context.contains("参加規約")&&context.contains("同意して進む"))return Stage.TERMS;
   if(context.contains("情報")&&(context.contains("正しいですか")||context.contains("正しいでしょうか")))return Stage.SUMMARY;
@@ -38,9 +49,14 @@ public final class Registration {
   case SEX:return Arrays.asList("男","女","男性","女性","その他","回答しない").contains(t);
   case PREFECTURE:return PREFECTURES.contains(t);
   case SCHOOL_INITIAL:return t.matches("[あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわ]");
-  case SCHOOL:return Text.clean(t).matches("[^\\n]{1,60}(?:高等学校|高校)(?:[（(](?:公立|私立|国立)[）)])?")&&!t.contains("頭文字");
+  case SCHOOL:return Text.clean(t).matches("[^\\n]{1,60}(?:高等学校|高校)(?:[\\p{L}\\p{N}・ー]{0,30}キャンパス)?(?:[（(](?:公立|私立|国立)[）)])?")&&!t.contains("頭文字");
   default:return false;
  }}
+ /** A changed viewport is not evidence that a sent registration choice was accepted.
+  * INTRO has successive conversational replies within one stage; retain its distinct-set progression. */
+ public static boolean selectionPending(String pending,Stage stage,String currentKey){
+  return pending.equals(currentKey)||(stage!=Stage.INTRO&&!pending.isEmpty()&&pending.startsWith(stage.name()+":"));
+ }
  public static String rightIntro(Map<String,Integer> centres){String chosen=null;int right=Integer.MIN_VALUE;for(Map.Entry<String,Integer> e:centres.entrySet())if(eligible(Stage.INTRO,e.getKey())&&e.getValue()>right){right=e.getValue();chosen=e.getKey();}return chosen;}
  public static String choose(Stage stage,List<String> labels,Random random){List<String> safe=new ArrayList<>();for(String s:labels)if(eligible(stage,s)&&!safe.contains(s))safe.add(s);if(safe.isEmpty())return null;return safe.get(random.nextInt(safe.size()));}
 }

@@ -35,3 +35,8 @@ java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests
 java -cp build/tests OverlayCoupon19Tests | tee -a build/test-results.txt
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/CouponShare20Tests.java
 java -cp build/tests CouponShare20Tests | tee -a build/test-results.txt
+
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Registration27Tests.java tests/RichStart27Tests.java tests/Reveal27Tests.java
+java -cp build/tests Registration27Tests | tee -a build/test-results.txt
+java -cp build/tests RichStart27Tests | tee -a build/test-results.txt
+java -cp build/tests Reveal27Tests | tee -a build/test-results.txt
