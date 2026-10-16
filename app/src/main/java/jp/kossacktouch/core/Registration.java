@@ -52,6 +52,14 @@ public final class Registration {
   case SCHOOL:return Text.clean(t).matches("[^\\n]{1,60}(?:高等学校|高校)(?:[\\p{L}\\p{N}・ー]{0,30}キャンパス)?(?:[（(](?:公立|私立|国立)[）)])?")&&!t.contains("頭文字");
   default:return false;
  }}
+ /** Only used after the UI proves the school-selection step, never for global stage inference. */
+ public static boolean schoolCandidate(String label){
+  String t=Text.clean(label);if(t.isEmpty()||t.length()>100||forbidden(t)||promptStage(t)!=Stage.UNKNOWN)return false;
+  if(t.matches("[A-D]")||t.matches("[あかさたなはまやらわ]行")||t.matches("[0-9]+(?:年|年代)?")||t.matches("(?s).*[。!?！？].*")||t.contains("http")||t.contains("クーポン")||t.contains("バーコード")||t.contains("同意")||t.contains("規約")||t.contains("承諾")||t.contains("了承")||t.contains("利用条件")||t.contains("第")&&t.contains("問"))return false;
+  for(Stage s:Stage.values())if(s!=Stage.SCHOOL&&s!=Stage.UNKNOWN&&eligible(s,t))return false;
+  return !Arrays.asList("はい","いいえ","開始","続きから","次へ","確認","終了","閉じる","メニュー","送信","OK","回答","回答する","問題を見る","もう一度挑戦する","結果を見る","正解","不正解").contains(t);
+ }
+ public static String chooseSchoolCandidate(List<String> labels,Random random){List<String> safe=new ArrayList<>();for(String s:labels)if(schoolCandidate(s)&&!safe.contains(s))safe.add(s);return safe.isEmpty()?null:safe.get(random.nextInt(safe.size()));}
  /** A changed viewport is not evidence that a sent registration choice was accepted.
   * INTRO has successive conversational replies within one stage; retain its distinct-set progression. */
  public static boolean selectionPending(String pending,Stage stage,String currentKey){

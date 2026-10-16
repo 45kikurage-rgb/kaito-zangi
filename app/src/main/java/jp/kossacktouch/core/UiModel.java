@@ -65,7 +65,44 @@ public final class UiModel {
    if(found>=0)return -1;found=target;
   }return found;
  }
+ /** Prove progression to the school list without interpreting the school name. */
+ private int schoolBoundary(){
+  // Registration prompts may scroll out while their candidate card remains visible.
+  // Only this contextual selector uses hidden prompt evidence; controls still must be visible.
+  int promptIndex=-1;
+  for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);if(n.enabled&&n.resource.endsWith(":id/chat_ui_message_text")&&Registration.promptStage(n.text)!=Registration.Stage.UNKNOWN&&(qRow<0||order[i]>order[flexRoots.get(qRow)])&&(promptIndex<0||order[i]>order[promptIndex]))promptIndex=i;}
+  if(promptIndex<0)return -1;
+  Registration.Stage prompt=Registration.promptStage(nodes.get(promptIndex).text);
+  if(prompt==Registration.Stage.SCHOOL)return order[promptIndex];
+  if(prompt!=Registration.Stage.SCHOOL_INITIAL)return -1;
+  int reply=-1;
+  for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);if(n.visible&&n.enabled&&n.resource.endsWith(":id/chat_ui_message_text")&&order[i]>order[promptIndex]&&Registration.eligible(Registration.Stage.SCHOOL_INITIAL,n.text.trim()))reply=Math.max(reply,order[i]);}
+  if(reply<0)return -1;
+  // The school list's dedicated back control distinguishes it from unrelated later cards.
+  for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);if(!n.visible||!n.enabled||!n.text.trim().equals("一つ前に戻る"))continue;
+   int row=rowOf(i);if(quick("一つ前に戻る")>=0||(row>=0&&row==flex.size()-1&&order[flexRoots.get(row)]>reply))return reply;
+  }return -1;
+ }
+ public boolean schoolSelectionContext(){return schoolBoundary()>=0&&!schoolChoiceControls().isEmpty();}
+ /** Latest dedicated candidates only; ordinary balloons and whole-card click containers are excluded. */
+ private Map<String,Integer> schoolChoiceControls(){
+  Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();int boundary=schoolBoundary();if(boundary<0)return result;
+  for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);String label=n.text.trim();if(!n.visible||!n.enabled||!leaf(i)||!Registration.schoolCandidate(label))continue;
+   int target=quick(label);
+   if(target>=0){if(order[target]<=boundary)continue;}
+   else {
+    int row=rowOf(i);if(row<0||row!=flex.size()-1||row<=qRow||order[flexRoots.get(row)]<=boundary)continue;
+    target=-1;for(int d=0,index=i;index>=0&&d<6;d++,index=parentOf(index)){
+     if(rowOf(index)!=row||index==flexRoots.get(row))break;Node p=nodes.get(index);
+     if(p.visible&&p.enabled&&p.clickable&&content(index).trim().equals(label)){target=index;break;}
+    }
+   }
+   if(target<0)continue;if(result.containsKey(label)&&result.get(label)!=target)ambiguous.add(label);else result.put(label,target);
+  }for(String label:ambiguous)result.remove(label);return result;
+ }
  public Map<String,Integer> registrationControls(Registration.Stage stage){
+  if(stage==Registration.Stage.SCHOOL&&schoolBoundary()>=0)return schoolChoiceControls();
+  if(stage!=Registration.Stage.SCHOOL&&schoolSelectionContext())return new LinkedHashMap<>();
   Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();
   Registration.Stage prompted=Registration.promptStage(registrationPrompt());
   if(prompted!=Registration.Stage.UNKNOWN&&prompted!=stage&&!(stage==Registration.Stage.SCHOOL_GUIDE&&prompted==Registration.Stage.PREFECTURE))return result;
