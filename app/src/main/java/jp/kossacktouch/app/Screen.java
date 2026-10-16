@@ -101,6 +101,7 @@ public final class Screen implements AutoCloseable {
  public boolean richMenuOpen(){return uniqueId("chat_ui_oa_bottombar_menu_opened_icon")!=null&&uniqueId("chat_ui_oa_bottombar_menu_closed_icon")==null&&richMenuToggle()!=null;}
  public boolean richMenuClosed(){return uniqueId("chat_ui_oa_bottombar_menu_closed_icon")!=null&&uniqueId("chat_ui_oa_bottombar_menu_opened_icon")==null&&uniqueId("oa_richmenu_imageview")==null;}
  public AccessibilityNodeInfo richMenuToggle(){AccessibilityNodeInfo n=uniqueId("chat_ui_oa_bottombar_menu_text");if(n==null)return null;String label=Text.clean(text(n));return label.isEmpty()||label.contains("メニュー")&&(label.contains("開く")||label.contains("閉じる"))?n:null;}
+ public AccessibilityNodeInfo richMenuCloseControl(){int i=RichStartFlow.closeControl(snapshot);return i<0?null:nodes.get(i);}
  public Rect richMenuImageBounds(){
   if(!trusted()||!richMenuOpen())return null;AccessibilityNodeInfo image=uniqueId("oa_richmenu_imageview"),container=uniqueId("chat_ui_oa_richmenu");if(image==null||container==null)return null;
   boolean owned=false;AccessibilityNodeInfo parent=image.getParent();for(int d=0;parent!=null&&d<12;d++){if(id(parent).endsWith(":id/chat_ui_oa_richmenu"))owned=true;AccessibilityNodeInfo next=parent.getParent();parent.recycle();parent=next;}if(parent!=null)parent.recycle();if(!owned)return null;

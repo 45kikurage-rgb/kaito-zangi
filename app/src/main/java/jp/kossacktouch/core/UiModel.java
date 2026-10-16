@@ -80,22 +80,41 @@ public final class UiModel {
   if(reply<0)return -1;
   // The school list's dedicated back control distinguishes it from unrelated later cards.
   for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);if(!n.visible||!n.enabled||!n.text.trim().equals("一つ前に戻る"))continue;
-   int row=rowOf(i);if(quick("一つ前に戻る")>=0||(row>=0&&row==flex.size()-1&&order[flexRoots.get(row)]>reply))return reply;
+   int row=rowOf(i);if(quick("一つ前に戻る")>=0||(row>=0&&row>qRow&&order[flexRoots.get(row)]>reply))return reply;
   }return -1;
  }
  public boolean schoolSelectionContext(){return schoolBoundary()>=0&&!schoolChoiceControls().isEmpty();}
+ /** Return may be its own trailing flex card. Keep only the latest contiguous school-card group. */
+ private Set<Integer> schoolRows(int boundary){
+  Set<Integer> rows=new HashSet<>();
+  for(int row=flex.size()-1;row>qRow;row--){
+   if(order[flexRoots.get(row)]<=boundary)break;
+   if(flex.get(row).trim().equals("一つ前に戻る"))continue;
+   boolean choice=false,otherAction=false;
+   for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);if(rowOf(i)!=row||!leaf(i)||!n.visible||!n.enabled)continue;
+    String label=n.text.trim();if(label.isEmpty()||label.equals("一つ前に戻る")||schoolTarget(i,row)<0)continue;
+    if(Registration.schoolCandidate(label))choice=true;else otherAction=true;
+   }
+   if(!choice||otherAction)break;
+   rows.add(row);
+  }return rows;
+ }
+ private int schoolTarget(int leaf,int row){
+  String label=nodes.get(leaf).text.trim();
+  for(int d=0,index=leaf;index>=0&&d<6;d++,index=parentOf(index)){
+   if(rowOf(index)!=row||index==flexRoots.get(row))break;Node p=nodes.get(index);
+   if(p.visible&&p.enabled&&p.clickable&&content(index).trim().equals(label))return index;
+  }return -1;
+ }
  /** Latest dedicated candidates only; ordinary balloons and whole-card click containers are excluded. */
  private Map<String,Integer> schoolChoiceControls(){
-  Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();int boundary=schoolBoundary();if(boundary<0)return result;
+  Map<String,Integer> result=new LinkedHashMap<>();Set<String> ambiguous=new HashSet<>();int boundary=schoolBoundary();if(boundary<0)return result;Set<Integer> rows=schoolRows(boundary);
   for(int i=0;i<nodes.size();i++){Node n=nodes.get(i);String label=n.text.trim();if(!n.visible||!n.enabled||!leaf(i)||!Registration.schoolCandidate(label))continue;
    int target=quick(label);
    if(target>=0){if(order[target]<=boundary)continue;}
    else {
-    int row=rowOf(i);if(row<0||row!=flex.size()-1||row<=qRow||order[flexRoots.get(row)]<=boundary)continue;
-    target=-1;for(int d=0,index=i;index>=0&&d<6;d++,index=parentOf(index)){
-     if(rowOf(index)!=row||index==flexRoots.get(row))break;Node p=nodes.get(index);
-     if(p.visible&&p.enabled&&p.clickable&&content(index).trim().equals(label)){target=index;break;}
-    }
+    int row=rowOf(i);if(!rows.contains(row))continue;
+    target=schoolTarget(i,row);
    }
    if(target<0)continue;if(result.containsKey(label)&&result.get(label)!=target)ambiguous.add(label);else result.put(label,target);
   }for(String label:ambiguous)result.remove(label);return result;
