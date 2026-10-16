@@ -306,7 +306,7 @@ public final class QuizService extends AccessibilityService {
    else status("登録確認待ち","同じ登録画面を再操作しません");return true;
   }
   if(!elementsStable){status("照合中","登録の表示候補を2回確認しています");return true;}
-  String choice=Registration.choose(stage,labels,registrationRandom);
+  String choice=stage==Registration.Stage.SCHOOL&&s.model.schoolSelectionContext()?Registration.chooseSchoolCandidate(labels,registrationRandom):Registration.choose(stage,labels,registrationRandom);
   if(stage==Registration.Stage.INTRO){java.util.Map<String,Integer> centres=new java.util.LinkedHashMap<>();for(java.util.Map.Entry<String,AccessibilityNodeInfo> e:controls.entrySet()){Rect bounds=new Rect();e.getValue().getBoundsInScreen(bounds);centres.put(e.getKey(),bounds.centerX());}choice=Registration.rightIntro(centres);}if(choice==null){stop("要確認","登録用の専用選択肢を確認できません");return true;}
   current="初回参加登録 · "+stage.name();answer="";registrationPending=key;registrationSent=now;registrationSteps++;
   if(!session.edit().putString("registration_pending",key).commit()){stop("要確認","登録記録を保存できません");return true;}

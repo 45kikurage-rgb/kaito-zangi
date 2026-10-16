@@ -40,3 +40,6 @@ java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests
 java -cp build/tests Registration27Tests | tee -a build/test-results.txt
 java -cp build/tests RichStart27Tests | tee -a build/test-results.txt
 java -cp build/tests Reveal27Tests | tee -a build/test-results.txt
+
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/Registration28Tests.java
+java -cp build/tests Registration28Tests | tee -a build/test-results.txt

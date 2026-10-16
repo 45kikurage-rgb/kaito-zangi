@@ -116,6 +116,7 @@ public final class Screen implements AutoCloseable {
  public boolean quizQuestionActive(){if(question==null||model.registrationPromptAfterCard())return false;boolean allFour=false;if(question.number<5){allFour=quick("A")!=null&&quick("B")!=null&&quick("C")!=null&&quick("D")!=null;}return Registration.quizPriority(visibleQuestion(),qRow==flex.size()-1,allFour);}
  public Registration.Stage registrationStage(){
   if(quizQuestionActive())return Registration.Stage.UNKNOWN;
+  if(model.schoolSelectionContext())return Registration.Stage.SCHOOL;
   if(quick("わかった！")!=null&&allVisibleText().contains("高校がある都道府県を選んで"))return Registration.Stage.SCHOOL_GUIDE;
   // Live quick replies identify intro/confirmation even when the prompt is an ordinary chat message.
   for(Registration.Stage st:new Registration.Stage[]{Registration.Stage.TERMS,Registration.Stage.SUMMARY,Registration.Stage.INTRO}){
