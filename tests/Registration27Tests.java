@@ -61,9 +61,9 @@ public class Registration27Tests {
   check(Registration.selectionPending("INTRO:1",Registration.Stage.INTRO,"INTRO:1"));check(!Registration.selectionPending("INTRO:1",Registration.Stage.INTRO,"INTRO:2"));
   // Breadth-first fixture order: compare tree traversal order, not raw leaf indices.
   ns=new ArrayList<>();ns.add(n(-1,"chat_ui_list","",true,false));ns.add(n(0,"chat_ui_row_text_message","",true,false));ns.add(n(0,"chat_ui_row_flex_message_frame","",true,false));ns.add(n(1,"chat_ui_message_text","高校の頭文字は何かの？",true,true));ns.add(n(2,"label","あ",true,true));m=new UiModel(ns);check(!m.registrationPromptAfterCard());check(m.registrationControls(Registration.Stage.SCHOOL_INITIAL).size()==1);
-  RevealSearch search=new RevealSearch();long now=0;int steps=0;for(;now<26000;now+=500){RevealSearch.Step s=search.missing(now,true);if(s==RevealSearch.Step.UP||s==RevealSearch.Step.DOWN){check(s==(steps%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));steps++;search.moved();}else check(s==(steps>=10?RevealSearch.Step.EXHAUSTED:RevealSearch.Step.WAIT));}check(steps==10);check(search.missing(26000,true)==RevealSearch.Step.EXHAUSTED);
-  search=new RevealSearch();check(search.missing(0)==RevealSearch.Step.WAIT);check(search.missing(500)==RevealSearch.Step.WAIT);check(search.missing(1000)==RevealSearch.Step.DOWN);
+  RevealSearch search=new RevealSearch();long now=0;int steps=0;for(;now<26000;now+=500){RevealSearch.Step s=search.missing(now,true);if(s==RevealSearch.Step.UP||s==RevealSearch.Step.DOWN){check(s==RevealSearch.Step.UP);steps++;search.moved();}else check(s==(steps>=10?RevealSearch.Step.EXHAUSTED:RevealSearch.Step.WAIT));}check(steps==10);check(search.missing(26000,true)==RevealSearch.Step.EXHAUSTED);
+  search=new RevealSearch();check(search.missing(0)==RevealSearch.Step.WAIT);check(search.missing(500)==RevealSearch.Step.WAIT);check(search.missing(1000)==RevealSearch.Step.UP);
   float[] path=RevealSearch.path(100,1000,48,RevealSearch.Step.UP);check(path[0]-path[1]==48);
-  System.out.println("PASS "+count+" code27 registration checks: ordinary prompt freshness, old-card exclusion, one/two choices, bounded DOWN-first alternating reveal and quiz preservation.");
+  System.out.println("PASS "+count+" code27 registration checks: ordinary prompt freshness, old-card exclusion, one/two choices, bounded latest-side UP-only reveal and quiz preservation.");
  }
 }

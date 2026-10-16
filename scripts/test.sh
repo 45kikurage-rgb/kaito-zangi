@@ -56,3 +56,6 @@ java -cp build/tests LineIdentity29Tests | tee -a build/test-results.txt
 
 java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/SwipeSettling30Tests.java
 java -cp build/tests SwipeSettling30Tests | tee -a build/test-results.txt
+
+java com.sun.tools.javac.Main --release 8 -encoding UTF-8 -classpath build/tests -d build/tests tests/LatestRecovery31Tests.java
+java -cp build/tests LatestRecovery31Tests | tee -a build/test-results.txt
