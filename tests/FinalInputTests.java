@@ -21,7 +21,7 @@ public class FinalInputTests {
   check(MathEngine.solve(observed).answer.equals("91"));
   Question current=Question.parse("第5問\n女子エリートWB新階級のライト級とウェルター級をa,bとする。異なる2数の差の確率は何%か。");Question old=Question.parse("第5問\nハンドボールとホッケーをa,bとする。倍数の確率は何%か。");Question other=Question.parse("第3問\nボクシングで反則となる行為はどれか？\n[A]一\n[B]二\n[C]三\n[D]四");
   check(current!=null&&old!=null&&other!=null);FinalAnchor a=new FinalAnchor();check(!a.mismatch(old));a.bind(other);check(!a.mismatch(current));a.bind(current);check(!a.mismatch(current));check(a.mismatch(old));check(a.mismatch(other));check(a.mismatch(null));a.bind(old);check(a.mismatch(old));check(a.recoverOnce());check(!a.recoverOnce());check(!a.mismatch(current));a.reset();check(!a.mismatch(old));a.bind(old);check(!a.mismatch(old));check(a.mismatch(current));check(a.recoverOnce());
-  RevealSearch r=new RevealSearch();check(r.missing(1000)==RevealSearch.Step.WAIT);check(r.missing(2000)==RevealSearch.Step.DOWN);r.moved();check(r.missing(3000)==RevealSearch.Step.WAIT);check(r.missing(4000)==RevealSearch.Step.UP);r.moved();r.found();check(r.pair()==2);check(r.missing(5000)==RevealSearch.Step.WAIT);check(r.missing(6000)==RevealSearch.Step.DOWN);
+  RevealSearch r=new RevealSearch();check(r.missing(1000)==RevealSearch.Step.WAIT);check(r.missing(2000)==RevealSearch.Step.UP);r.moved();check(r.missing(3000)==RevealSearch.Step.WAIT);check(r.missing(4000)==RevealSearch.Step.UP);r.moved();r.found();check(r.pair()==2);check(r.missing(5000)==RevealSearch.Step.WAIT);check(r.missing(6000)==RevealSearch.Step.UP);
   System.out.println("PASS "+c+" final-input checks: native composer boundaries, changed IDs, draft/send validation, ambiguous and WebView rejection, current-Q5 anchor and bounded history recovery.");
  }
 }

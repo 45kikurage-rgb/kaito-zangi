@@ -20,27 +20,27 @@ public class Reveal27Tests {
   }
   RevealSearch search=new RevealSearch();int moves=0;long now=0;
   while(now<=26000){RevealSearch.Step step=search.missing(now);if(step==RevealSearch.Step.EXHAUSTED)break;
-   if(step==RevealSearch.Step.DOWN||step==RevealSearch.Step.UP){check(search.movement()==moves+1);check(step==(moves%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));search.moved();moves++;}
+   if(step==RevealSearch.Step.DOWN||step==RevealSearch.Step.UP){check(search.movement()==moves+1);check(step==RevealSearch.Step.UP);search.moved();moves++;}
    now+=500;
   }
   check(moves==10);check(now<26000);check(search.missing(now)==RevealSearch.Step.EXHAUSTED);
   boolean bounded=false;try{search.moved();}catch(IllegalStateException expected){bounded=true;}check(bounded);
   // Slow valid UP strokes can hit the time budget before the count budget; no extra move is authorized.
-  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.DOWN);search.moved();
+  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.UP);search.moved();
   check(search.missing(26000,true)==RevealSearch.Step.EXHAUSTED);
-  search.reset();check(search.missing(30000)==RevealSearch.Step.WAIT);check(search.missing(31000)==RevealSearch.Step.DOWN);
+  search.reset();check(search.missing(30000)==RevealSearch.Step.WAIT);check(search.missing(31000)==RevealSearch.Step.UP);
   // Start and each completion require new observations; registration follows the same ten-step sequence.
   search=new RevealSearch();ElementMonitor monitor=new ElementMonitor();now=0;
   for(int i=0;i<10;i++){
    monitor.reset();check(!monitor.observe("registration:"+i,now));check(monitor.observe("registration:"+i,now+500));
    check(search.missing(now,true)==RevealSearch.Step.WAIT);
    check(search.missing(now+500,true)==RevealSearch.Step.WAIT);
-   check(search.missing(now+1000,true)==(i%2==0?RevealSearch.Step.DOWN:RevealSearch.Step.UP));
+   check(search.missing(now+1000,true)==RevealSearch.Step.UP);
    search.moved();now+=2000;
   }
   check(search.missing(now,true)==RevealSearch.Step.EXHAUSTED);
   // Revealed choices restart freshness checks without losing the total search budget.
-  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.DOWN);search.moved();search.found();
+  search=new RevealSearch();check(search.missing(0,true)==RevealSearch.Step.WAIT);check(search.missing(1000,true)==RevealSearch.Step.UP);search.moved();search.found();
   check(search.missing(2000,true)==RevealSearch.Step.WAIT);check(search.missing(3000,true)==RevealSearch.Step.UP);
   for(float screen:new float[]{640,1280,1920,2400,3200}){
    float top=screen*.1f,bottom=screen*.9f,half=screen*.5f;
@@ -48,6 +48,22 @@ public class Reveal27Tests {
    check(Math.abs(down[1]-down[0]-half)<.001f);check(down[0]>top&&down[1]<bottom);
    float[] up=RevealSearch.path(top,bottom,48,half,RevealSearch.Step.UP);check(up[0]-up[1]==48);
    down=RevealSearch.path(top,top+100,48,half,RevealSearch.Step.DOWN);check(down[1]-down[0]==98);check(down[1]<top+100);
+  }
+  // Both registration and quiz exploration always reveal newer messages; every movement
+  // is followed by fresh observations, never an alternating fast movement toward old cards.
+  for(boolean registration:new boolean[]{false,true})for(float density:new float[]{1,1.5f,2,3,4}){
+   search=new RevealSearch();long t=0;
+   for(int n=0;n<10;n++){
+    check(search.missing(t,registration)==RevealSearch.Step.WAIT);
+    check(search.missing(t+500,registration)==RevealSearch.Step.WAIT);
+    RevealSearch.Step next=search.missing(t+1000,registration);check(next==RevealSearch.Step.UP);
+    float distance=RevealSearch.upwardDistance(density,1280);
+    float[] latest=RevealSearch.path(100,1100,distance,next);
+    check(latest[0]>latest[1]);check(latest[0]-latest[1]<=48*density);
+    check(latest[1]>100&&latest[0]<1100);check(RevealSearch.brakeAtEnd(next));
+    search.moved();search.found();t+=2000;
+   }
+   check(search.missing(t,registration)==RevealSearch.Step.EXHAUSTED);
   }
   for(Registration.Stage stage:Registration.Stage.values())for(boolean prompted:new boolean[]{false,true})for(boolean pending:new boolean[]{false,true}){
    check(!Registration.canSearch(stage,prompted,pending,true));
@@ -76,6 +92,6 @@ public class Reveal27Tests {
   }
   for(float v:new float[]{10,20,50,150,800})check(4*1000d/RevealSearch.brakeDuration(4,v)<=v*.25);
   boolean rejects=false;try{RevealSearch.brakeDistance(1);}catch(IllegalArgumentException expected){rejects=true;}check(rejects);
-  System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, half-screen DOWN, 300ms endpoint hold contract, ten total movements and time/step bounds.");
+  System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, legacy path compatibility, latest-side UP-only search, 300ms endpoint hold contract, ten total movements and time/step bounds.");
  }
 }

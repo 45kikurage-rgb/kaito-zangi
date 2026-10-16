@@ -23,7 +23,7 @@ public final class QuizService extends AccessibilityService {
  private final java.util.Random registrationRandom=new java.util.Random();private int registrationSteps=0;private long registrationSince=0,registrationSent=0;private String registrationPending="",registrationPriorQuestion="";
  private android.content.SharedPreferences session;private String runPackage="",finalPrepared="",couponStage="";private long couponSince=0,finalSince=0;
  private long anchorMissingSince=0;private boolean keyboardRequested=false;private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
- private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
+ private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private final LatestRecovery latestRecovery=new LatestRecovery();private boolean elementsStable=false,gesturePending=false;
  private boolean revealGestureInFlight=false,revealReleaseUncertain=false;
  private final SwipeSettling swipeSettling=new SwipeSettling();private boolean revealSettling=false;private int revealWindow=-1,revealScrollEvents=0;private long revealDeltaY=0;private boolean revealDeltaAvailable=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
@@ -94,11 +94,11 @@ public final class QuizService extends AccessibilityService {
  }
  private void hideFloat(){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
  private void startRun(){if(revealReleaseUncertain){stop("要確認","タッチ解放が未確認です。OS操作の許可をOFF/ONしてから再開してください");return;}richStartChecked=false;richStartSince=0;testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
-  manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();swipeSettling.reset();revealSettling=false;gesturePending=revealGestureInFlight;elementsStable=false;
+  manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();latestRecovery.reset();swipeSettling.reset();revealSettling=false;gesturePending=revealGestureInFlight;elementsStable=false;
   anchorMissingSince=0;keyboardRequested=false;session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setContentDescription("再生（実行中）");status("認識中","現在のLINE画面から開始します");check();
  }
- public void stop(String state,String detail){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();swipeSettling.reset();revealSettling=false;if(play!=null)play.setContentDescription(testMode()?"入力テスト操作メニュー":"再生");
+ public void stop(String state,String detail){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();latestRecovery.reset();swipeSettling.reset();revealSettling=false;if(play!=null)play.setContentDescription(testMode()?"入力テスト操作メニュー":"再生");
   if(!couponStage.isEmpty()&&!state.equals("完了"))detail+="\n"+(couponStage.equals("get_clicked")?"LINEの「クーポンを表示する」を手動で押してください。":"開いたクーポンページを確認してください。自動で押し直しません。");
   else if(finalAnswerKnown&&!state.equals("完了")&&!testMode())detail+="\n"+(submitAttempted?"送信履歴を確認してください。再送しないでください。":inputVerified?"入力欄の答えを確認して、手動で送信してください。":"同じ問題か確認し、上の答えを手動で入力・送信してください。");
   if(testMode())floatSize(true);status(state,detail);Store.log(this,state,current,answer,detail);
@@ -142,6 +142,7 @@ public final class QuizService extends AccessibilityService {
     finalPrepared=session.getString("final_prepared","");couponStage=session.getString("coupon_stage","");Store.prefs(this).edit().putString("active_line_package",s.pkg).apply();
    }else if(!runPackage.equals(s.pkg)){stop("停止","LINEを切り替えました。対象トークで▶再生してください");return;}
    previousPackage=s.pkg;elementsStable=elementMonitor.observe(s.confirmationKey(),now);
+   if(s.trusted()&&couponStage.isEmpty()&&finalPrepared.isEmpty()&&!manualFinal.started()&&recoverLatest(s,now))return;
    if(s.trusted()&&handleRichStart(s,now))return;
    if("share_clicked".equals(couponStage)){
     if(s.trusted()&&s.question!=null&&s.question.number<5&&s.visibleQuestion()&&s.couponButton("クーポンを表示する")==null&&s.couponButton("クーポンをゲットする")==null){
@@ -159,10 +160,9 @@ public final class QuizService extends AccessibilityService {
     if(manualFinal.started()){stop("要確認","第5問 · 答え: "+answer+"\n現在の問題を確認できないため停止。入力・送信は行いません");return;}
     if(!elementsStable){status("照合中","探索で別の問題へ移ったため2回確認しています");return;}
     if(anchorMissingSince==0)anchorMissingSince=now;
-    AccessibilityNodeInfo bottom=s.uniqueId("chat_ui_scroll_to_bottom_button");
-    if(bottom==null||!finalAnchor.recoverOnce()){if(now-anchorMissingSince>24000){stop("要確認","第5問の現在位置を24秒間確認できませんでした。最新メッセージへ戻して▶再生してください");return;}status("現在位置待機","第5問の再表示を待っています。過去の問題は操作しません");return;}
-    if(!click(s,bottom,false)){stop("要確認","最新メッセージへ戻れません。過去の問題は操作しません");return;}
-    status("現在位置復帰","過去の問題を操作せず、最新メッセージへ戻しています");return;
+    // Native latest-position recovery is handled before all answer/registration actions.
+    if(now-anchorMissingSince>24000){stop("要確認","第5問の現在位置を24秒間確認できませんでした。最新メッセージへ戻して▶再生してください");return;}
+    scroll(s);return;
    }
    anchorMissingSince=0;
    if(elementsStable&&s.currentFinal()&&s.visibleQuestion())finalAnchor.bind(s.question);
@@ -537,6 +537,28 @@ public final class QuizService extends AccessibilityService {
    return target!=null&&performChecked(target,resetSearch);
   }
  }
+ private boolean recoverLatest(Screen s,long now){
+  boolean visible=false;
+  for(AccessibilityNodeInfo n:s.nodes)if(n.isVisibleToUser()&&Screen.id(n).endsWith(":id/chat_ui_scroll_to_bottom_button")){visible=true;break;}
+  LatestRecovery.Action action=latestRecovery.observe(visible,now);
+  if(action==LatestRecovery.Action.NONE)return false;
+  if(action==LatestRecovery.Action.EXHAUSTED){stop("要確認","最新位置への移動を確認できません。過去の選択肢は操作せず停止します");return true;}
+  if(action==LatestRecovery.Action.WAIT){status("最新位置確認待ち","最新位置ボタンが消えるまで、回答・登録の操作を待っています");return true;}
+  AccessibilityNodeInfo bottom=s.uniqueId("chat_ui_scroll_to_bottom_button");
+  if(bottom==null||!bottom.isClickable()){stop("要確認","最新位置ボタンを一意に確認できません。過去の選択肢は操作しません");return true;}
+  if(!elementsStable||now-lastAction<ElementMonitor.INTERVAL_MS){status("照合中","最新位置ボタンを再確認しています");return true;}
+  RevealSearch.Step step=revealSearch.missing(now);
+  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認","最新位置復帰・探索の上限（合計10回または26秒）に達しました");return true;}
+  if(step==RevealSearch.Step.WAIT){status("最新位置確認","過去の表示を操作せず、最新位置への復帰を準備しています");return true;}
+  Rect bounds=new Rect();bottom.getBoundsInScreen(bounds);android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();
+  if(bounds.left<0||bounds.top<0||bounds.right>metrics.widthPixels||bounds.bottom>metrics.heightPixels){stop("要確認","最新位置ボタンの表示範囲を確認できません");return true;}
+  if(!click(s,bottom,false)){stop("要確認","最新位置への操作を確認できません。過去の選択肢は操作しません");return true;}
+  latestRecovery.requested(now);revealSearch.moved();
+  revealWindow=s.nodes.get(0).getWindowId();revealScrollEvents=0;revealDeltaY=0;revealDeltaAvailable=false;
+  swipeSettling.start(SystemClock.elapsedRealtime());revealSettling=true;
+  InputDiagnostics.add(this,"LATEST_RETURN_REQUEST","app="+Store.VERSION+" nativeButton=true confirmation=pending");
+  status("最新位置へ復帰","右下の↓を操作しました。移動後の画面を確認します");return true;
+ }
  private void scroll(Screen s){scroll(s,false);}
  private boolean registrationSearchAllowed(Screen s){
   return Registration.canSearch(s.registrationStage(),Registration.stage(s.model.registrationPrompt())!=Registration.Stage.UNKNOWN,!registrationPending.isEmpty(),s.quizQuestionActive());
@@ -550,7 +572,7 @@ public final class QuizService extends AccessibilityService {
   if(gesturePending||SystemClock.elapsedRealtime()-lastAction<ElementMonitor.INTERVAL_MS)return;
   RevealSearch.Step step=revealSearch.missing(SystemClock.elapsedRealtime(),registration);
   if(step==RevealSearch.Step.WAIT){status("表示待機","必要な要素が見つからないため、0.5秒後に再確認します");return;}
-  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認",registration?"登録候補の探索上限（上下合計10回または26秒）に達しました":"要素の探索上限（上下合計10回または26秒）に達しました");return;}
+  if(step==RevealSearch.Step.EXHAUSTED){stop("要確認",registration?"登録候補の探索上限（最新側へ合計10回または26秒）に達しました":"要素の探索上限（最新側へ合計10回または26秒）に達しました");return;}
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","スライド直前の画面を取得できません");return;}
   try(Screen fresh=new Screen(root)){
    if(!fresh.trusted()||!fresh.pkg.equals(runPackage)||!fresh.confirmationKey().equals(s.confirmationKey())||(registration?(fresh.registrationStage()!=expected||!registrationSearchAllowed(fresh)):(fresh.registrationStage()!=Registration.Stage.UNKNOWN||fresh.registrationChoicesVisible()))){
@@ -566,7 +588,7 @@ public final class QuizService extends AccessibilityService {
    float[] lane=SwipeLane.choose(r.left,r.top,r.right,r.bottom,blocked,dp(160),dp(12));
    if(lane==null){status("表示待機","操作できる範囲が狭いため再確認中です。フロートはドラッグで移動できます");return;}
    float upwardDistancePx=RevealSearch.upwardDistance(metrics.density,metrics.heightPixels);
-   float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,metrics.heightPixels*.5f,step);
+   float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,upwardDistancePx,step);
    if(!running)return;
    final int generation=testGeneration;final String progress=(registration?"登録候補 ":"")+revealSearch.movement()+"/10";
    float distancePx=Math.abs(y[0]-y[1]);int minimumVelocity=ViewConfiguration.get(this).getScaledMinimumFlingVelocity();
@@ -586,7 +608,7 @@ public final class QuizService extends AccessibilityService {
     @Override public void onCancelled(GestureDescription g){finishRevealGesture(generation,progress,false,false);}
    },handler);
    if(!accepted){revealGestureInFlight=false;gesturePending=false;stop("要確認","スライドを実行できません");return;}
-   revealSearch.moved();status("要素探索",progress+" · "+(step==RevealSearch.Step.UP?"上へ小さく移動・減速して停止":"画面半分の高さで下へ高速スライド"));
+   revealSearch.moved();status("要素探索",progress+" · "+"最新側へ小さく移動・減速して停止");
   }
  }
  /** Continue the same pointer through a slow, nonzero tail before holding; never add a brake tap. */
