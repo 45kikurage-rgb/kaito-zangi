@@ -59,6 +59,23 @@ public class Reveal27Tests {
   check(!Registration.selectionPending("PREFECTURE:old",Registration.Stage.SCHOOL_INITIAL,"SCHOOL_INITIAL:new"));
   check(!Registration.selectionPending("SCHOOL_INITIAL:old",Registration.Stage.SCHOOL,"SCHOOL:new"));
   for(Registration.Stage stage:new Registration.Stage[]{Registration.Stage.YEAR,Registration.Stage.SEX,Registration.Stage.TERMS,Registration.Stage.SUMMARY})check(!Registration.selectionPending("SCHOOL:old",stage,stage.name()+":new"));
+  check(RevealSearch.brakeAtEnd(RevealSearch.Step.UP));check(!RevealSearch.brakeAtEnd(RevealSearch.Step.DOWN));
+  // A real terminal MOVE is bounded inside each swipe, even after integer pixel quantization.
+  for(float density:new float[]{1,1.5f,2,3,4})for(float screen:new float[]{320,640,1280,2400}){
+   float distance=RevealSearch.upwardDistance(density,screen);
+   check(distance<=48*density&&distance<=screen*.1f);
+   float tail=RevealSearch.brakeDistance(distance);
+   check(tail>=1&&tail<=4&&tail<distance);
+   for(float sign:new float[]{-1,1}){
+    float end=400+sign*distance,split=end-sign*tail;
+    check(Math.abs(split-400)+Math.abs(end-split)==distance);
+    check(Math.abs(Math.round(end)-Math.round(split))>=1);
+   }
+   long duration=RevealSearch.brakeDuration(tail,50*density);
+   check(duration>=600&&tail*1000d/duration<=50*density*.25);
+  }
+  for(float v:new float[]{10,20,50,150,800})check(4*1000d/RevealSearch.brakeDuration(4,v)<=v*.25);
+  boolean rejects=false;try{RevealSearch.brakeDistance(1);}catch(IllegalArgumentException expected){rejects=true;}check(rejects);
   System.out.println("PASS "+count+" code27 reveal checks: half-minimum-fling velocity, invalid-input fallback, half-screen DOWN, 300ms endpoint hold contract, ten total movements and time/step bounds.");
  }
 }
