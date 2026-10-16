@@ -25,6 +25,7 @@ public final class QuizService extends AccessibilityService {
  private long anchorMissingSince=0;private boolean keyboardRequested=false;private boolean resumeChecked=false;private String savedPending="",savedPackage="",transitionScreen="";private int transitionSteps=0;
  private final ManualFinal manualFinal=new ManualFinal();private final FinalAnchor finalAnchor=new FinalAnchor();private final ElementMonitor elementMonitor=new ElementMonitor();private final RevealSearch revealSearch=new RevealSearch();private boolean elementsStable=false,gesturePending=false;
  private boolean revealGestureInFlight=false,revealReleaseUncertain=false;
+ private final SwipeSettling swipeSettling=new SwipeSettling();private boolean revealSettling=false;private int revealWindow=-1,revealScrollEvents=0;private long revealDeltaY=0;private boolean revealDeltaAvailable=false;
  private final Runnable poll=new Runnable(){public void run(){check();handler.postDelayed(this,ElementMonitor.INTERVAL_MS);}};
  @Override protected void onServiceConnected(){instance=this;try{bank=Store.bank(this);}catch(Exception e){status("要確認","正答データを読み込めません");}wm=(WindowManager)getSystemService(WINDOW_SERVICE);handler.post(poll);}
  public void showFloat(){if(overlay!=null)return;expandedFloat=false;final boolean inputTest=testMode();final int headerHeight=48;
@@ -93,17 +94,21 @@ public final class QuizService extends AccessibilityService {
  }
  private void hideFloat(){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}if(overlay!=null){wm.removeView(overlay);overlay=null;info=null;titleView=null;play=null;pause=null;}}
  private void startRun(){if(revealReleaseUncertain){stop("要確認","タッチ解放が未確認です。OS操作の許可をOFF/ONしてから再開してください");return;}richStartChecked=false;richStartSince=0;testGeneration++;testBusy=false;finalAnswerKnown=false;submitAttempted=false;inputVerified=false;autoDiagKey="";couponDiagKey="";if(bank==null){stop("要確認","正答データ不備");return;}
-  manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();gesturePending=revealGestureInFlight;elementsStable=false;
+  manualFinal.reset();finalAnchor.reset();elementMonitor.reset();revealSearch.reset();swipeSettling.reset();revealSettling=false;gesturePending=revealGestureInFlight;elementsStable=false;
   anchorMissingSince=0;keyboardRequested=false;session=null;runPackage="";finalPrepared="";couponStage="";couponSince=0;finalSince=0;savedPending="";savedPackage="";resumeChecked=false;transitionSteps=0;transitionScreen="";
   registrationSteps=0;registrationSince=0;registrationSent=0;registrationPending="";registrationPriorQuestion="";guard=new RunGuard();current="";answer="";transition="";lastAction=0;lastTick=0;questionSince=SystemClock.elapsedRealtime();running=true;play.setContentDescription("再生（実行中）");status("認識中","現在のLINE画面から開始します");check();
  }
- public void stop(String state,String detail){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();if(play!=null)play.setContentDescription(testMode()?"入力テスト操作メニュー":"再生");
+ public void stop(String state,String detail){if(inputTestMenu!=null){inputTestMenu.dismiss();inputTestMenu=null;}cleanupClipboard();running=false;testBusy=false;testGeneration++;elementMonitor.reset();revealSearch.reset();swipeSettling.reset();revealSettling=false;if(play!=null)play.setContentDescription(testMode()?"入力テスト操作メニュー":"再生");
   if(!couponStage.isEmpty()&&!state.equals("完了"))detail+="\n"+(couponStage.equals("get_clicked")?"LINEの「クーポンを表示する」を手動で押してください。":"開いたクーポンページを確認してください。自動で押し直しません。");
   else if(finalAnswerKnown&&!state.equals("完了")&&!testMode())detail+="\n"+(submitAttempted?"送信履歴を確認してください。再送しないでください。":inputVerified?"入力欄の答えを確認して、手動で送信してください。":"同じ問題か確認し、上の答えを手動で入力・送信してください。");
   if(testMode())floatSize(true);status(state,detail);Store.log(this,state,current,answer,detail);
  }
  private void status(String state,String detail){updateFloatControls();Store.prefs(this).edit().putString("state",state).putString("detail",detail).putString("question",current).putString("answer",answer).apply();if(titleView!=null)titleView.setText((finalAnswerKnown?"答え "+answer+" · ":"")+state);if(info!=null)info.setText((finalAnswerKnown?"第5問の答え："+answer+"\n":"")+detail);}
  @Override public void onAccessibilityEvent(AccessibilityEvent e){if(e.getEventType()==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED&&(running||testBusy)){textChanged=true;}if(!running)return;int type=e.getEventType();
+  if(type==AccessibilityEvent.TYPE_VIEW_SCROLLED&&(revealGestureInFlight||revealSettling)&&runPackage.equals(String.valueOf(e.getPackageName()))&&e.getWindowId()==revealWindow){
+   revealScrollEvents++;if(revealSettling)swipeSettling.onScroll(SystemClock.elapsedRealtime());
+   if(Build.VERSION.SDK_INT>=28){int delta=e.getScrollDeltaY();if(delta!=Integer.MAX_VALUE){revealDeltaAvailable=true;revealDeltaY+=delta;}}
+  }
   // Event package identifies its source, not the foreground application (e.g. an IME).
   if(type==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED||type==AccessibilityEvent.TYPE_VIEW_SCROLLED||type==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||type==AccessibilityEvent.TYPE_WINDOWS_CHANGED||type==AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED)handler.post(this::check);
  }
@@ -121,6 +126,13 @@ public final class QuizService extends AccessibilityService {
   if(((KeyguardManager)getSystemService(KEYGUARD_SERVICE)).isKeyguardLocked()||!((PowerManager)getSystemService(POWER_SERVICE)).isInteractive()){stop("要確認","画面ロック・画面OFFを検知しました");return;}
   if(now-questionSince>240000){stop("要確認","問題の制限時間に近づいたため停止しました");return;}
   if(gesturePending)return;
+  if(revealSettling){
+   SwipeSettling.Result settled=swipeSettling.poll(now);
+   if(settled==SwipeSettling.Result.WAIT){status("スクロール停止待ち","移動が落ち着いてから問題・選択肢を確認します");return;}
+   revealSettling=false;swipeSettling.reset();elementMonitor.reset();
+   InputDiagnostics.add(this,"REVEAL_SETTLE","result="+settled+" scrollEvents="+revealScrollEvents+" reportedDeltaY="+(revealDeltaAvailable?Long.toString(revealDeltaY):"unavailable")+" visualMovement=unmeasured");
+   if(settled!=SwipeSettling.Result.SETTLED){stop("要確認","スライド後もスクロールが続いているため停止しました");return;}
+  }
   AccessibilityNodeInfo root=foregroundLineRoot();if(root==null){stop("要確認","前面のLINE画面を確認できません（別アプリ・ダイアログ・権限）");return;}
   if(!Store.allowed(this,String.valueOf(root.getPackageName()))){root.recycle();stop("要確認","対応するLINEの画面ではありません");return;}
   try(Screen s=new Screen(root)){
@@ -553,34 +565,56 @@ public final class QuizService extends AccessibilityService {
    java.util.List<AccessibilityWindowInfo> windows=getWindows();try{for(AccessibilityWindowInfo w:windows)if(w.getType()==AccessibilityWindowInfo.TYPE_INPUT_METHOD){Rect b=new Rect();w.getBoundsInScreen(b);if(!b.isEmpty())blocked.add(new float[]{b.left,b.top,b.right,b.bottom});}}finally{for(AccessibilityWindowInfo w:windows)w.recycle();}
    float[] lane=SwipeLane.choose(r.left,r.top,r.right,r.bottom,blocked,dp(160),dp(12));
    if(lane==null){status("表示待機","操作できる範囲が狭いため再確認中です。フロートはドラッグで移動できます");return;}
-   float upwardDistancePx=overlay!=null&&overlay.getHeight()>0?overlay.getHeight():dp(48);
-   float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,metrics.heightPixels*.5f,step);Path path=new Path();path.moveTo(lane[0],y[0]);path.lineTo(lane[0],y[1]);
+   float upwardDistancePx=RevealSearch.upwardDistance(metrics.density,metrics.heightPixels);
+   float[] y=RevealSearch.path(lane[1],lane[2],upwardDistancePx,metrics.heightPixels*.5f,step);
    if(!running)return;
    final int generation=testGeneration;final String progress=(registration?"登録候補 ":"")+revealSearch.movement()+"/10";
    float distancePx=Math.abs(y[0]-y[1]);int minimumVelocity=ViewConfiguration.get(this).getScaledMinimumFlingVelocity();
-   long moveDuration=RevealSearch.duration(step,distancePx,minimumVelocity);
-   if(moveDuration>RevealSearch.TIMEOUT_MS-RevealSearch.END_HOLD_MS){stop("要確認","安全な速度で探索できる時間を超えています");return;}
-   InputDiagnostics.add(this,"REVEAL_REQUEST","direction="+step+" requestedDistancePx="+distancePx+" requestedDistanceDp="+(distancePx/metrics.density)+" durationMs="+moveDuration+" minFlingVelocityPxPerSecond="+minimumVelocity+" endHoldMs="+(step==RevealSearch.Step.UP?RevealSearch.END_HOLD_MS:0)+" actualContentMovement=unmeasured");
-   final boolean holdEnd=step==RevealSearch.Step.UP;final float endX=lane[0],endY=y[1];
-   final GestureDescription.StrokeDescription stroke=new GestureDescription.StrokeDescription(path,0,moveDuration,holdEnd);
+   final boolean brakeAtEnd=RevealSearch.brakeAtEnd(step);
+   final float brakeDistance=brakeAtEnd?RevealSearch.brakeDistance(distancePx):0,endX=lane[0],endY=y[1];
+   final float brakeY=endY-Math.signum(y[1]-y[0])*brakeDistance;
+   final long brakeDuration=brakeAtEnd?RevealSearch.brakeDuration(brakeDistance,minimumVelocity):0;
+   long moveDuration=RevealSearch.duration(step,distancePx-brakeDistance,minimumVelocity);
+   if(moveDuration+brakeDuration>RevealSearch.TIMEOUT_MS-RevealSearch.END_HOLD_MS){stop("要確認","安全な速度で探索できる時間を超えています");return;}
+   InputDiagnostics.add(this,"REVEAL_REQUEST","app="+Store.VERSION+" fingerDirection="+step+" startY="+y[0]+" endY="+endY+" requestedDistancePx="+distancePx+" requestedDistanceDp="+(distancePx/metrics.density)+" durationMs="+moveDuration+" brakeDistancePx="+brakeDistance+" brakeDurationMs="+brakeDuration+" endHoldMs="+(brakeAtEnd?RevealSearch.END_HOLD_MS:0)+" actualContentMovement=unmeasured");
+   Path path=new Path();path.moveTo(endX,y[0]);path.lineTo(endX,brakeY);
+   final GestureDescription.StrokeDescription stroke=new GestureDescription.StrokeDescription(path,0,moveDuration,brakeAtEnd);
+   revealWindow=fresh.nodes.get(0).getWindowId();revealScrollEvents=0;revealDeltaY=0;revealDeltaAvailable=false;
    gesturePending=true;revealGestureInFlight=true;lastAction=SystemClock.elapsedRealtime();elementMonitor.reset();
    boolean accepted=dispatchGesture(new GestureDescription.Builder().addStroke(stroke).build(),new GestureResultCallback(){
-    @Override public void onCompleted(GestureDescription g){
-     if(holdEnd)releaseRevealGesture(stroke,endX,endY,generation,progress);
-     else finishRevealGesture(generation,progress,true,false);
-    }
+    @Override public void onCompleted(GestureDescription g){if(brakeAtEnd)brakeRevealGesture(stroke,endX,brakeY,endY,brakeDuration,generation,progress);else finishRevealGesture(generation,progress,true,false,false);}
     @Override public void onCancelled(GestureDescription g){finishRevealGesture(generation,progress,false,false);}
    },handler);
    if(!accepted){revealGestureInFlight=false;gesturePending=false;stop("要確認","スライドを実行できません");return;}
-   revealSearch.moved();status("要素探索",progress+" · "+(holdEnd?"上へ小さく動かし、止めてから離します":"画面半分の高さで下へ"));
+   revealSearch.moved();status("要素探索",progress+" · "+(step==RevealSearch.Step.UP?"上へ小さく移動・減速して停止":"画面半分の高さで下へ高速スライド"));
   }
  }
- /** Always end the same pointer, even after stop/lock or a newer run generation. */
- private void releaseRevealGesture(GestureDescription.StrokeDescription stroke,float x,float y,int generation,String progress){
-  long hold=running&&generation==testGeneration&&testUnlocked()?RevealSearch.END_HOLD_MS:1;
-  if(dispatchRevealRelease(stroke,x,y,hold,generation,progress))return;
-  // A rejected request did not start: retry only the same pointer's release, never a new tap.
-  if(hold>1&&dispatchRevealRelease(stroke,x,y,1,generation,progress))return;
+ /** Continue the same pointer through a slow, nonzero tail before holding; never add a brake tap. */
+ private void brakeRevealGesture(GestureDescription.StrokeDescription stroke,float x,float fromY,float toY,long duration,int generation,String progress){
+  if(!running||generation!=testGeneration||!testUnlocked()){releaseRevealGesture(stroke,x,fromY,generation,progress,false);return;}
+  try{
+   Path tail=new Path();tail.moveTo(x,fromY);tail.lineTo(x,toY);
+   final GestureDescription.StrokeDescription brake=stroke.continueStroke(tail,0,duration,true);
+   boolean accepted=dispatchGesture(new GestureDescription.Builder().addStroke(brake).build(),new GestureResultCallback(){
+    @Override public void onCompleted(GestureDescription g){releaseRevealGesture(brake,x,toY,generation,progress,true);}
+    @Override public void onCancelled(GestureDescription g){finishRevealGesture(generation,progress,false,false);}
+   },handler);
+   if(accepted)return;
+  }catch(RuntimeException e){InputDiagnostics.add(this,"REVEAL_BRAKE_ERROR",e.getClass().getSimpleName());}
+  // Cleanup only: never treat a rejected brake as a successful swipe.
+  if(generation==testGeneration&&running)stop("要確認","スライドの減速を実行できないため停止しました");
+  releaseRevealGesture(stroke,x,fromY,generation,progress,false);
+ }
+ /** Always release the existing pointer; a failed normal release stops the run before cleanup. */
+ private void releaseRevealGesture(GestureDescription.StrokeDescription stroke,float x,float y,int generation,String progress,boolean braked){
+  if(braked&&running&&generation==testGeneration&&testUnlocked()){
+   InputDiagnostics.add(this,"REVEAL_BRAKE","completed=true holdMs="+RevealSearch.END_HOLD_MS);
+   if(dispatchRevealRelease(stroke,x,y,RevealSearch.END_HOLD_MS,generation,progress))return;
+   stop("要確認","スライドの停止保持を実行できないため停止しました");
+  }
+  if(running&&generation==testGeneration)stop("要確認","スライドを中断し、指を離して停止しました");
+  InputDiagnostics.add(this,"REVEAL_RELEASE_CLEANUP","normalCompletion=false");
+  if(dispatchRevealRelease(stroke,x,y,1,generation,progress))return;
   finishRevealGesture(generation,progress,false,true);
  }
  private boolean dispatchRevealRelease(GestureDescription.StrokeDescription stroke,float x,float y,long hold,int generation,String progress){
@@ -593,12 +627,14 @@ public final class QuizService extends AccessibilityService {
    },handler);
   }catch(RuntimeException e){InputDiagnostics.add(this,"REVEAL_RELEASE_ERROR",e.getClass().getSimpleName());return false;}
  }
- private void finishRevealGesture(int generation,String progress,boolean success,boolean uncertain){
+ private void finishRevealGesture(int generation,String progress,boolean success,boolean uncertain){finishRevealGesture(generation,progress,success,uncertain,true);}
+ private void finishRevealGesture(int generation,String progress,boolean success,boolean uncertain,boolean waitForSettle){
   revealGestureInFlight=false;gesturePending=false;elementMonitor.reset();lastAction=SystemClock.elapsedRealtime();
   if(uncertain){revealReleaseUncertain=true;stop("要確認","タッチ解放が未確認です。OS操作の許可をOFF/ONしてから再開してください");return;}
   if(generation!=testGeneration)return;
   if(!success){if(running)stop("要確認","スライドが中断されました");return;}
-  if(running)status("表示確認",progress+" · 指を離しました。問題・回答を再解析します");
+  if(running&&!waitForSettle){status("表示確認",progress+" · 下スライド完了。画面を再解析します");return;}
+  if(running){revealSettling=true;swipeSettling.start(SystemClock.elapsedRealtime());status("スクロール停止待ち",progress+" · 指を離し、スクロールの静止を確認します");}
  }
  public void refreshTestMode(){stop("停止","入力テスト設定を変更しました");testQuestion="";hideFloat();showFloat();}
  public void copyDiagnostics(){try{((ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("怪盗ザンギ入力診断",InputDiagnostics.read(this)));Toast.makeText(this,"診断結果をコピーしました",Toast.LENGTH_SHORT).show();}catch(RuntimeException e){Toast.makeText(this,"コピーできません。アプリの診断画面を開いてください",Toast.LENGTH_LONG).show();}}

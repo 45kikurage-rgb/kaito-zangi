@@ -36,6 +36,20 @@ public final class RevealSearch {
  /** Unit-density fallback; Android callers pass the measured float height explicitly. */
  public static float[] path(float top,float bottom,Step step){return path(top,bottom,48,step);}
 
+ /** Keep the terminal movement inside the requested travel, with real integer-pixel MOVE samples. */
+ public static boolean brakeAtEnd(Step step){return step==Step.UP;}
+ public static float brakeDistance(float distancePx){
+  if(!Float.isFinite(distancePx)||distancePx<2)throw new IllegalArgumentException("移動距離不足");
+  return Math.min(4f,distancePx/2f);
+ }
+ public static long brakeDuration(float distancePx,float minimumFlingVelocity){
+  if(!Float.isFinite(distancePx)||distancePx<=0||!Float.isFinite(minimumFlingVelocity)||minimumFlingVelocity<=0)throw new IllegalArgumentException("停止速度不明");
+  return Math.max(600L,(long)Math.ceil(distancePx*4000d/minimumFlingVelocity));
+ }
+ public static float upwardDistance(float density,float screenHeightPx){
+  if(!Float.isFinite(density)||density<=0||!Float.isFinite(screenHeightPx)||screenHeightPx<=0)throw new IllegalArgumentException("画面寸法不明");
+  return Math.min(48f*density,screenHeightPx*.1f);
+ }
  public static long duration(Step step){return step==Step.UP?350:150;}
  /** UP moves at no more than half Android's minimum fling velocity (px/s). */
  public static long duration(Step step,float distancePx,float minimumFlingVelocity){
